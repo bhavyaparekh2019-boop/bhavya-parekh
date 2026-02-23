@@ -1,0 +1,207 @@
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { ArrowLeft, PiggyBank, Info, TrendingUp, Target } from 'lucide-react';
+import { motion } from 'motion/react';
+import { GoogleGenAI } from "@google/genai";
+import { cn } from '@/src/lib/utils';
+
+export default function RetirementPlanner() {
+  const [currentAge, setCurrentAge] = useState<number>(30);
+  const [retirementAge, setRetirementAge] = useState<number>(60);
+  const [currentSavings, setCurrentSavings] = useState<number>(500000);
+  const [monthlyContribution, setMonthlyContribution] = useState<number>(20000);
+  const [expectedReturn, setExpectedReturn] = useState<number>(12);
+  const [projectedSavings, setProjectedSavings] = useState<number>(0);
+  const [marketContext, setMarketContext] = useState<string>('');
+  const [isLoadingContext, setIsLoadingContext] = useState(false);
+
+  useEffect(() => {
+    calculateRetirement();
+  }, [currentAge, retirementAge, currentSavings, monthlyContribution, expectedReturn]);
+
+  const calculateRetirement = () => {
+    const yearsToRetire = retirementAge - currentAge;
+    if (yearsToRetire <= 0) {
+      setProjectedSavings(currentSavings);
+      return;
+    }
+
+    const monthlyRate = expectedReturn / 100 / 12;
+    const months = yearsToRetire * 12;
+    
+    // Future value of current savings
+    const fvCurrent = currentSavings * Math.pow(1 + monthlyRate, months);
+    
+    // Future value of monthly contributions
+    const fvContributions = monthlyContribution * ((Math.pow(1 + monthlyRate, months) - 1) / monthlyRate);
+    
+    setProjectedSavings(fvCurrent + fvContributions);
+  };
+
+  const fetchMarketContext = async () => {
+    setIsLoadingContext(true);
+    try {
+      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+      const response = await ai.models.generateContent({
+        model: "gemini-3-flash-preview",
+        contents: "What are the current NPS and EPF interest rates in India for 2024? Mention recommended retirement savings targets for Indian professionals and inflation expectations.",
+        config: {
+          tools: [{ googleSearch: {} }],
+        },
+      });
+      setMarketContext(response.text || 'Unable to fetch current market data.');
+    } catch (error) {
+      console.error('Error fetching market context:', error);
+      setMarketContext('Error loading market data. Please try again later.');
+    } finally {
+      setIsLoadingContext(false);
+    }
+  };
+
+  return (
+    <main className="min-h-screen bg-slate-50 py-12 md:py-20">
+      <div className="max-w-4xl mx-auto px-4">
+        <Link
+          to="/"
+          className="inline-flex items-center gap-2 text-slate-500 hover:text-primary transition-colors mb-8 font-medium"
+        >
+          <ArrowLeft className="w-4 h-4" /> Back to Insights
+        </Link>
+
+        <div className="bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden">
+          <div className="bg-slate-900 p-8 md:p-12 text-white">
+            <div className="flex items-center gap-4 mb-6">
+              <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center text-slate-900">
+                <PiggyBank className="w-6 h-6" />
+              </div>
+              <h1 className="text-3xl font-black">Retirement Planner</h1>
+            </div>
+            <p className="text-slate-400 max-w-2xl leading-relaxed">
+              Visualize your financial future in India. See how your EPF, NPS, and personal savings grow over time to meet your retirement goals.
+            </p>
+          </div>
+
+          <div className="p-8 md:p-12 grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <div className="space-y-6">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-[10px] font-black text-slate-900 uppercase tracking-widest mb-2">
+                    Current Age
+                  </label>
+                  <input
+                    type="number"
+                    value={currentAge}
+                    onChange={(e) => setCurrentAge(Number(e.target.value))}
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 font-bold focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-black text-slate-900 uppercase tracking-widest mb-2">
+                    Retirement Age
+                  </label>
+                  <input
+                    type="number"
+                    value={retirementAge}
+                    onChange={(e) => setRetirementAge(Number(e.target.value))}
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 font-bold focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[10px] font-black text-slate-900 uppercase tracking-widest mb-2">
+                  Current Savings (₹)
+                </label>
+                <input
+                  type="number"
+                  value={currentSavings}
+                  onChange={(e) => setCurrentSavings(Number(e.target.value))}
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 font-bold focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[10px] font-black text-slate-900 uppercase tracking-widest mb-2">
+                  Monthly Contribution (₹)
+                </label>
+                <input
+                  type="number"
+                  value={monthlyContribution}
+                  onChange={(e) => setMonthlyContribution(Number(e.target.value))}
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 font-bold focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[10px] font-black text-slate-900 uppercase tracking-widest mb-2">
+                  Expected Return (%)
+                </label>
+                <input
+                  type="number"
+                  step="0.1"
+                  value={expectedReturn}
+                  onChange={(e) => setExpectedReturn(Number(e.target.value))}
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 font-bold focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-col justify-center items-center bg-primary/5 rounded-3xl p-8 border border-primary/10 text-center">
+              <Target className="w-8 h-8 text-primary mb-4" />
+              <p className="text-slate-500 font-bold uppercase tracking-widest text-[10px] mb-2">Projected Corpus at Age {retirementAge}</p>
+              <motion.p
+                key={projectedSavings}
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                className="text-4xl md:text-5xl font-black text-slate-900 mb-6"
+              >
+                ₹{projectedSavings.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
+              </motion.p>
+              <div className="w-full h-px bg-primary/20 mb-6" />
+              <div className="space-y-3 w-full text-xs font-bold text-slate-600 uppercase tracking-wider">
+                <div className="flex justify-between">
+                  <span>Total Contributed</span>
+                  <span className="text-slate-900">₹{(currentSavings + (monthlyContribution * (retirementAge - currentAge) * 12)).toLocaleString('en-IN')}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Interest Earned</span>
+                  <span className="text-primary">
+                    ₹{(projectedSavings - (currentSavings + (monthlyContribution * (retirementAge - currentAge) * 12))).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* AI Market Insights */}
+          <div className="border-t border-slate-100 p-8 md:p-12 bg-slate-50">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-3">
+                <TrendingUp className="w-5 h-5 text-primary" />
+                <h3 className="text-xl font-black text-slate-900">Retirement Context (India)</h3>
+              </div>
+              <button
+                onClick={fetchMarketContext}
+                disabled={isLoadingContext}
+                className="text-xs font-black uppercase tracking-widest bg-white border border-slate-200 px-4 py-2 rounded-lg hover:bg-slate-50 transition-all disabled:opacity-50"
+              >
+                {isLoadingContext ? 'Fetching...' : 'Get 2024 Benchmarks'}
+              </button>
+            </div>
+            
+            {marketContext ? (
+              <div className="bg-white p-6 rounded-2xl border border-slate-100 text-slate-600 leading-relaxed text-sm shadow-sm">
+                {marketContext}
+              </div>
+            ) : (
+              <div className="flex items-center gap-3 text-slate-500 text-sm italic">
+                <Info className="w-4 h-4" />
+                Get the latest 2024 Indian retirement benchmarks and rates powered by Google Search.
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </main>
+  );
+}

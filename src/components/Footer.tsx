@@ -1,0 +1,76 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { Globe, Share2, Mail, MapPin } from 'lucide-react';
+
+export default function Footer() {
+  const sections = [
+    {
+      title: 'Services',
+      links: ['Wealth Management', 'Institutional Investing', 'Retirement Planning', 'Insurance Solutions'],
+    },
+    {
+      title: 'Company',
+      links: ['About Us', 'Our Team', 'Insights', 'Contact'],
+    },
+    {
+      title: 'Compliance',
+      links: ['Privacy Policy', 'Terms of Service', 'Disclosure', 'Security'],
+    },
+  ];
+
+  return (
+    <footer className="bg-white border-t border-slate-200 pt-20 pb-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-16">
+          <div className="lg:col-span-2">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white font-bold text-lg">
+                B
+              </div>
+              <span className="text-xl font-bold text-slate-900">BHP Finance</span>
+            </div>
+            <p className="text-slate-500 text-sm leading-relaxed mb-8 max-w-xs">
+              Empowering individuals and institutions with strategic financial guidance and innovative market insights since 2002.
+            </p>
+            <div className="flex gap-4">
+              {[Globe, Share2, Mail].map((Icon, i) => (
+                <a
+                  key={i}
+                  href="#"
+                  className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-primary/10 hover:text-primary transition-all"
+                >
+                  <Icon className="w-5 h-5" />
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {sections.map((section) => (
+            <div key={section.title}>
+              <h4 className="font-bold text-slate-900 mb-6">{section.title}</h4>
+              <ul className="space-y-4 text-sm text-slate-500">
+                {section.links.map((link) => (
+                  <li key={link}>
+                    <Link to="#" className="hover:text-primary transition-colors">
+                      {link}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        <div className="pt-8 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-xs text-slate-400">
+            © {new Date().getFullYear()} BHP Finance. All rights reserved. Registered Investment Advisor.
+          </p>
+          <div className="flex items-center gap-2 text-xs font-bold text-slate-500">
+            <MapPin className="w-3 h-3 text-primary" />
+            Global Financial District
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}

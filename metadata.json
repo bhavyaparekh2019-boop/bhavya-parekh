@@ -1,0 +1,5 @@
+{
+  "name": "BHP Finance",
+  "description": "Professional financial services and wealth management insights platform.",
+  "requestFramePermissions": ["geolocation"]
+}
