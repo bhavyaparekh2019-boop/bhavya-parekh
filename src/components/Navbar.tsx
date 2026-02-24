@@ -3,6 +3,8 @@ import { Link, useLocation } from 'react-router-dom';
 import { Search, Menu, X, User } from 'lucide-react';
 import { cn } from '@/src/lib/utils';
 
+import Logo from './Logo';
+
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -15,10 +17,10 @@ export default function Navbar() {
   }, []);
 
   const navLinks = [
-    { name: 'Wealth Management', href: '/wealth' },
+    { name: 'Investment Guide', href: '/guides/investment' },
+    { name: 'Insurance Guide', href: '/guides/insurance' },
     { name: 'Insights', href: '/' },
-    { name: 'Insurance', href: '/insurance' },
-    { name: 'Retirement', href: '/retirement' },
+    { name: 'Tools', href: '/tools/retirement' },
     { name: 'About Us', href: '/about' },
   ];
 
@@ -34,11 +36,8 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-primary/20 group-hover:scale-105 transition-transform">
-              B
-            </div>
-            <span className="text-xl font-bold tracking-tight text-slate-900">BHP Finance</span>
+          <Link to="/">
+            <Logo />
           </Link>
 
           {/* Desktop Nav */}

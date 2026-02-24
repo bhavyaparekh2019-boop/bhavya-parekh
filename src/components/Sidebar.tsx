@@ -97,6 +97,44 @@ export default function Sidebar() {
         </div>
       </div>
 
+      {/* Knowledge Base */}
+      <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+        <h3 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
+          <Sparkles className="w-5 h-5 text-primary" />
+          Knowledge Base
+        </h3>
+        <div className="space-y-4">
+          <Link 
+            to="/guides/investment"
+            className="block p-4 bg-slate-50 rounded-xl border border-transparent hover:border-primary transition-all group"
+          >
+            <h4 className="text-sm font-bold text-slate-900 group-hover:text-primary transition-colors">Investment Masterclass</h4>
+            <p className="text-xs text-slate-500 mt-1">Fundamentals of wealth creation.</p>
+          </Link>
+          <Link 
+            to="/guides/insurance"
+            className="block p-4 bg-slate-50 rounded-xl border border-transparent hover:border-primary transition-all group"
+          >
+            <h4 className="text-sm font-bold text-slate-900 group-hover:text-primary transition-colors">Insurance Essentials</h4>
+            <p className="text-xs text-slate-500 mt-1">Protecting your financial future.</p>
+          </Link>
+          <Link 
+            to="/guides/retirement"
+            className="block p-4 bg-slate-50 rounded-xl border border-transparent hover:border-primary transition-all group"
+          >
+            <h4 className="text-sm font-bold text-slate-900 group-hover:text-primary transition-colors">Retirement Roadmap</h4>
+            <p className="text-xs text-slate-500 mt-1">Planning for a golden future.</p>
+          </Link>
+          <Link 
+            to="/guides/tax"
+            className="block p-4 bg-slate-50 rounded-xl border border-transparent hover:border-primary transition-all group"
+          >
+            <h4 className="text-sm font-bold text-slate-900 group-hover:text-primary transition-colors">Tax Strategy 2024</h4>
+            <p className="text-xs text-slate-500 mt-1">Smart ways to save more.</p>
+          </Link>
+        </div>
+      </div>
+
       {/* Financial Tools */}
       <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
         <h3 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">

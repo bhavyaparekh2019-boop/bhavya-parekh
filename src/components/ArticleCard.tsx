@@ -32,108 +32,59 @@ export default function ArticleCard({ article, featured }: ArticleCardProps): Re
     </AnimatePresence>
   );
 
-  if (featured) {
-    return (
-      <div 
-        className="group relative flex flex-col md:flex-row bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300"
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-      >
-        <Tooltip />
-        <Link to={`/article/${article.id}`} className="md:w-1/2 overflow-hidden block">
-          <img
-            src={article.image}
-            alt={article.title}
-            className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
-            referrerPolicy="no-referrer"
-          />
-        </Link>
-        <div className="p-6 md:p-10 md:w-1/2 flex flex-col justify-center">
-          <div className="flex items-center gap-3 mb-4">
-            <span className="bg-primary/10 text-primary text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">
-              Expert Verified
-            </span>
-            <span className="text-slate-500 text-xs font-medium">{article.readTime}</span>
-          </div>
-          <Link to={`/article/${article.id}`}>
-            <h3 className="text-2xl md:text-3xl font-bold text-slate-900 leading-tight mb-4 group-hover:text-primary transition-colors">
-              {article.title}
-            </h3>
-          </Link>
-          <p className="text-slate-600 mb-8 line-clamp-3 text-lg leading-relaxed">
-            {article.excerpt}
-          </p>
-          <div className="flex items-center justify-between mt-auto">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-slate-200 overflow-hidden">
-                <img src={`https://i.pravatar.cc/150?u=${article.author}`} alt={article.author} />
-              </div>
-              <span className="text-sm font-semibold text-slate-700">{article.author}</span>
-            </div>
-            <Link
-              to={`/article/${article.id}`}
-              className="text-primary font-bold text-sm flex items-center gap-1 group-hover:gap-2 transition-all"
-            >
-              Read Report <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <article 
-      className="relative bg-white rounded-3xl overflow-hidden border border-slate-200 hover:border-primary/50 transition-all group hover:shadow-2xl flex flex-col md:flex-row h-full"
+      className={cn(
+        "group relative bg-white rounded-[2.5rem] overflow-hidden border border-slate-200 hover:border-primary/50 transition-all duration-500 hover:shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] flex flex-col md:flex-row",
+        featured ? "min-h-[500px]" : "min-h-[400px]"
+      )}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <Tooltip />
-      <Link to={`/article/${article.id}`} className="md:w-2/5 overflow-hidden block">
+      <Link to={`/article/${article.id}`} className="md:w-1/2 overflow-hidden block relative">
         <img
           src={article.image}
           alt={article.title}
-          className="w-full h-full min-h-[240px] object-cover group-hover:scale-105 transition-transform duration-500"
+          className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-700"
           referrerPolicy="no-referrer"
         />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       </Link>
-      <div className="p-8 md:p-10 flex flex-col flex-grow md:w-3/5">
-        <div className="flex items-center gap-3 mb-4">
-          <span className="text-primary text-xs font-black uppercase tracking-[0.2em]">
+      <div className="p-8 md:p-12 md:w-1/2 flex flex-col justify-center">
+        <div className="flex items-center gap-4 mb-6">
+          <span className="bg-primary/10 text-primary text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-[0.2em]">
             {article.category}
           </span>
-          <span className="w-1 h-1 bg-slate-300 rounded-full" />
-          <span className="text-slate-500 text-xs font-medium">{article.readTime}</span>
+          <span className="text-slate-400 text-xs font-bold uppercase tracking-widest">{article.readTime}</span>
         </div>
         <Link to={`/article/${article.id}`}>
-          <h4 className="text-2xl md:text-3xl font-black mb-4 text-slate-900 group-hover:text-primary transition-colors leading-tight">
+          <h3 className={cn(
+            "font-black text-slate-900 leading-[1.1] mb-6 group-hover:text-primary transition-colors tracking-tight",
+            featured ? "text-4xl md:text-5xl" : "text-3xl md:text-4xl"
+          )}>
             {article.title}
-          </h4>
+          </h3>
         </Link>
-        <p className="text-base md:text-lg text-slate-600 mb-8 line-clamp-3 leading-relaxed">
+        <p className="text-slate-600 mb-10 line-clamp-3 text-lg md:text-xl leading-relaxed font-medium">
           {article.excerpt}
         </p>
-        <div className="flex items-center justify-between mt-auto pt-6 border-t border-slate-100">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-slate-100 overflow-hidden border border-slate-200">
-              <img src={`https://i.pravatar.cc/150?u=${article.author}`} alt={article.author} />
+        <div className="flex items-center justify-between mt-auto pt-8 border-t border-slate-100">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-slate-100 overflow-hidden border-2 border-white shadow-sm">
+              <img src={`https://i.pravatar.cc/150?u=${article.author}`} alt={article.author} className="w-full h-full object-cover" />
             </div>
             <div className="flex flex-col">
-              <span className="text-sm font-bold text-slate-900">{article.author}</span>
-              <span className="text-[10px] text-slate-500 uppercase tracking-wider">{article.date}</span>
+              <span className="text-sm font-black text-slate-900 uppercase tracking-tight">{article.author}</span>
+              <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{article.date}</span>
             </div>
           </div>
-          <div className="flex items-center gap-4">
-            <button className="text-slate-400 hover:text-primary transition-colors">
-              <Bookmark className="w-5 h-5" />
-            </button>
-            <Link 
-              to={`/article/${article.id}`} 
-              className="bg-slate-900 text-white px-6 py-2 rounded-xl text-sm font-bold hover:bg-primary hover:text-slate-900 transition-all flex items-center gap-2"
-            >
-              Read Full <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
+          <Link
+            to={`/article/${article.id}`}
+            className="group/btn flex items-center gap-2 text-slate-900 font-black text-sm uppercase tracking-widest hover:text-primary transition-colors"
+          >
+            Read Full <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
+          </Link>
         </div>
       </div>
     </article>

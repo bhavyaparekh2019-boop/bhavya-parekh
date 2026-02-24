@@ -9,21 +9,48 @@ export default function MortgageCalculator() {
   const [loanAmount, setLoanAmount] = useState<number>(5000000);
   const [interestRate, setInterestRate] = useState<number>(8.5);
   const [loanTerm, setLoanTerm] = useState<number>(20);
+  const [prepayment, setPrepayment] = useState<number>(0);
   const [monthlyPayment, setMonthlyPayment] = useState<number>(0);
+  const [totalInterestSaved, setTotalInterestSaved] = useState<number>(0);
+  const [monthsSaved, setMonthsSaved] = useState<number>(0);
   const [marketContext, setMarketContext] = useState<string>('');
   const [isLoadingContext, setIsLoadingContext] = useState(false);
 
   useEffect(() => {
     calculatePayment();
-  }, [loanAmount, interestRate, loanTerm]);
+  }, [loanAmount, interestRate, loanTerm, prepayment]);
 
   const calculatePayment = () => {
     const monthlyRate = interestRate / 100 / 12;
     const numberOfPayments = loanTerm * 12;
-    const payment =
+    const emi =
       (loanAmount * monthlyRate * Math.pow(1 + monthlyRate, numberOfPayments)) /
       (Math.pow(1 + monthlyRate, numberOfPayments) - 1);
-    setMonthlyPayment(isNaN(payment) ? 0 : payment);
+    
+    setMonthlyPayment(isNaN(emi) ? 0 : emi);
+
+    // Calculate savings with prepayment
+    if (prepayment > 0 && emi > 0) {
+      let balance = loanAmount;
+      let totalInterestWithPrepayment = 0;
+      let monthCount = 0;
+      const totalMonthlyPayment = emi + prepayment;
+
+      while (balance > 0 && monthCount < numberOfPayments) {
+        const interest = balance * monthlyRate;
+        totalInterestWithPrepayment += interest;
+        const principal = Math.min(balance, totalMonthlyPayment - interest);
+        balance -= principal;
+        monthCount++;
+      }
+
+      const originalTotalInterest = (emi * numberOfPayments) - loanAmount;
+      setTotalInterestSaved(Math.max(0, originalTotalInterest - totalInterestWithPrepayment));
+      setMonthsSaved(Math.max(0, numberOfPayments - monthCount));
+    } else {
+      setTotalInterestSaved(0);
+      setMonthsSaved(0);
+    }
   };
 
   const fetchMarketContext = async () => {
@@ -131,6 +158,21 @@ export default function MortgageCalculator() {
                   <option value={30}>30 Years</option>
                 </select>
               </div>
+
+              <div>
+                <label className="block text-sm font-black text-slate-900 uppercase tracking-widest mb-3">
+                  Monthly Prepayment (₹)
+                </label>
+                <input
+                  type="number"
+                  value={prepayment}
+                  onChange={(e) => setPrepayment(Number(e.target.value))}
+                  className="w-full px-6 py-4 rounded-2xl border border-slate-200 bg-slate-50 text-lg font-bold focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all"
+                />
+                <p className="mt-2 text-xs text-slate-500 font-medium italic">
+                  Paying extra each month significantly reduces your interest and loan tenure.
+                </p>
+              </div>
             </div>
 
             <div className="flex flex-col justify-center items-center bg-slate-50 rounded-3xl p-8 border border-slate-100 text-center">
@@ -162,6 +204,26 @@ export default function MortgageCalculator() {
                   </span>
                 </div>
               </div>
+
+              {prepayment > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mt-8 w-full bg-emerald-50 rounded-2xl p-6 border border-emerald-100"
+                >
+                  <p className="text-emerald-800 font-black uppercase tracking-widest text-[10px] mb-4">Prepayment Savings</p>
+                  <div className="grid grid-cols-2 gap-4 text-center">
+                    <div>
+                      <p className="text-xs text-emerald-600 font-bold uppercase mb-1">Interest Saved</p>
+                      <p className="text-xl font-black text-emerald-900">₹{totalInterestSaved.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-emerald-600 font-bold uppercase mb-1">Time Saved</p>
+                      <p className="text-xl font-black text-emerald-900">{Math.floor(monthsSaved / 12)}y {monthsSaved % 12}m</p>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
             </div>
           </div>
 

@@ -11,18 +11,22 @@ export default function RetirementPlanner() {
   const [currentSavings, setCurrentSavings] = useState<number>(500000);
   const [monthlyContribution, setMonthlyContribution] = useState<number>(20000);
   const [expectedReturn, setExpectedReturn] = useState<number>(12);
+  const [inflationRate, setInflationRate] = useState<number>(6);
+  const [adjustForInflation, setAdjustForInflation] = useState<boolean>(true);
   const [projectedSavings, setProjectedSavings] = useState<number>(0);
+  const [inflationAdjustedValue, setInflationAdjustedValue] = useState<number>(0);
   const [marketContext, setMarketContext] = useState<string>('');
   const [isLoadingContext, setIsLoadingContext] = useState(false);
 
   useEffect(() => {
     calculateRetirement();
-  }, [currentAge, retirementAge, currentSavings, monthlyContribution, expectedReturn]);
+  }, [currentAge, retirementAge, currentSavings, monthlyContribution, expectedReturn, inflationRate, adjustForInflation]);
 
   const calculateRetirement = () => {
     const yearsToRetire = retirementAge - currentAge;
     if (yearsToRetire <= 0) {
       setProjectedSavings(currentSavings);
+      setInflationAdjustedValue(currentSavings);
       return;
     }
 
@@ -35,7 +39,12 @@ export default function RetirementPlanner() {
     // Future value of monthly contributions
     const fvContributions = monthlyContribution * ((Math.pow(1 + monthlyRate, months) - 1) / monthlyRate);
     
-    setProjectedSavings(fvCurrent + fvContributions);
+    const totalFV = fvCurrent + fvContributions;
+    setProjectedSavings(totalFV);
+
+    // Inflation adjustment: FV / (1 + inflation)^years
+    const adjusted = totalFV / Math.pow(1 + (inflationRate / 100), yearsToRetire);
+    setInflationAdjustedValue(adjusted);
   };
 
   const fetchMarketContext = async () => {
@@ -144,19 +153,53 @@ export default function RetirementPlanner() {
                   className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 font-bold focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
                 />
               </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-[10px] font-black text-slate-900 uppercase tracking-widest mb-2">
+                    Inflation Rate (%)
+                  </label>
+                  <input
+                    type="number"
+                    step="0.1"
+                    value={inflationRate}
+                    onChange={(e) => setInflationRate(Number(e.target.value))}
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 font-bold focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                  />
+                </div>
+                <div className="flex items-end pb-1">
+                  <label className="flex items-center gap-2 cursor-pointer group">
+                    <input
+                      type="checkbox"
+                      checked={adjustForInflation}
+                      onChange={(e) => setAdjustForInflation(e.target.checked)}
+                      className="w-5 h-5 rounded border-slate-300 text-primary focus:ring-primary"
+                    />
+                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest group-hover:text-slate-900 transition-colors">
+                      Adjust for Inflation
+                    </span>
+                  </label>
+                </div>
+              </div>
             </div>
 
             <div className="flex flex-col justify-center items-center bg-primary/5 rounded-3xl p-8 border border-primary/10 text-center">
               <Target className="w-8 h-8 text-primary mb-4" />
               <p className="text-slate-500 font-bold uppercase tracking-widest text-[10px] mb-2">Projected Corpus at Age {retirementAge}</p>
               <motion.p
-                key={projectedSavings}
+                key={adjustForInflation ? inflationAdjustedValue : projectedSavings}
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
-                className="text-4xl md:text-5xl font-black text-slate-900 mb-6"
+                className="text-4xl md:text-5xl font-black text-slate-900 mb-2"
               >
-                ₹{projectedSavings.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
+                ₹{(adjustForInflation ? inflationAdjustedValue : projectedSavings).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
               </motion.p>
+              {adjustForInflation && (
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-6">
+                  In Today's Purchasing Power (₹{projectedSavings.toLocaleString('en-IN', { maximumFractionDigits: 0 })} actual)
+                </p>
+              )}
+              {!adjustForInflation && <div className="mb-6" />}
               <div className="w-full h-px bg-primary/20 mb-6" />
               <div className="space-y-3 w-full text-xs font-bold text-slate-600 uppercase tracking-wider">
                 <div className="flex justify-between">

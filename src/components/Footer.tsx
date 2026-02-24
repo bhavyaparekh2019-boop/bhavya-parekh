@@ -2,6 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Globe, Share2, Mail, MapPin } from 'lucide-react';
 
+import Logo from './Logo';
+
 export default function Footer() {
   const sections = [
     {
@@ -23,12 +25,7 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-16">
           <div className="lg:col-span-2">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white font-bold text-lg">
-                B
-              </div>
-              <span className="text-xl font-bold text-slate-900">BHP Finance</span>
-            </div>
+            <Logo size="sm" className="mb-6" />
             <p className="text-slate-500 text-sm leading-relaxed mb-8 max-w-xs">
               Empowering individuals and institutions with strategic financial guidance and innovative market insights since 2002.
             </p>

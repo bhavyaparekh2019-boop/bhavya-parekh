@@ -10,22 +10,40 @@ export default function InvestmentROI() {
   const [monthlyContribution, setMonthlyContribution] = useState<number>(10000);
   const [timePeriod, setTimePeriod] = useState<number>(10);
   const [returnRate, setReturnRate] = useState<number>(12);
+  const [stepUpPercent, setStepUpPercent] = useState<number>(10);
   const [finalValue, setFinalValue] = useState<number>(0);
+  const [totalInvested, setTotalInvested] = useState<number>(0);
   const [marketContext, setMarketContext] = useState<string>('');
   const [isLoadingContext, setIsLoadingContext] = useState(false);
 
   useEffect(() => {
     calculateROI();
-  }, [initialInvestment, monthlyContribution, timePeriod, returnRate]);
+  }, [initialInvestment, monthlyContribution, timePeriod, returnRate, stepUpPercent]);
 
   const calculateROI = () => {
     const monthlyRate = returnRate / 100 / 12;
     const months = timePeriod * 12;
     
-    const fvInitial = initialInvestment * Math.pow(1 + monthlyRate, months);
-    const fvContributions = monthlyContribution * ((Math.pow(1 + monthlyRate, months) - 1) / monthlyRate);
+    let currentBalance = initialInvestment;
+    let currentMonthlyContribution = monthlyContribution;
+    let invested = initialInvestment;
+
+    for (let month = 1; month <= months; month++) {
+      // Add interest to current balance
+      currentBalance = currentBalance * (1 + monthlyRate);
+      
+      // Add contribution
+      currentBalance += currentMonthlyContribution;
+      invested += currentMonthlyContribution;
+
+      // Annual step-up
+      if (month % 12 === 0 && month < months) {
+        currentMonthlyContribution = currentMonthlyContribution * (1 + (stepUpPercent / 100));
+      }
+    }
     
-    setFinalValue(fvInitial + fvContributions);
+    setFinalValue(currentBalance);
+    setTotalInvested(invested);
   };
 
   const fetchMarketContext = async () => {
@@ -128,6 +146,24 @@ export default function InvestmentROI() {
                   />
                 </div>
               </div>
+
+              <div>
+                <label className="block text-[10px] font-black text-slate-900 uppercase tracking-widest mb-2">
+                  Annual SIP Step-up (%)
+                </label>
+                <div className="relative">
+                  <input
+                    type="number"
+                    value={stepUpPercent}
+                    onChange={(e) => setStepUpPercent(Number(e.target.value))}
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 font-bold focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                  />
+                  <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">%</span>
+                </div>
+                <p className="mt-2 text-[10px] text-slate-500 font-medium italic">
+                  Increasing your SIP amount every year as your income grows is the fastest way to build wealth.
+                </p>
+              </div>
             </div>
 
             <div className="flex flex-col justify-center items-center bg-slate-900 rounded-3xl p-8 text-center text-white">
@@ -144,12 +180,12 @@ export default function InvestmentROI() {
               <div className="space-y-3 w-full text-xs font-bold uppercase tracking-wider">
                 <div className="flex justify-between text-slate-400">
                   <span>Total Invested</span>
-                  <span className="text-white">₹{(initialInvestment + (monthlyContribution * timePeriod * 12)).toLocaleString('en-IN')}</span>
+                  <span className="text-white">₹{totalInvested.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</span>
                 </div>
                 <div className="flex justify-between text-slate-400">
                   <span>Total Gain</span>
                   <span className="text-emerald-400">
-                    +₹{(finalValue - (initialInvestment + (monthlyContribution * timePeriod * 12))).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
+                    +₹{(finalValue - totalInvested).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
                   </span>
                 </div>
               </div>

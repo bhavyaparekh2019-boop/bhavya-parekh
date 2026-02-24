@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Search, ChevronLeft, ChevronRight, Info, Loader2 } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Search, ChevronLeft, ChevronRight, Info, Loader2, TrendingUp, Shield } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ARTICLES, CATEGORIES } from '@/src/constants';
 import ArticleCard from '@/src/components/ArticleCard';
@@ -62,7 +63,7 @@ export default function Home() {
       const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
       const response = await ai.models.generateContent({
         model: "gemini-3-flash-preview",
-        contents: `The user is searching for "${searchQuery}" on a financial insights blog. Provide a concise, expert financial summary or answer related to this query.`,
+        contents: `The user is searching for "${searchQuery}" on an Indian financial insights blog. Provide a concise, expert financial summary or answer related to this query, specifically tailored to the Indian context (Rupees, Indian tax laws, market conditions).`,
         config: {
           tools: [{ googleSearch: {} }],
           responseMimeType: "application/json",
@@ -120,7 +121,7 @@ export default function Home() {
             transition={{ delay: 0.1 }}
             className="text-xl text-slate-600 mb-12 max-w-2xl mx-auto leading-relaxed"
           >
-            BHP Insights: Expert Market Analysis, Professional Guidance, and the tools you need to build long-term wealth.
+            BHP Insights: Expert Market Analysis, Professional Guidance, and the tools you need to build long-term wealth in the Indian market.
           </motion.p>
 
           {/* Hero Search */}
@@ -210,6 +211,96 @@ export default function Home() {
           </motion.section>
         )}
       </AnimatePresence>
+
+      {/* Knowledge Center Section */}
+      <section className="bg-slate-50 py-16 border-b border-slate-200">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-4">
+            <div>
+              <h2 className="text-3xl font-black text-slate-900 tracking-tight">Knowledge Center</h2>
+              <p className="text-slate-500 mt-1">Master the fundamentals of finance with our comprehensive guides.</p>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <motion.div 
+              whileHover={{ y: -5 }}
+              className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl transition-all group"
+            >
+              <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                <TrendingUp className="w-6 h-6" />
+              </div>
+              <h3 className="text-xl font-bold text-slate-900 mb-3">Investment</h3>
+              <p className="text-slate-600 mb-6 text-sm leading-relaxed">
+                Build a resilient portfolio and leverage compounding in India.
+              </p>
+              <Link 
+                to="/guides/investment" 
+                className="inline-flex items-center gap-2 text-primary font-bold hover:gap-3 transition-all text-sm"
+              >
+                Start Learning <ChevronRight className="w-4 h-4" />
+              </Link>
+            </motion.div>
+
+            <motion.div 
+              whileHover={{ y: -5 }}
+              className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl transition-all group"
+            >
+              <div className="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                <Shield className="w-6 h-6" />
+              </div>
+              <h3 className="text-xl font-bold text-slate-900 mb-3">Insurance</h3>
+              <p className="text-slate-600 mb-6 text-sm leading-relaxed">
+                Complete walkthrough of life and health insurance for Indian families.
+              </p>
+              <Link 
+                to="/guides/insurance" 
+                className="inline-flex items-center gap-2 text-primary font-bold hover:gap-3 transition-all text-sm"
+              >
+                Explore Guide <ChevronRight className="w-4 h-4" />
+              </Link>
+            </motion.div>
+
+            <motion.div 
+              whileHover={{ y: -5 }}
+              className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl transition-all group"
+            >
+              <div className="w-12 h-12 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-amber-600 group-hover:text-white transition-colors">
+                <Loader2 className="w-6 h-6" />
+              </div>
+              <h3 className="text-xl font-bold text-slate-900 mb-3">Retirement</h3>
+              <p className="text-slate-600 mb-6 text-sm leading-relaxed">
+                Build a bulletproof corpus for a worry-free post-work life.
+              </p>
+              <Link 
+                to="/guides/retirement" 
+                className="inline-flex items-center gap-2 text-primary font-bold hover:gap-3 transition-all text-sm"
+              >
+                Plan Future <ChevronRight className="w-4 h-4" />
+              </Link>
+            </motion.div>
+
+            <motion.div 
+              whileHover={{ y: -5 }}
+              className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl transition-all group"
+            >
+              <div className="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                <Info className="w-6 h-6" />
+              </div>
+              <h3 className="text-xl font-bold text-slate-900 mb-3">Tax Planning</h3>
+              <p className="text-slate-600 mb-6 text-sm leading-relaxed">
+                Minimize liability and maximize take-home pay legally.
+              </p>
+              <Link 
+                to="/guides/tax" 
+                className="inline-flex items-center gap-2 text-primary font-bold hover:gap-3 transition-all text-sm"
+              >
+                Save Tax <ChevronRight className="w-4 h-4" />
+              </Link>
+            </motion.div>
+          </div>
+        </div>
+      </section>
 
       {/* Category Filter Bar */}
       <div className="bg-white border-b border-slate-200 sticky top-[73px] z-40">
