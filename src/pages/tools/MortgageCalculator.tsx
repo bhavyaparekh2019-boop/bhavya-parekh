@@ -8,7 +8,7 @@ import { cn } from '@/src/lib/utils';
 export default function MortgageCalculator() {
   const [loanAmount, setLoanAmount] = useState<number>(5000000);
   const [interestRate, setInterestRate] = useState<number>(8.5);
-  const [loanTerm, setLoanTerm] = useState<number>(20);
+  const [loanTermMonths, setLoanTermMonths] = useState<number>(240);
   const [prepayment, setPrepayment] = useState<number>(0);
   const [monthlyPayment, setMonthlyPayment] = useState<number>(0);
   const [totalInterestSaved, setTotalInterestSaved] = useState<number>(0);
@@ -18,11 +18,11 @@ export default function MortgageCalculator() {
 
   useEffect(() => {
     calculatePayment();
-  }, [loanAmount, interestRate, loanTerm, prepayment]);
+  }, [loanAmount, interestRate, loanTermMonths, prepayment]);
 
   const calculatePayment = () => {
     const monthlyRate = interestRate / 100 / 12;
-    const numberOfPayments = loanTerm * 12;
+    const numberOfPayments = loanTermMonths;
     const emi =
       (loanAmount * monthlyRate * Math.pow(1 + monthlyRate, numberOfPayments)) /
       (Math.pow(1 + monthlyRate, numberOfPayments) - 1);
@@ -143,20 +143,26 @@ export default function MortgageCalculator() {
 
               <div>
                 <label className="block text-sm font-black text-slate-900 uppercase tracking-widest mb-3">
-                  Loan Term (Years)
+                  Loan Tenure (Months)
                 </label>
-                <select
-                  value={loanTerm}
-                  onChange={(e) => setLoanTerm(Number(e.target.value))}
-                  className="w-full px-6 py-4 rounded-2xl border border-slate-200 bg-slate-50 text-lg font-bold focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all appearance-none"
-                >
-                  <option value={5}>5 Years</option>
-                  <option value={10}>10 Years</option>
-                  <option value={15}>15 Years</option>
-                  <option value={20}>20 Years</option>
-                  <option value={25}>25 Years</option>
-                  <option value={30}>30 Years</option>
-                </select>
+                <input
+                  type="number"
+                  value={loanTermMonths}
+                  onChange={(e) => setLoanTermMonths(Number(e.target.value))}
+                  className="w-full px-6 py-4 rounded-2xl border border-slate-200 bg-slate-50 text-lg font-bold focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all"
+                />
+                <input
+                  type="range"
+                  min="12"
+                  max="360"
+                  step="1"
+                  value={loanTermMonths}
+                  onChange={(e) => setLoanTermMonths(Number(e.target.value))}
+                  className="w-full mt-4 accent-primary"
+                />
+                <p className="mt-2 text-xs text-slate-500 font-medium italic">
+                  {Math.floor(loanTermMonths / 12)} Years {loanTermMonths % 12} Months
+                </p>
               </div>
 
               <div>
@@ -194,13 +200,13 @@ export default function MortgageCalculator() {
                 <div className="flex justify-between">
                   <span>Total Interest</span>
                   <span className="text-slate-900 font-bold">
-                    ₹{((monthlyPayment * loanTerm * 12) - loanAmount).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
+                    ₹{((monthlyPayment * loanTermMonths) - loanAmount).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span>Total Cost</span>
                   <span className="text-slate-900 font-bold">
-                    ₹{(monthlyPayment * loanTerm * 12).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
+                    ₹{(monthlyPayment * loanTermMonths).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
                   </span>
                 </div>
               </div>

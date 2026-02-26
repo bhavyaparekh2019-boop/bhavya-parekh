@@ -83,6 +83,164 @@ export default function RetirementGuide() {
               </div>
             </section>
 
+            {/* SWP Section */}
+            <section className="bg-white p-10 rounded-[2.5rem] border border-slate-200 shadow-sm">
+              <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+                <Wallet className="w-6 h-6 text-primary" />
+                SWP: The Pension Alternative
+              </h2>
+              <div className="prose prose-slate max-w-none">
+                <p className="text-slate-600 mb-6">
+                  A Systematic Withdrawal Plan (SWP) allows you to withdraw a fixed amount from your mutual fund investments regularly. It is often more tax-efficient than traditional pensions or FDs.
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="p-5 bg-slate-50 rounded-2xl border border-slate-100">
+                    <h4 className="font-bold text-slate-900 mb-2">Tax Efficiency</h4>
+                    <p className="text-xs text-slate-500">Only the capital gains portion of the withdrawal is taxed, not the entire amount.</p>
+                  </div>
+                  <div className="p-5 bg-slate-50 rounded-2xl border border-slate-100">
+                    <h4 className="font-bold text-slate-900 mb-2">Flexibility</h4>
+                    <p className="text-xs text-slate-500">You can increase, decrease, or stop the withdrawal amount at any time.</p>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-8 pt-8 border-t border-slate-100">
+                <h4 className="font-bold text-slate-900 mb-4">The 3-Bucket Strategy for Withdrawals</h4>
+                <p className="text-sm text-slate-600 mb-6">Managing your money during retirement is as important as saving for it. The 3-bucket strategy ensures you have cash for today and growth for tomorrow.</p>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="p-4 bg-blue-50 rounded-xl border border-blue-100">
+                    <h5 className="font-bold text-blue-900 text-xs mb-1">Bucket 1: Immediate Cash</h5>
+                    <p className="text-[10px] text-blue-700">2-3 years of expenses in Liquid Funds/FDs. No market risk.</p>
+                  </div>
+                  <div className="p-4 bg-emerald-50 rounded-xl border border-emerald-100">
+                    <h5 className="font-bold text-emerald-900 text-xs mb-1">Bucket 2: Stability</h5>
+                    <p className="text-[10px] text-emerald-700">5-7 years of expenses in Debt Funds/Bonds. Low to medium risk.</p>
+                  </div>
+                  <div className="p-4 bg-amber-50 rounded-xl border border-amber-100">
+                    <h5 className="font-bold text-amber-900 text-xs mb-1">Bucket 3: Growth</h5>
+                    <p className="text-[10px] text-amber-700">Remaining corpus in Equity Funds. High risk, high long-term growth.</p>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* Age-based Allocation */}
+            <section className="bg-slate-900 text-white p-10 rounded-[2.5rem]">
+              <h2 className="text-2xl font-bold mb-8">Asset Allocation by Life Stage</h2>
+              <div className="space-y-8">
+                <div className="flex gap-6 items-center">
+                  <div className="w-24 text-primary font-bold text-xl">Age 25</div>
+                  <div className="flex-1 h-4 bg-white/10 rounded-full overflow-hidden flex">
+                    <div className="w-[80%] bg-primary h-full" title="Equity" />
+                    <div className="w-[20%] bg-slate-500 h-full" title="Debt" />
+                  </div>
+                  <div className="text-xs text-slate-400">80% Equity / 20% Debt</div>
+                </div>
+                <div className="flex gap-6 items-center">
+                  <div className="w-24 text-primary font-bold text-xl">Age 45</div>
+                  <div className="flex-1 h-4 bg-white/10 rounded-full overflow-hidden flex">
+                    <div className="w-[50%] bg-primary h-full" title="Equity" />
+                    <div className="w-[50%] bg-slate-500 h-full" title="Debt" />
+                  </div>
+                  <div className="text-xs text-slate-400">50% Equity / 50% Debt</div>
+                </div>
+                <div className="flex gap-6 items-center">
+                  <div className="w-24 text-primary font-bold text-xl">Age 65</div>
+                  <div className="flex-1 h-4 bg-white/10 rounded-full overflow-hidden flex">
+                    <div className="w-[20%] bg-primary h-full" title="Equity" />
+                    <div className="w-[80%] bg-slate-500 h-full" title="Debt" />
+                  </div>
+                  <div className="text-xs text-slate-400">20% Equity / 80% Debt</div>
+                </div>
+              </div>
+            </section>
+
+            {/* FIRE Section */}
+            <section className="bg-white p-10 rounded-[2.5rem] border border-slate-200 shadow-sm">
+              <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+                <Target className="w-6 h-6 text-primary" />
+                The FIRE Movement
+              </h2>
+              <div className="prose prose-slate max-w-none">
+                <p className="text-slate-600 mb-6">
+                  FIRE stands for **Financial Independence, Retire Early**. It's a lifestyle movement with the goal of gaining financial independence and retiring much earlier than traditional budgets and retirement plans allow.
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="p-5 bg-blue-50 rounded-2xl border border-blue-100">
+                    <h4 className="font-bold text-blue-900 mb-2">The 25x Rule</h4>
+                    <p className="text-xs text-blue-700">You need to save 25 times your annual expenses to be considered financially independent.</p>
+                  </div>
+                  <div className="p-5 bg-emerald-50 rounded-2xl border border-emerald-100">
+                    <h4 className="font-bold text-emerald-900 mb-2">The 4% Rule</h4>
+                    <p className="text-xs text-emerald-700">You can safely withdraw 4% of your portfolio annually without running out of money.</p>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-8 pt-8 border-t border-slate-100">
+                <h4 className="font-bold text-slate-900 mb-4">Reverse Mortgage: An Option for Seniors</h4>
+                <p className="text-sm text-slate-600 mb-4">
+                  For senior citizens who own a home but have limited cash flow, a reverse mortgage allows them to receive a regular stream of income from the bank against the value of their property.
+                </p>
+                <ul className="text-xs text-slate-500 space-y-2">
+                  <li>• You continue to live in the house.</li>
+                  <li>• No monthly repayments required during your lifetime.</li>
+                  <li>• The loan is settled by selling the house after the owner's demise or by the heirs.</li>
+                </ul>
+              </div>
+            </section>
+
+            <section className="bg-white p-10 rounded-[2.5rem] border border-slate-200 shadow-sm">
+              <h2 className="text-2xl font-bold text-slate-900 mb-6">Estate Planning: Securing Your Legacy</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100">
+                  <h4 className="font-bold text-slate-900 mb-2">Wills & Nominations</h4>
+                  <p className="text-xs text-slate-600 mb-4">A nominee is only a "custodian." A Will is the legal document that determines who actually inherits your assets.</p>
+                  <ul className="text-[10px] text-slate-500 space-y-1">
+                    <li>• Register your Will for better legal standing.</li>
+                    <li>• Ensure all bank accounts and folios have nominees.</li>
+                  </ul>
+                </div>
+                <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100">
+                  <h4 className="font-bold text-slate-900 mb-2">Succession Planning</h4>
+                  <p className="text-xs text-slate-600 mb-4">For business owners, planning the transition of leadership and ownership is critical for continuity.</p>
+                  <ul className="text-[10px] text-slate-500 space-y-1">
+                    <li>• Create a family trust for complex estates.</li>
+                    <li>• Clearly define roles for the next generation.</li>
+                  </ul>
+                </div>
+              </div>
+            </section>
+
+            {/* Inflation Section */}
+            <section className="bg-rose-50 p-10 rounded-[2.5rem] border border-rose-100">
+              <h2 className="text-2xl font-bold text-rose-900 mb-6 flex items-center gap-3">
+                <AlertCircle className="w-6 h-6 text-rose-600" />
+                The Silent Killer: Inflation
+              </h2>
+              <div className="prose prose-slate max-w-none">
+                <p className="text-rose-800 mb-6">
+                  Inflation erodes the purchasing power of your money. What costs ₹1 Lakh today will cost ₹4.3 Lakh in 25 years at 6% inflation.
+                </p>
+                <div className="bg-white p-6 rounded-2xl shadow-sm">
+                  <h4 className="font-bold text-slate-900 mb-4">Impact of 6% Inflation</h4>
+                  <div className="space-y-3">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-slate-500">Today</span>
+                      <span className="font-bold text-slate-900">₹1,00,000</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-slate-500">In 10 Years</span>
+                      <span className="font-bold text-slate-900">₹1,79,085</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-slate-500">In 20 Years</span>
+                      <span className="font-bold text-slate-900">₹3,20,714</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
             {/* Deep Dive Section */}
             <section className="bg-white p-10 rounded-[2.5rem] border border-slate-200">
               <h2 className="text-2xl font-bold text-slate-900 mb-6">The Magic of NPS (National Pension System)</h2>

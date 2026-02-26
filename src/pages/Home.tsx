@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, ChevronLeft, ChevronRight, Info, Loader2, TrendingUp, Shield } from 'lucide-react';
+import { Search, ChevronLeft, ChevronRight, Info, Loader2, TrendingUp, Shield, Sparkles, BarChart2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ARTICLES, CATEGORIES } from '@/src/constants';
 import ArticleCard from '@/src/components/ArticleCard';
@@ -222,7 +222,7 @@ export default function Home() {
             </div>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <motion.div 
               whileHover={{ y: -5 }}
               className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl transition-all group"
@@ -296,6 +296,44 @@ export default function Home() {
                 className="inline-flex items-center gap-2 text-primary font-bold hover:gap-3 transition-all text-sm"
               >
                 Save Tax <ChevronRight className="w-4 h-4" />
+              </Link>
+            </motion.div>
+
+            <motion.div 
+              whileHover={{ y: -5 }}
+              className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl transition-all group"
+            >
+              <div className="w-12 h-12 bg-rose-50 text-rose-600 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-rose-600 group-hover:text-white transition-colors">
+                <Sparkles className="w-6 h-6" />
+              </div>
+              <h3 className="text-xl font-bold text-slate-900 mb-3">Mutual Funds</h3>
+              <p className="text-slate-600 mb-6 text-sm leading-relaxed">
+                Master SIPs, ELSS, and professional wealth management.
+              </p>
+              <Link 
+                to="/guides/mutual-funds" 
+                className="inline-flex items-center gap-2 text-primary font-bold hover:gap-3 transition-all text-sm"
+              >
+                View Guide <ChevronRight className="w-4 h-4" />
+              </Link>
+            </motion.div>
+
+            <motion.div 
+              whileHover={{ y: -5 }}
+              className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl transition-all group"
+            >
+              <div className="w-12 h-12 bg-slate-50 text-slate-600 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                <BarChart2 className="w-6 h-6" />
+              </div>
+              <h3 className="text-xl font-bold text-slate-900 mb-3">Stock Market</h3>
+              <p className="text-slate-600 mb-6 text-sm leading-relaxed">
+                Demystifying the stock market for beginners in India.
+              </p>
+              <Link 
+                to="/guides/stocks" 
+                className="inline-flex items-center gap-2 text-primary font-bold hover:gap-3 transition-all text-sm"
+              >
+                Learn Basics <ChevronRight className="w-4 h-4" />
               </Link>
             </motion.div>
           </div>

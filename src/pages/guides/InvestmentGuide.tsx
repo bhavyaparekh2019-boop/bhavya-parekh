@@ -121,6 +121,33 @@ export default function InvestmentGuide() {
               </div>
             </section>
 
+            <section className="bg-rose-50 p-8 rounded-3xl border border-rose-100">
+              <h2 className="text-2xl font-bold text-rose-900 mb-6 flex items-center gap-3">
+                <TrendingUp className="w-6 h-6 text-rose-600" />
+                Inflation: The Silent Wealth Eroder
+              </h2>
+              <div className="prose prose-slate max-w-none text-rose-900">
+                <p>
+                  Inflation is the rate at which the general level of prices for goods and services is rising. If your investments don't grow faster than inflation, you are effectively losing money.
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                  <div className="bg-white p-5 rounded-2xl shadow-sm border border-rose-100">
+                    <h4 className="font-bold mb-2">Real Rate of Return</h4>
+                    <p className="text-sm text-slate-600">
+                      Real Return = Nominal Return - Inflation Rate. 
+                      If your FD gives 7% and inflation is 6%, your real growth is only 1%.
+                    </p>
+                  </div>
+                  <div className="bg-white p-5 rounded-2xl shadow-sm border border-rose-100">
+                    <h4 className="font-bold mb-2">Purchasing Power</h4>
+                    <p className="text-sm text-slate-600">
+                      ₹1 Lakh today will only be worth ₹54,000 in 10 years if inflation stays at 6%. You must invest in assets that beat inflation.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </section>
+
             <section className="bg-white p-8 rounded-3xl border border-slate-200">
               <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-3">
                 <Target className="w-6 h-6 text-primary" />
@@ -146,6 +173,123 @@ export default function InvestmentGuide() {
                   <div className="p-4 bg-rose-50 rounded-xl border border-rose-100">
                     <h4 className="font-bold text-rose-900 text-sm mb-1">Wealth Creation</h4>
                     <p className="text-xs text-rose-700">Focus on growing capital over time. Subject to market volatility.</p>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section className="bg-white p-8 rounded-3xl border border-slate-200">
+              <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+                <Target className="w-6 h-6 text-primary" />
+                Strategic Asset Allocation
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                  <h4 className="font-bold text-slate-900 mb-3">Aggressive (Age 20-35)</h4>
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="h-4 w-3/4 bg-primary rounded-full" title="Equity" />
+                    <div className="h-4 w-1/4 bg-slate-200 rounded-full" title="Debt" />
+                  </div>
+                  <ul className="text-xs text-slate-600 space-y-2">
+                    <li>• 70-80% Equity for long-term growth</li>
+                    <li>• 20-30% Debt for stability</li>
+                    <li>• High risk tolerance, long horizon</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="font-bold text-slate-900 mb-3">Conservative (Age 50+)</h4>
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="h-4 w-1/3 bg-primary rounded-full" title="Equity" />
+                    <div className="h-4 w-2/3 bg-slate-200 rounded-full" title="Debt" />
+                  </div>
+                  <ul className="text-xs text-slate-600 space-y-2">
+                    <li>• 30-40% Equity to beat inflation</li>
+                    <li>• 60-70% Debt for capital protection</li>
+                    <li>• Low risk tolerance, focus on income</li>
+                  </ul>
+                </div>
+              </div>
+              <div className="mt-8 pt-8 border-t border-slate-100">
+                <h4 className="font-bold text-slate-900 mb-4">Portfolio Rebalancing</h4>
+                <p className="text-sm text-slate-600 mb-4">
+                  Over time, some assets grow faster than others, changing your risk profile. Rebalancing is the process of selling high-performing assets and buying underperforming ones to bring your portfolio back to its target allocation.
+                </p>
+                <div className="bg-slate-50 p-4 rounded-xl text-xs text-slate-500 italic">
+                  Tip: Rebalance your portfolio at least once a year or whenever an asset class deviates by more than 5-10% from its target.
+                </div>
+              </div>
+            </section>
+
+            <section className="bg-white p-8 rounded-3xl border border-slate-200">
+              <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+                <Landmark className="w-6 h-6 text-primary" />
+                Active vs. Passive Investing
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100">
+                  <h4 className="font-bold text-slate-900 mb-2">Active Investing</h4>
+                  <p className="text-xs text-slate-600 mb-4">Aims to "beat the market" through research, timing, and individual stock picking.</p>
+                  <ul className="text-[10px] text-slate-500 space-y-1">
+                    <li>• Higher potential returns</li>
+                    <li>• Higher costs (management fees)</li>
+                    <li>• Requires significant time and expertise</li>
+                  </ul>
+                </div>
+                <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100">
+                  <h4 className="font-bold text-slate-900 mb-2">Passive Investing</h4>
+                  <p className="text-xs text-slate-600 mb-4">Aims to "match the market" by tracking an index like Nifty 50.</p>
+                  <ul className="text-[10px] text-slate-500 space-y-1">
+                    <li>• Lower costs (Index funds/ETFs)</li>
+                    <li>• Consistent market returns</li>
+                    <li>• "Set it and forget it" approach</li>
+                  </ul>
+                </div>
+              </div>
+            </section>
+
+            <section className="bg-amber-50 p-8 rounded-3xl border border-amber-100">
+              <h2 className="text-2xl font-bold text-amber-900 mb-6 flex items-center gap-3">
+                <Target className="w-6 h-6 text-amber-600" />
+                Behavioral Finance: The Mind Game
+              </h2>
+              <p className="text-sm text-amber-800 mb-6">
+                Investing is 20% knowledge and 80% behavior. Your own psychology is often your biggest enemy.
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="bg-white p-4 rounded-xl shadow-sm">
+                  <h5 className="font-bold text-slate-900 text-xs mb-1">Loss Aversion</h5>
+                  <p className="text-[10px] text-slate-500">The pain of losing ₹10,000 is twice as powerful as the joy of gaining ₹10,000.</p>
+                </div>
+                <div className="bg-white p-4 rounded-xl shadow-sm">
+                  <h5 className="font-bold text-slate-900 text-xs mb-1">Herd Mentality</h5>
+                  <p className="text-[10px] text-slate-500">Buying just because everyone else is buying (FOMO) often leads to buying at peaks.</p>
+                </div>
+                <div className="bg-white p-4 rounded-xl shadow-sm">
+                  <h5 className="font-bold text-slate-900 text-xs mb-1">Confirmation Bias</h5>
+                  <p className="text-[10px] text-slate-500">Seeking information that only supports your existing beliefs about a stock.</p>
+                </div>
+              </div>
+            </section>
+
+            <section className="bg-slate-900 text-white p-8 rounded-3xl">
+              <h2 className="text-2xl font-bold mb-6">Taxation on Investments (India)</h2>
+              <div className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="border-l-2 border-primary pl-4">
+                    <h4 className="font-bold text-primary mb-2">Equity LTCG</h4>
+                    <p className="text-sm text-slate-300">10% tax on gains exceeding ₹1 Lakh in a financial year (if held {'>'} 1 year).</p>
+                  </div>
+                  <div className="border-l-2 border-primary pl-4">
+                    <h4 className="font-bold text-primary mb-2">Equity STCG</h4>
+                    <p className="text-sm text-slate-300">15% tax on gains if sold within 1 year of purchase.</p>
+                  </div>
+                  <div className="border-l-2 border-slate-500 pl-4">
+                    <h4 className="font-bold text-slate-400 mb-2">Debt Taxation</h4>
+                    <p className="text-sm text-slate-300">Gains are added to your income and taxed as per your applicable income tax slab.</p>
+                  </div>
+                  <div className="border-l-2 border-slate-500 pl-4">
+                    <h4 className="font-bold text-slate-400 mb-2">Dividend Tax</h4>
+                    <p className="text-sm text-slate-300">Dividends are taxed in the hands of the investor at their slab rate.</p>
                   </div>
                 </div>
               </div>

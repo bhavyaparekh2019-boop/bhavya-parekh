@@ -89,6 +89,19 @@ export default function MutualFundsGuide() {
                   </ul>
                 </div>
               </div>
+              <div className="mt-8 pt-8 border-t border-slate-100">
+                <h4 className="font-bold text-slate-900 mb-4">Advanced Strategies: STP & SWP</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="p-5 bg-slate-50 rounded-2xl border border-slate-100">
+                    <h5 className="font-bold text-slate-900 text-sm mb-2">STP (Systematic Transfer Plan)</h5>
+                    <p className="text-xs text-slate-500">Transfer a fixed amount from one fund (usually Debt) to another (usually Equity). Ideal for investing a large lumpsum gradually to avoid market timing risk.</p>
+                  </div>
+                  <div className="p-5 bg-slate-50 rounded-2xl border border-slate-100">
+                    <h5 className="font-bold text-slate-900 text-sm mb-2">SWP (Systematic Withdrawal Plan)</h5>
+                    <p className="text-xs text-slate-500">Withdraw a fixed amount regularly from your fund. Ideal for generating a steady monthly income during retirement while the remaining capital stays invested.</p>
+                  </div>
+                </div>
+              </div>
             </section>
 
             {/* Fund Types Grid */}
@@ -120,6 +133,92 @@ export default function MutualFundsGuide() {
                       ))}
                     </div>
                   </motion.div>
+                ))}
+              </div>
+              <div className="mt-8 bg-white p-8 rounded-3xl border border-slate-200">
+                <h4 className="font-bold text-slate-900 mb-6">How to Read a Fund Factsheet</h4>
+                <p className="text-sm text-slate-600 mb-6">The monthly factsheet is the most important document for an investor. Here's what to look for:</p>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="p-4 bg-slate-50 rounded-xl">
+                    <h5 className="font-bold text-slate-900 text-xs mb-1">Portfolio Disclosure</h5>
+                    <p className="text-[10px] text-slate-500">Check the top 10 stocks and sector allocation to understand where your money is going.</p>
+                  </div>
+                  <div className="p-4 bg-slate-50 rounded-xl">
+                    <h5 className="font-bold text-slate-900 text-xs mb-1">Standard Deviation</h5>
+                    <p className="text-[10px] text-slate-500">Measures volatility. A lower SD means the fund's returns are more stable.</p>
+                  </div>
+                  <div className="p-4 bg-slate-50 rounded-xl">
+                    <h5 className="font-bold text-slate-900 text-xs mb-1">Sharpe Ratio</h5>
+                    <p className="text-[10px] text-slate-500">Measures risk-adjusted returns. A higher Sharpe ratio is better.</p>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section className="bg-white p-10 rounded-[2.5rem] border border-slate-200 shadow-sm">
+              <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+                <BarChart3 className="w-6 h-6 text-primary" />
+                Understanding Risk Ratios
+              </h2>
+              <div className="space-y-6">
+                <div className="flex items-start gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                  <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm shrink-0 font-bold text-primary">α</div>
+                  <div>
+                    <h4 className="font-bold text-slate-900 text-sm mb-1">Alpha</h4>
+                    <p className="text-xs text-slate-600">The excess return of a fund relative to the return of its benchmark index. A positive alpha means the fund manager has outperformed the market.</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                  <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm shrink-0 font-bold text-primary">β</div>
+                  <div>
+                    <h4 className="font-bold text-slate-900 text-sm mb-1">Beta</h4>
+                    <p className="text-xs text-slate-600">Measures the fund's sensitivity to market movements. A beta of 1 means the fund moves with the market. {'>'}1 means it's more volatile, {'<'}1 means it's less volatile.</p>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* Taxation Section */}
+            <section className="bg-white p-10 rounded-[2.5rem] border border-slate-200 shadow-sm">
+              <h2 className="text-2xl font-bold text-slate-900 mb-8 flex items-center gap-3">
+                <BarChart3 className="w-6 h-6 text-primary" />
+                Taxation on Mutual Funds (India)
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100">
+                  <h4 className="font-bold text-slate-900 mb-3">Equity-Oriented Funds</h4>
+                  <ul className="text-sm text-slate-600 space-y-3">
+                    <li><span className="font-bold text-slate-900">STCG (held {'<'} 1 yr):</span> 15% flat tax.</li>
+                    <li><span className="font-bold text-slate-900">LTCG (held {'>'} 1 yr):</span> 10% tax on gains above ₹1 Lakh.</li>
+                  </ul>
+                </div>
+                <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100">
+                  <h4 className="font-bold text-slate-900 mb-3">Debt-Oriented Funds</h4>
+                  <ul className="text-sm text-slate-600 space-y-3">
+                    <li><span className="font-bold text-slate-900">All Gains:</span> Taxed as per your income tax slab rate (as per latest 2023 rules).</li>
+                    <li><span className="font-bold text-slate-900">Indexation:</span> No longer available for debt funds.</li>
+                  </ul>
+                </div>
+              </div>
+            </section>
+
+            {/* Common Mistakes */}
+            <section className="bg-rose-50 p-10 rounded-[2.5rem] border border-rose-100">
+              <h2 className="text-2xl font-bold text-rose-900 mb-8 flex items-center gap-3">
+                <Info className="w-6 h-6 text-rose-600" />
+                Common Investing Mistakes
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {[
+                  { title: 'Chasing Past Performance', desc: 'Investing in last year\'s top performer without understanding the strategy.' },
+                  { title: 'Stopping SIPs in Bear Markets', desc: 'The best time to buy is when markets are low. Stopping SIPs kills rupee cost averaging.' },
+                  { title: 'Ignoring Expense Ratios', desc: 'High expense ratios can eat up a significant portion of your wealth over 20 years.' },
+                  { title: 'Over-diversification', desc: 'Holding 20+ funds doesn\'t reduce risk; it just makes tracking difficult and dilutes returns.' }
+                ].map((m, i) => (
+                  <div key={i} className="bg-white p-5 rounded-2xl border border-rose-200">
+                    <h4 className="font-bold text-rose-900 mb-1">{m.title}</h4>
+                    <p className="text-xs text-rose-700 leading-relaxed">{m.desc}</p>
+                  </div>
                 ))}
               </div>
             </section>

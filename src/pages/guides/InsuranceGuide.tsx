@@ -143,37 +143,148 @@ export default function InsuranceGuide() {
                   </p>
                 </div>
               </div>
+              <div className="mt-8 pt-8 border-t border-slate-100">
+                <h4 className="font-bold text-slate-900 mb-4">How Much Life Cover Do You Need? (HLV)</h4>
+                <p className="text-sm text-slate-600 mb-4">
+                  Human Life Value (HLV) is a method to calculate the amount of life insurance you need based on your income, expenses, liabilities, and future goals.
+                </p>
+                <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                  <p className="text-xs font-bold text-slate-900 mb-2">The Thumb Rule:</p>
+                  <p className="text-sm text-primary font-bold mb-4">Life Cover = (Annual Income × 15) + Outstanding Debts - Existing Assets</p>
+                  <p className="text-xs text-slate-500">Example: If you earn ₹10 Lakh/year and have a ₹50 Lakh home loan, you should ideally have a cover of at least ₹2 Crore.</p>
+                </div>
+              </div>
             </section>
 
-            <section className="bg-slate-50 p-8 rounded-3xl border border-slate-200">
-              <h2 className="text-2xl font-bold text-slate-900 mb-6">Critical Health Insurance Terms</h2>
-              <div className="space-y-6">
-                <div className="flex gap-4">
-                  <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm shrink-0">
-                    <span className="font-bold text-primary">01</span>
+            <section className="bg-white p-8 rounded-3xl border border-slate-200">
+              <h2 className="text-2xl font-bold text-slate-900 mb-6">Term Insurance vs. Endowment Plans</h2>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm text-left">
+                  <thead className="text-[10px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-100">
+                    <tr>
+                      <th className="pb-4">Feature</th>
+                      <th className="pb-4">Term Insurance</th>
+                      <th className="pb-4">Endowment Plan</th>
+                    </tr>
+                  </thead>
+                  <tbody className="text-slate-600">
+                    <tr className="border-b border-slate-50">
+                      <td className="py-4 font-bold text-slate-900">Purpose</td>
+                      <td className="py-4">Pure Protection</td>
+                      <td className="py-4">Protection + Savings</td>
+                    </tr>
+                    <tr className="border-b border-slate-50">
+                      <td className="py-4 font-bold text-slate-900">Premium</td>
+                      <td className="py-4 text-emerald-600 font-bold">Very Low</td>
+                      <td className="py-4 text-rose-600 font-bold">High</td>
+                    </tr>
+                    <tr className="border-b border-slate-50">
+                      <td className="py-4 font-bold text-slate-900">Maturity Benefit</td>
+                      <td className="py-4">None (Usually)</td>
+                      <td className="py-4">Sum Assured + Bonus</td>
+                    </tr>
+                    <tr>
+                      <td className="py-4 font-bold text-slate-900">Ideal For</td>
+                      <td className="py-4">High Life Cover at low cost</td>
+                      <td className="py-4">Disciplined long-term saving</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+
+            <section className="bg-primary/5 p-8 rounded-3xl border border-primary/20">
+              <h2 className="text-2xl font-bold text-slate-900 mb-6">Essential Insurance Riders</h2>
+              <p className="text-sm text-slate-600 mb-6">Riders are add-ons that provide extra protection for a small additional premium.</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="bg-white p-4 rounded-xl border border-slate-100">
+                  <h4 className="font-bold text-slate-900 text-sm mb-1">Accidental Death Benefit</h4>
+                  <p className="text-xs text-slate-500">Additional sum assured paid if death occurs due to an accident.</p>
+                </div>
+                <div className="bg-white p-4 rounded-xl border border-slate-100">
+                  <h4 className="font-bold text-slate-900 text-sm mb-1">Critical Illness Rider</h4>
+                  <p className="text-xs text-slate-500">Lump sum payment on diagnosis of specified major illnesses (Cancer, Heart Attack, etc.).</p>
+                </div>
+                <div className="bg-white p-4 rounded-xl border border-slate-100">
+                  <h4 className="font-bold text-slate-900 text-sm mb-1">Waiver of Premium</h4>
+                  <p className="text-xs text-slate-500">Future premiums are waived if the policyholder becomes permanently disabled.</p>
+                </div>
+                <div className="bg-white p-4 rounded-xl border border-slate-100">
+                  <h4 className="font-bold text-slate-900 text-sm mb-1">Hospital Cash Rider</h4>
+                  <p className="text-xs text-slate-500">Daily allowance for each day of hospitalization to cover non-medical expenses.</p>
+                </div>
+              </div>
+            </section>
+
+            <section className="bg-white p-8 rounded-3xl border border-slate-200">
+              <h2 className="text-2xl font-bold text-slate-900 mb-6">Common Insurance Exclusions</h2>
+              <p className="text-sm text-slate-600 mb-6">It's equally important to know what your policy does NOT cover to avoid surprises during claims.</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="p-5 bg-rose-50 rounded-2xl border border-rose-100">
+                  <h4 className="font-bold text-rose-900 text-sm mb-2">Health Insurance</h4>
+                  <ul className="text-xs text-rose-700 space-y-1">
+                    <li>• Cosmetic surgery or obesity treatment</li>
+                    <li>• Injuries due to war or nuclear perils</li>
+                    <li>• Self-inflicted injuries or suicide attempts</li>
+                    <li>• Non-medical expenses (consumables)</li>
+                  </ul>
+                </div>
+                <div className="p-5 bg-rose-50 rounded-2xl border border-rose-100">
+                  <h4 className="font-bold text-rose-900 text-sm mb-2">Life Insurance</h4>
+                  <ul className="text-xs text-rose-700 space-y-1">
+                    <li>• Suicide within the first year of policy</li>
+                    <li>• Death due to participation in illegal acts</li>
+                    <li>• Death due to hazardous sports (unless declared)</li>
+                    <li>• Misstatement of age or lifestyle habits</li>
+                  </ul>
+                </div>
+              </div>
+            </section>
+
+            <section className="bg-white p-8 rounded-3xl border border-slate-200">
+              <h2 className="text-2xl font-bold text-slate-900 mb-6">Group vs. Individual Health Insurance</h2>
+              <div className="prose prose-slate max-w-none">
+                <p className="text-sm text-slate-600 mb-6">
+                  While your company's group insurance is a great perk, relying solely on it is risky. Here's why you need an individual plan:
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="p-5 bg-slate-50 rounded-2xl border border-slate-100">
+                    <h4 className="font-bold text-slate-900 text-sm mb-2">Continuity Risk</h4>
+                    <p className="text-xs text-slate-500">If you lose your job or change companies, you lose your coverage. An individual plan stays with you for life.</p>
                   </div>
-                  <div>
-                    <h4 className="font-bold text-slate-900 mb-1">Waiting Period</h4>
-                    <p className="text-sm text-slate-600">The time you must wait before certain diseases or pre-existing conditions are covered (usually 2-4 years).</p>
+                  <div className="p-5 bg-slate-50 rounded-2xl border border-slate-100">
+                    <h4 className="font-bold text-slate-900 text-sm mb-2">Customization</h4>
+                    <p className="text-xs text-slate-500">Group plans are "one size fits all." Individual plans allow you to choose riders and coverage limits that suit your family.</p>
                   </div>
                 </div>
-                <div className="flex gap-4">
-                  <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm shrink-0">
-                    <span className="font-bold text-primary">02</span>
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-slate-900 mb-1">Co-payment</h4>
-                    <p className="text-sm text-slate-600">A fixed percentage of the claim amount that the policyholder must pay from their own pocket.</p>
-                  </div>
+              </div>
+            </section>
+
+            <section className="bg-slate-900 text-white p-8 rounded-3xl">
+              <h2 className="text-2xl font-bold mb-8 flex items-center gap-3">
+                <CheckCircle2 className="w-6 h-6 text-primary" />
+                The Claim Settlement Process
+              </h2>
+              <div className="space-y-8">
+                <div className="relative pl-8 border-l border-white/20">
+                  <div className="absolute -left-3 top-0 w-6 h-6 bg-primary rounded-full flex items-center justify-center text-slate-900 text-xs font-bold">1</div>
+                  <h4 className="font-bold mb-1">Intimation</h4>
+                  <p className="text-sm text-slate-400">Notify the insurer immediately (within 24-48 hours) about the event (hospitalization or death).</p>
                 </div>
-                <div className="flex gap-4">
-                  <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm shrink-0">
-                    <span className="font-bold text-primary">03</span>
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-slate-900 mb-1">No Claim Bonus (NCB)</h4>
-                    <p className="text-sm text-slate-600">A reward for not making any claims during the policy year, usually in the form of increased sum insured.</p>
-                  </div>
+                <div className="relative pl-8 border-l border-white/20">
+                  <div className="absolute -left-3 top-0 w-6 h-6 bg-primary rounded-full flex items-center justify-center text-slate-900 text-xs font-bold">2</div>
+                  <h4 className="font-bold mb-1">Documentation</h4>
+                  <p className="text-sm text-slate-400">Submit all required documents (medical reports, bills, death certificate, etc.) to the TPA or insurer.</p>
+                </div>
+                <div className="relative pl-8 border-l border-white/20">
+                  <div className="absolute -left-3 top-0 w-6 h-6 bg-primary rounded-full flex items-center justify-center text-slate-900 text-xs font-bold">3</div>
+                  <h4 className="font-bold mb-1">Verification</h4>
+                  <p className="text-sm text-slate-400">The insurer verifies the documents and may conduct an investigation if necessary.</p>
+                </div>
+                <div className="relative pl-8">
+                  <div className="absolute -left-3 top-0 w-6 h-6 bg-primary rounded-full flex items-center justify-center text-slate-900 text-xs font-bold">4</div>
+                  <h4 className="font-bold mb-1">Settlement</h4>
+                  <p className="text-sm text-slate-400">Once approved, the claim amount is paid directly to the hospital (cashless) or reimbursed to the policyholder.</p>
                 </div>
               </div>
             </section>

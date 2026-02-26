@@ -10,10 +10,11 @@ export default function Sidebar() {
   const [isLoadingPulse, setIsLoadingPulse] = useState(false);
 
   const tools = [
-    { name: 'Mortgage Calculator', desc: 'Estimate monthly payments', icon: Home, path: '/tools/mortgage' },
+    { name: 'SIP Calculator', desc: 'Calculate mutual fund returns', icon: TrendingUp, path: '/tools/sip' },
+    { name: 'Home Loan EMI', desc: 'Estimate monthly payments', icon: Home, path: '/tools/mortgage' },
     { name: 'Retirement Planner', desc: 'Calculate future savings', icon: PiggyBank, path: '/tools/retirement' },
     { name: 'Insurance Coverage', desc: 'Assess your protection needs', icon: Shield, path: '/tools/insurance' },
-    { name: 'Investment ROI', desc: 'Project portfolio growth', icon: TrendingUp, path: '/tools/roi' },
+    { name: 'Investment ROI', desc: 'Project portfolio growth', icon: Calculator, path: '/tools/roi' },
   ];
 
   const resources = [
@@ -131,6 +132,20 @@ export default function Sidebar() {
           >
             <h4 className="text-sm font-bold text-slate-900 group-hover:text-primary transition-colors">Tax Strategy 2024</h4>
             <p className="text-xs text-slate-500 mt-1">Smart ways to save more.</p>
+          </Link>
+          <Link 
+            to="/guides/mutual-funds"
+            className="block p-4 bg-slate-50 rounded-xl border border-transparent hover:border-primary transition-all group"
+          >
+            <h4 className="text-sm font-bold text-slate-900 group-hover:text-primary transition-colors">Mutual Funds Pro</h4>
+            <p className="text-xs text-slate-500 mt-1">Mastering SIPs and ELSS.</p>
+          </Link>
+          <Link 
+            to="/guides/stocks"
+            className="block p-4 bg-slate-50 rounded-xl border border-transparent hover:border-primary transition-all group"
+          >
+            <h4 className="text-sm font-bold text-slate-900 group-hover:text-primary transition-colors">Stock Market Basics</h4>
+            <p className="text-xs text-slate-500 mt-1">Fundamentals for beginners.</p>
           </Link>
         </div>
       </div>

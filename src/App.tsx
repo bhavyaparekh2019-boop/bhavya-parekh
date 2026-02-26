@@ -9,10 +9,14 @@ import MortgageCalculator from '@/src/pages/tools/MortgageCalculator';
 import RetirementPlanner from '@/src/pages/tools/RetirementPlanner';
 import InvestmentROI from '@/src/pages/tools/InvestmentROI';
 import InsuranceCalculator from '@/src/pages/tools/InsuranceCalculator';
+import SIPCalculator from '@/src/pages/tools/SIPCalculator';
 import InsuranceGuide from '@/src/pages/guides/InsuranceGuide';
 import InvestmentGuide from '@/src/pages/guides/InvestmentGuide';
 import RetirementGuide from '@/src/pages/guides/RetirementGuide';
 import TaxGuide from '@/src/pages/guides/TaxGuide';
+import MutualFundsGuide from '@/src/pages/guides/MutualFundsGuide';
+import StockMarketGuide from '@/src/pages/guides/StockMarketGuide';
+import Insights from '@/src/pages/Insights';
 
 export default function App() {
   return (
@@ -27,10 +31,14 @@ export default function App() {
             <Route path="/tools/retirement" element={<RetirementPlanner />} />
             <Route path="/tools/roi" element={<InvestmentROI />} />
             <Route path="/tools/insurance" element={<InsuranceCalculator />} />
+            <Route path="/tools/sip" element={<SIPCalculator />} />
             <Route path="/guides/insurance" element={<InsuranceGuide />} />
             <Route path="/guides/investment" element={<InvestmentGuide />} />
             <Route path="/guides/retirement" element={<RetirementGuide />} />
             <Route path="/guides/tax" element={<TaxGuide />} />
+            <Route path="/guides/mutual-funds" element={<MutualFundsGuide />} />
+            <Route path="/guides/stocks" element={<StockMarketGuide />} />
+            <Route path="/insights" element={<Insights />} />
             <Route path="*" element={<Home />} />
           </Routes>
         </div>

@@ -90,6 +90,196 @@ export default function TaxGuide() {
                   </motion.div>
                 ))}
               </div>
+              <div className="mt-8 bg-white p-8 rounded-3xl border border-slate-200">
+                <h4 className="font-bold text-slate-900 mb-4">Other Important Deductions</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="p-5 bg-slate-50 rounded-2xl border border-slate-100">
+                    <h5 className="font-bold text-slate-900 text-sm mb-1">Section 80G: Donations</h5>
+                    <p className="text-[10px] text-slate-500">Donations to certain relief funds and charitable institutions can be claimed as a deduction (50% or 100% depending on the institution).</p>
+                  </div>
+                  <div className="p-5 bg-slate-50 rounded-2xl border border-slate-100">
+                    <h5 className="font-bold text-slate-900 text-sm mb-1">Standard Deduction</h5>
+                    <p className="text-[10px] text-slate-500">A flat deduction of ₹50,000 (increased to ₹75,000 in 2024 for New Regime) available to all salaried individuals and pensioners.</p>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* Capital Gains Summary */}
+            <section className="bg-white p-10 rounded-[2.5rem] border border-slate-200 shadow-sm">
+              <h2 className="text-2xl font-bold text-slate-900 mb-8 flex items-center gap-3">
+                <Calculator className="w-6 h-6 text-primary" />
+                Capital Gains Tax Summary
+              </h2>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm text-left">
+                  <thead className="text-[10px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-100">
+                    <tr>
+                      <th className="pb-4">Asset Type</th>
+                      <th className="pb-4">Short Term (STCG)</th>
+                      <th className="pb-4">Long Term (LTCG)</th>
+                    </tr>
+                  </thead>
+                  <tbody className="text-slate-600">
+                    <tr className="border-b border-slate-50">
+                      <td className="py-4 font-bold text-slate-900">Listed Stocks/Equity MF</td>
+                      <td className="py-4">15% (held {'<'} 1 yr)</td>
+                      <td className="py-4">10% (held {'>'} 1 yr, gains {'>'} ₹1L)</td>
+                    </tr>
+                    <tr className="border-b border-slate-50">
+                      <td className="py-4 font-bold text-slate-900">Debt Mutual Funds</td>
+                      <td className="py-4">As per Slab Rate</td>
+                      <td className="py-4">As per Slab Rate (No Indexation)</td>
+                    </tr>
+                    <tr className="border-b border-slate-50">
+                      <td className="py-4 font-bold text-slate-900">Real Estate</td>
+                      <td className="py-4">As per Slab Rate</td>
+                      <td className="py-4">20% with Indexation (held {'>'} 2 yrs)</td>
+                    </tr>
+                    <tr>
+                      <td className="py-4 font-bold text-slate-900">Gold</td>
+                      <td className="py-4">As per Slab Rate</td>
+                      <td className="py-4">20% with Indexation (held {'>'} 3 yrs)</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div className="mt-8 pt-8 border-t border-slate-100">
+                <h4 className="font-bold text-slate-900 mb-4">Tax Loss Harvesting</h4>
+                <p className="text-sm text-slate-600 mb-4">
+                  A strategy to reduce your tax liability by selling stocks or mutual funds that are currently at a loss to offset the capital gains from other investments.
+                </p>
+                <div className="bg-emerald-50 p-4 rounded-xl text-xs text-emerald-700 italic">
+                  Example: If you have ₹50,000 in gains and ₹20,000 in losses, you can sell the loss-making asset to bring your taxable gain down to ₹30,000.
+                </div>
+              </div>
+            </section>
+
+            <section className="bg-white p-10 rounded-[2.5rem] border border-slate-200 shadow-sm">
+              <h2 className="text-2xl font-bold text-slate-900 mb-6">HRA & LTA: Salaried Benefits</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100">
+                  <h4 className="font-bold text-slate-900 mb-2">HRA (House Rent Allowance)</h4>
+                  <p className="text-xs text-slate-600 mb-4">Exemption is the minimum of:</p>
+                  <ul className="text-[10px] text-slate-500 space-y-1">
+                    <li>• Actual HRA received</li>
+                    <li>• Rent paid minus 10% of basic salary</li>
+                    <li>• 50% of basic (Metro) or 40% (Non-metro)</li>
+                  </ul>
+                </div>
+                <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100">
+                  <h4 className="font-bold text-slate-900 mb-2">LTA (Leave Travel Allowance)</h4>
+                  <p className="text-xs text-slate-600 mb-4">Exemption for travel expenses within India for self and family.</p>
+                  <ul className="text-[10px] text-slate-500 space-y-1">
+                    <li>• Available for 2 journeys in a block of 4 years.</li>
+                    <li>• Only travel cost (air/rail/bus) is exempt, not stay.</li>
+                  </ul>
+                </div>
+              </div>
+            </section>
+
+            <section className="bg-slate-900 text-white p-10 rounded-[2.5rem]">
+              <h2 className="text-2xl font-bold mb-6">Advance Tax: Pay as You Earn</h2>
+              <p className="text-slate-400 mb-8">If your total tax liability for the year exceeds ₹10,000, you must pay tax in installments during the year.</p>
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="p-4 bg-white/5 rounded-xl border border-white/10">
+                  <h5 className="text-primary font-bold text-xs mb-1">June 15</h5>
+                  <p className="text-[10px] text-slate-400">15% of total tax</p>
+                </div>
+                <div className="p-4 bg-white/5 rounded-xl border border-white/10">
+                  <h5 className="text-primary font-bold text-xs mb-1">Sept 15</h5>
+                  <p className="text-[10px] text-slate-400">45% of total tax</p>
+                </div>
+                <div className="p-4 bg-white/5 rounded-xl border border-white/10">
+                  <h5 className="text-primary font-bold text-xs mb-1">Dec 15</h5>
+                  <p className="text-[10px] text-slate-400">75% of total tax</p>
+                </div>
+                <div className="p-4 bg-white/5 rounded-xl border border-white/10">
+                  <h5 className="text-primary font-bold text-xs mb-1">Mar 15</h5>
+                  <p className="text-[10px] text-slate-400">100% of total tax</p>
+                </div>
+              </div>
+            </section>
+
+            {/* NRI Taxation Section */}
+            <section className="bg-primary/5 p-10 rounded-[2.5rem] border border-primary/20">
+              <h2 className="text-2xl font-bold text-slate-900 mb-6">Tax Planning for NRIs</h2>
+              <p className="text-sm text-slate-600 mb-8 leading-relaxed">
+                Non-Resident Indians (NRIs) have different tax rules. Income earned in India is taxable, but global income is not (subject to DTAA).
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="bg-white p-5 rounded-2xl border border-slate-100">
+                  <h4 className="font-bold text-slate-900 mb-2">NRE vs NRO Accounts</h4>
+                  <p className="text-xs text-slate-500">NRE interest is tax-free in India. NRO interest is taxable at 30% (plus surcharge/cess).</p>
+                </div>
+                <div className="bg-white p-5 rounded-2xl border border-slate-100">
+                  <h4 className="font-bold text-slate-900 mb-2">DTAA Benefits</h4>
+                  <p className="text-xs text-slate-500">Double Taxation Avoidance Agreement prevents you from paying tax on the same income in two countries.</p>
+                </div>
+              </div>
+            </section>
+
+            {/* Tax Planning Checklist */}
+            <section className="bg-white p-10 rounded-[2.5rem] border border-slate-200 shadow-sm">
+              <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+                <FileText className="w-6 h-6 text-primary" />
+                Tax Planning Checklist
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <h4 className="font-bold text-slate-900">Early Year (April - June)</h4>
+                  <ul className="space-y-2 text-sm text-slate-600">
+                    <li className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3 text-emerald-500" /> Declare investments to employer</li>
+                    <li className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3 text-emerald-500" /> Start SIPs in ELSS funds</li>
+                    <li className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3 text-emerald-500" /> Review previous year's tax return</li>
+                  </ul>
+                </div>
+                <div className="space-y-4">
+                  <h4 className="font-bold text-slate-900">Year End (Jan - March)</h4>
+                  <ul className="space-y-2 text-sm text-slate-600">
+                    <li className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3 text-emerald-500" /> Submit investment proofs</li>
+                    <li className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3 text-emerald-500" /> Top up PPF and NPS accounts</li>
+                    <li className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3 text-emerald-500" /> Check for any pending tax savings</li>
+                  </ul>
+                </div>
+              </div>
+            </section>
+
+            {/* Common Mistakes Section */}
+            <section className="bg-rose-50 p-10 rounded-[2.5rem] border border-rose-100">
+              <h2 className="text-2xl font-bold text-rose-900 mb-6 flex items-center gap-3">
+                <Briefcase className="w-6 h-6 text-rose-600" />
+                Common Tax Planning Mistakes
+              </h2>
+              <div className="space-y-4">
+                <div className="flex gap-4 items-start">
+                  <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center shadow-sm shrink-0 mt-1">
+                    <span className="text-rose-600 font-bold">!</span>
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-slate-900">Waiting until March</h4>
+                    <p className="text-sm text-slate-600">Last-minute decisions often lead to poor investment choices. Start in April.</p>
+                  </div>
+                </div>
+                <div className="flex gap-4 items-start">
+                  <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center shadow-sm shrink-0 mt-1">
+                    <span className="text-rose-600 font-bold">!</span>
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-slate-900">Ignoring the New Regime</h4>
+                    <p className="text-sm text-slate-600">The new regime is now the default and often better for those with fewer deductions.</p>
+                  </div>
+                </div>
+                <div className="flex gap-4 items-start">
+                  <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center shadow-sm shrink-0 mt-1">
+                    <span className="text-rose-600 font-bold">!</span>
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-slate-900">Mixing Insurance and Investment</h4>
+                    <p className="text-sm text-slate-600">Endowment plans often offer low returns and low life cover. Keep them separate.</p>
+                  </div>
+                </div>
+              </div>
             </section>
 
             {/* Old vs New Regime */}
