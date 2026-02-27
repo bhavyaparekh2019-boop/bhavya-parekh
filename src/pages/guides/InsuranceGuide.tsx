@@ -1,6 +1,8 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { Shield, Heart, Car, Home, Lock, CheckCircle2, Info } from 'lucide-react';
+import { Shield, Heart, Car, Home, Lock, CheckCircle2, Info, Briefcase } from 'lucide-react';
+import BlurText from '@/src/components/BlurText';
+import ChromaGrid from '@/src/components/ChromaGrid';
 
 const insuranceTypes = [
   {
@@ -79,9 +81,12 @@ export default function InsuranceGuide() {
             <span className="inline-block px-3 py-1 bg-primary/10 text-primary text-xs font-bold rounded-full mb-4 uppercase tracking-wider">
               Knowledge Base
             </span>
-            <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 tracking-tight">
-              Comprehensive Guide to <span className="text-primary">Insurance</span>
-            </h1>
+            <BlurText 
+              text="Comprehensive Guide to Insurance"
+              centered={false}
+              highlight="Insurance"
+              className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 tracking-tight"
+            />
             <p className="text-xl text-slate-600 leading-relaxed">
               Insurance is not just an expense; it's a critical safety net that protects your financial future from life's uncertainties.
             </p>
@@ -99,32 +104,20 @@ export default function InsuranceGuide() {
                 <span className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white text-sm">01</span>
                 Types of Insurance in India
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {insuranceTypes.map((type, idx) => (
-                  <motion.div 
-                    key={type.title}
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: idx * 0.1 }}
-                    className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow"
-                  >
-                    <div className={`w-12 h-12 rounded-xl ${type.color} flex items-center justify-center mb-4`}>
-                      <type.icon className="w-6 h-6" />
-                    </div>
-                    <h3 className="text-lg font-bold text-slate-900 mb-2">{type.title}</h3>
-                    <p className="text-slate-600 text-sm mb-4">{type.description}</p>
-                    <ul className="space-y-2">
-                      {type.details.map((detail, i) => (
-                        <li key={i} className="flex items-start gap-2 text-xs text-slate-500">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-primary mt-0.5 shrink-0" />
-                          {detail}
-                        </li>
-                      ))}
-                    </ul>
-                  </motion.div>
-                ))}
-              </div>
+              <ChromaGrid 
+                cols="grid-cols-1 md:grid-cols-2"
+                radius={300}
+                damping={0.45}
+                fadeOut={0.6}
+                ease="power3.out"
+                items={insuranceTypes.map(type => ({
+                  title: type.title,
+                  description: type.description,
+                  icon: type.icon,
+                  borderColor: type.color.includes('rose') ? '#F43F5E' : type.color.includes('emerald') ? '#10B981' : type.color.includes('blue') ? '#3B82F6' : '#F59E0B',
+                  gradient: `linear-gradient(145deg, ${type.color.includes('rose') ? '#F43F5E' : type.color.includes('emerald') ? '#10B981' : type.color.includes('blue') ? '#3B82F6' : '#F59E0B'}, #000)`
+                }))}
+              />
             </section>
 
             <section className="bg-white p-8 rounded-3xl border border-slate-200">
@@ -196,49 +189,65 @@ export default function InsuranceGuide() {
             <section className="bg-primary/5 p-8 rounded-3xl border border-primary/20">
               <h2 className="text-2xl font-bold text-slate-900 mb-6">Essential Insurance Riders</h2>
               <p className="text-sm text-slate-600 mb-6">Riders are add-ons that provide extra protection for a small additional premium.</p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-white p-4 rounded-xl border border-slate-100">
-                  <h4 className="font-bold text-slate-900 text-sm mb-1">Accidental Death Benefit</h4>
-                  <p className="text-xs text-slate-500">Additional sum assured paid if death occurs due to an accident.</p>
-                </div>
-                <div className="bg-white p-4 rounded-xl border border-slate-100">
-                  <h4 className="font-bold text-slate-900 text-sm mb-1">Critical Illness Rider</h4>
-                  <p className="text-xs text-slate-500">Lump sum payment on diagnosis of specified major illnesses (Cancer, Heart Attack, etc.).</p>
-                </div>
-                <div className="bg-white p-4 rounded-xl border border-slate-100">
-                  <h4 className="font-bold text-slate-900 text-sm mb-1">Waiver of Premium</h4>
-                  <p className="text-xs text-slate-500">Future premiums are waived if the policyholder becomes permanently disabled.</p>
-                </div>
-                <div className="bg-white p-4 rounded-xl border border-slate-100">
-                  <h4 className="font-bold text-slate-900 text-sm mb-1">Hospital Cash Rider</h4>
-                  <p className="text-xs text-slate-500">Daily allowance for each day of hospitalization to cover non-medical expenses.</p>
-                </div>
-              </div>
+              <ChromaGrid 
+                cols="grid-cols-1 md:grid-cols-2"
+                radius={300}
+                damping={0.45}
+                fadeOut={0.6}
+                ease="power3.out"
+                items={[
+                  {
+                    title: 'Accidental Death Benefit',
+                    description: 'Additional sum assured paid if death occurs due to an accident.',
+                    borderColor: '#3B82F6',
+                    gradient: 'linear-gradient(145deg, #3B82F6, #000)'
+                  },
+                  {
+                    title: 'Critical Illness Rider',
+                    description: 'Lump sum payment on diagnosis of specified major illnesses.',
+                    borderColor: '#10B981',
+                    gradient: 'linear-gradient(180deg, #10B981, #000)'
+                  },
+                  {
+                    title: 'Waiver of Premium',
+                    description: 'Future premiums are waived if the policyholder becomes permanently disabled.',
+                    borderColor: '#F59E0B',
+                    gradient: 'linear-gradient(145deg, #F59E0B, #000)'
+                  },
+                  {
+                    title: 'Hospital Cash Rider',
+                    description: 'Daily allowance for each day of hospitalization for non-medical expenses.',
+                    borderColor: '#6366F1',
+                    gradient: 'linear-gradient(145deg, #6366F1, #000)'
+                  }
+                ]}
+              />
             </section>
 
             <section className="bg-white p-8 rounded-3xl border border-slate-200">
               <h2 className="text-2xl font-bold text-slate-900 mb-6">Common Insurance Exclusions</h2>
               <p className="text-sm text-slate-600 mb-6">It's equally important to know what your policy does NOT cover to avoid surprises during claims.</p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="p-5 bg-rose-50 rounded-2xl border border-rose-100">
-                  <h4 className="font-bold text-rose-900 text-sm mb-2">Health Insurance</h4>
-                  <ul className="text-xs text-rose-700 space-y-1">
-                    <li>• Cosmetic surgery or obesity treatment</li>
-                    <li>• Injuries due to war or nuclear perils</li>
-                    <li>• Self-inflicted injuries or suicide attempts</li>
-                    <li>• Non-medical expenses (consumables)</li>
-                  </ul>
-                </div>
-                <div className="p-5 bg-rose-50 rounded-2xl border border-rose-100">
-                  <h4 className="font-bold text-rose-900 text-sm mb-2">Life Insurance</h4>
-                  <ul className="text-xs text-rose-700 space-y-1">
-                    <li>• Suicide within the first year of policy</li>
-                    <li>• Death due to participation in illegal acts</li>
-                    <li>• Death due to hazardous sports (unless declared)</li>
-                    <li>• Misstatement of age or lifestyle habits</li>
-                  </ul>
-                </div>
-              </div>
+              <ChromaGrid 
+                cols="grid-cols-1 md:grid-cols-2"
+                radius={300}
+                damping={0.45}
+                fadeOut={0.6}
+                ease="power3.out"
+                items={[
+                  {
+                    title: 'Health Insurance',
+                    description: 'Cosmetic surgery, obesity treatment, injuries due to war, self-inflicted injuries, non-medical expenses.',
+                    borderColor: '#F43F5E',
+                    gradient: 'linear-gradient(145deg, #F43F5E, #000)'
+                  },
+                  {
+                    title: 'Life Insurance',
+                    description: 'Suicide within first year, death due to illegal acts, hazardous sports, misstatement of age.',
+                    borderColor: '#F43F5E',
+                    gradient: 'linear-gradient(145deg, #F43F5E, #000)'
+                  }
+                ]}
+              />
             </section>
 
             <section className="bg-white p-8 rounded-3xl border border-slate-200">
@@ -247,16 +256,27 @@ export default function InsuranceGuide() {
                 <p className="text-sm text-slate-600 mb-6">
                   While your company's group insurance is a great perk, relying solely on it is risky. Here's why you need an individual plan:
                 </p>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="p-5 bg-slate-50 rounded-2xl border border-slate-100">
-                    <h4 className="font-bold text-slate-900 text-sm mb-2">Continuity Risk</h4>
-                    <p className="text-xs text-slate-500">If you lose your job or change companies, you lose your coverage. An individual plan stays with you for life.</p>
-                  </div>
-                  <div className="p-5 bg-slate-50 rounded-2xl border border-slate-100">
-                    <h4 className="font-bold text-slate-900 text-sm mb-2">Customization</h4>
-                    <p className="text-xs text-slate-500">Group plans are "one size fits all." Individual plans allow you to choose riders and coverage limits that suit your family.</p>
-                  </div>
-                </div>
+                <ChromaGrid 
+                  cols="grid-cols-1 md:grid-cols-2"
+                  radius={300}
+                  damping={0.45}
+                  fadeOut={0.6}
+                  ease="power3.out"
+                  items={[
+                    {
+                      title: 'Continuity Risk',
+                      description: 'If you lose your job, you lose your coverage. An individual plan stays with you for life.',
+                      borderColor: '#3B82F6',
+                      gradient: 'linear-gradient(145deg, #3B82F6, #000)'
+                    },
+                    {
+                      title: 'Customization',
+                      description: 'Individual plans allow you to choose riders and coverage limits that suit your family.',
+                      borderColor: '#10B981',
+                      gradient: 'linear-gradient(180deg, #10B981, #000)'
+                    }
+                  ]}
+                />
               </div>
             </section>
 
@@ -285,6 +305,54 @@ export default function InsuranceGuide() {
                   <div className="absolute -left-3 top-0 w-6 h-6 bg-primary rounded-full flex items-center justify-center text-slate-900 text-xs font-bold">4</div>
                   <h4 className="font-bold mb-1">Settlement</h4>
                   <p className="text-sm text-slate-400">Once approved, the claim amount is paid directly to the hospital (cashless) or reimbursed to the policyholder.</p>
+                </div>
+              </div>
+            </section>
+
+            <section className="bg-white p-10 rounded-[2.5rem] border border-slate-200 shadow-sm">
+              <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+                <Briefcase className="w-6 h-6 text-primary" />
+                Insurance for Business Owners & Professionals
+              </h2>
+              <p className="text-sm text-slate-600 mb-8">
+                If you run a business or are a practicing professional (Doctor, Lawyer, Architect), standard personal insurance is not enough. You need specialized protection.
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100">
+                  <h4 className="font-bold text-slate-900 mb-2">Key Person Insurance</h4>
+                  <p className="text-xs text-slate-600 mb-4">A life insurance policy taken by a business on the life of a crucial employee. The business is the beneficiary.</p>
+                  <ul className="text-[10px] text-slate-500 space-y-1">
+                    <li>• Protects against loss of profits due to the death of a key person.</li>
+                    <li>• Premiums are deductible as business expenses.</li>
+                  </ul>
+                </div>
+                <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100">
+                  <h4 className="font-bold text-slate-900 mb-2">Professional Indemnity</h4>
+                  <p className="text-xs text-slate-600 mb-4">Protects professionals against legal liability for errors, omissions, or negligence in their services.</p>
+                  <ul className="text-[10px] text-slate-500 space-y-1">
+                    <li>• Essential for Doctors (Medical Malpractice).</li>
+                    <li>• Covers legal defense costs and settlements.</li>
+                  </ul>
+                </div>
+                <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100">
+                  <h4 className="font-bold text-slate-900 mb-2">Director's & Officer's (D&O)</h4>
+                  <p className="text-xs text-slate-600 mb-4">Covers personal liability of directors and officers for claims made against them while serving on a board.</p>
+                </div>
+                <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100">
+                  <h4 className="font-bold text-slate-900 mb-2">Cyber Liability</h4>
+                  <p className="text-xs text-slate-600 mb-4">Protects businesses against data breaches, ransomware, and other digital threats.</p>
+                </div>
+              </div>
+            </section>
+
+            <section className="bg-primary/5 p-10 rounded-[2.5rem] border border-primary/20">
+              <h2 className="text-2xl font-bold text-slate-900 mb-6">BHP's "Insurance First" Philosophy</h2>
+              <div className="prose prose-slate max-w-none">
+                <p className="text-slate-700">
+                  At BHP Finance, we believe insurance is the foundation of any financial plan. You cannot build a skyscraper on a swamp. Insurance is the "piling" that ensures your family's lifestyle remains intact even if the primary earner is no longer there.
+                </p>
+                <div className="mt-6 p-6 bg-white rounded-2xl border border-primary/10 italic text-sm text-slate-600">
+                  "The best time to buy insurance was yesterday. The second best time is today. The worst time is when you actually need it."
                 </div>
               </div>
             </section>

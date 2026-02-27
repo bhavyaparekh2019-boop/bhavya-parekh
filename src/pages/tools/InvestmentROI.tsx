@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, TrendingUp, Info, BarChart3, DollarSign } from 'lucide-react';
 import { motion } from 'motion/react';
+import BlurText from '@/src/components/BlurText';
 import { GoogleGenAI } from "@google/genai";
 import { cn } from '@/src/lib/utils';
 
@@ -82,7 +83,11 @@ export default function InvestmentROI() {
               <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center text-slate-900">
                 <BarChart3 className="w-6 h-6" />
               </div>
-              <h1 className="text-3xl font-black">Investment ROI Calculator</h1>
+              <BlurText 
+                text="Investment ROI Calculator"
+                centered={false}
+                className="text-3xl font-black"
+              />
             </div>
             <p className="text-slate-400 max-w-2xl leading-relaxed">
               Project your wealth growth in India. Calculate the potential return on your investments based on initial capital, recurring SIPs, and market performance.

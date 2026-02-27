@@ -1,6 +1,8 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { FileText, Calculator, Landmark, Shield, Briefcase, ArrowRight, CheckCircle2, Info } from 'lucide-react';
+import { FileText, Calculator, Landmark, Shield, Briefcase, ArrowRight, CheckCircle2, Info, Home } from 'lucide-react';
+import BlurText from '@/src/components/BlurText';
+import ChromaGrid from '@/src/components/ChromaGrid';
 
 const taxSections = [
   {
@@ -43,9 +45,12 @@ export default function TaxGuide() {
             <span className="inline-block px-3 py-1 bg-primary/10 text-primary text-xs font-bold rounded-full mb-4 uppercase tracking-wider">
               Knowledge Base
             </span>
-            <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 tracking-tight">
-              Smart <span className="text-primary">Tax Planning</span> for 2024
-            </h1>
+            <BlurText 
+              text="Smart Tax Planning for 2024"
+              centered={false}
+              highlight="Tax Planning"
+              className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 tracking-tight"
+            />
             <p className="text-xl text-slate-600 leading-relaxed">
               Don't just pay taxes; plan them. Learn how to legally minimize your tax liability and maximize your take-home pay using the latest Indian tax laws.
             </p>
@@ -63,45 +68,43 @@ export default function TaxGuide() {
                 <Calculator className="w-6 h-6 text-primary" />
                 Key Tax Saving Sections
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {taxSections.map((section, idx) => (
-                  <motion.div 
-                    key={section.title}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: idx * 0.1 }}
-                    className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm"
-                  >
-                    <div className="flex justify-between items-start mb-6">
-                      <h3 className="text-xl font-bold text-slate-900">{section.title}</h3>
-                      <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${section.color}`}>
-                        {section.limit}
-                      </span>
-                    </div>
-                    <ul className="space-y-3">
-                      {section.items.map((item, i) => (
-                        <li key={i} className="flex items-center gap-3 text-sm text-slate-600">
-                          <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </motion.div>
-                ))}
-              </div>
+            <ChromaGrid 
+              cols="grid-cols-1 md:grid-cols-2"
+              radius={300}
+              damping={0.45}
+              fadeOut={0.6}
+              ease="power3.out"
+              items={taxSections.map(section => ({
+                title: section.title,
+                description: `Limit: ${section.limit}`,
+                icon: section.title.includes('80C') ? Landmark : section.title.includes('80D') ? Shield : section.title.includes('24') ? Calculator : FileText,
+                borderColor: section.color.includes('blue') ? '#3B82F6' : section.color.includes('emerald') ? '#10B981' : section.color.includes('amber') ? '#F59E0B' : '#6366F1',
+                gradient: `linear-gradient(145deg, ${section.color.includes('blue') ? '#3B82F6' : section.color.includes('emerald') ? '#10B981' : section.color.includes('amber') ? '#F59E0B' : '#6366F1'}, #000)`
+              }))}
+            />
               <div className="mt-8 bg-white p-8 rounded-3xl border border-slate-200">
                 <h4 className="font-bold text-slate-900 mb-4">Other Important Deductions</h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="p-5 bg-slate-50 rounded-2xl border border-slate-100">
-                    <h5 className="font-bold text-slate-900 text-sm mb-1">Section 80G: Donations</h5>
-                    <p className="text-[10px] text-slate-500">Donations to certain relief funds and charitable institutions can be claimed as a deduction (50% or 100% depending on the institution).</p>
-                  </div>
-                  <div className="p-5 bg-slate-50 rounded-2xl border border-slate-100">
-                    <h5 className="font-bold text-slate-900 text-sm mb-1">Standard Deduction</h5>
-                    <p className="text-[10px] text-slate-500">A flat deduction of ₹50,000 (increased to ₹75,000 in 2024 for New Regime) available to all salaried individuals and pensioners.</p>
-                  </div>
-                </div>
+                <ChromaGrid 
+                  cols="grid-cols-1 md:grid-cols-2"
+                  radius={300}
+                  damping={0.45}
+                  fadeOut={0.6}
+                  ease="power3.out"
+                  items={[
+                    {
+                      title: 'Section 80G: Donations',
+                      description: 'Donations to certain relief funds and charitable institutions can be claimed as a deduction.',
+                      borderColor: '#3B82F6',
+                      gradient: 'linear-gradient(145deg, #3B82F6, #000)'
+                    },
+                    {
+                      title: 'Standard Deduction',
+                      description: 'A flat deduction of ₹50,000 (₹75,000 in New Regime) available to salaried individuals.',
+                      borderColor: '#10B981',
+                      gradient: 'linear-gradient(180deg, #10B981, #000)'
+                    }
+                  ]}
+                />
               </div>
             </section>
 
@@ -197,6 +200,52 @@ export default function TaxGuide() {
                 <div className="p-4 bg-white/5 rounded-xl border border-white/10">
                   <h5 className="text-primary font-bold text-xs mb-1">Mar 15</h5>
                   <p className="text-[10px] text-slate-400">100% of total tax</p>
+                </div>
+              </div>
+            </section>
+
+            <section className="bg-white p-10 rounded-[2.5rem] border border-slate-200 shadow-sm">
+              <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+                <Briefcase className="w-6 h-6 text-primary" />
+                Taxation for Freelancers & Small Businesses
+              </h2>
+              <p className="text-sm text-slate-600 mb-8 leading-relaxed">
+                If you are a freelancer or run a small business, you are taxed on your net income (Revenue minus Expenses).
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100">
+                  <h4 className="font-bold text-slate-900 mb-2">Presumptive Taxation (Sec 44AD/44ADA)</h4>
+                  <p className="text-xs text-slate-600 mb-4">Small businesses and professionals can declare a fixed percentage of their turnover as profit without maintaining detailed books.</p>
+                  <ul className="text-[10px] text-slate-500 space-y-1">
+                    <li>• Professionals: 50% of gross receipts.</li>
+                    <li>• Businesses: 6% or 8% of turnover.</li>
+                  </ul>
+                </div>
+                <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100">
+                  <h4 className="font-bold text-slate-900 mb-2">Deductible Expenses</h4>
+                  <p className="text-xs text-slate-600 mb-4">You can deduct expenses incurred for business purposes, such as rent, internet, travel, and equipment depreciation.</p>
+                </div>
+              </div>
+            </section>
+
+            <section className="bg-slate-900 text-white p-10 rounded-[2.5rem] shadow-2xl">
+              <h2 className="text-2xl font-bold mb-8 flex items-center gap-3">
+                <Home className="w-6 h-6 text-primary" />
+                Saving Tax on Property Sales (Section 54)
+              </h2>
+              <div className="space-y-6">
+                <p className="text-sm text-slate-400">
+                  If you sell a residential property and make a capital gain, you can avoid paying tax if you reinvest the gain in another residential property.
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="p-5 bg-white/5 rounded-2xl border border-white/10">
+                    <h4 className="font-bold text-primary mb-2">Section 54</h4>
+                    <p className="text-xs text-slate-400">Reinvest in another house within 1 year before or 2 years after the sale (3 years for construction).</p>
+                  </div>
+                  <div className="p-5 bg-white/5 rounded-2xl border border-white/10">
+                    <h4 className="font-bold text-primary mb-2">Section 54EC</h4>
+                    <p className="text-xs text-slate-400">Invest the capital gains in specified bonds (NHAI/REC) within 6 months of sale. Max limit: ₹50 Lakh.</p>
+                  </div>
                 </div>
               </div>
             </section>

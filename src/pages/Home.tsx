@@ -5,10 +5,15 @@ import { motion, AnimatePresence } from 'motion/react';
 import { ARTICLES, CATEGORIES } from '@/src/constants';
 import ArticleCard from '@/src/components/ArticleCard';
 import Sidebar from '@/src/components/Sidebar';
+import ChromaGrid from '@/src/components/ChromaGrid';
 import { cn } from '@/src/lib/utils';
 import { GoogleGenAI } from "@google/genai";
+import BlurText from '@/src/components/BlurText';
 
 export default function Home() {
+  const handleAnimationComplete = () => {
+    console.log('Animation completed!');
+  };
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState(CATEGORIES[0]);
   const [aiResponse, setAiResponse] = useState<{ concise: string; full: string } | null>(null);
@@ -108,13 +113,15 @@ export default function Home() {
         </div>
 
         <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+          <BlurText
+            text="Financial Wisdom for Your Future"
+            delay={150}
+            animateBy="words"
+            direction="top"
+            highlight="Your Future"
+            onAnimationComplete={handleAnimationComplete}
             className="text-5xl md:text-7xl font-black text-slate-900 leading-[1.1] mb-8 tracking-tight"
-          >
-            Financial Wisdom for <span className="text-primary">Your Future</span>
-          </motion.h1>
+          />
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -222,121 +229,62 @@ export default function Home() {
             </div>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <motion.div 
-              whileHover={{ y: -5 }}
-              className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl transition-all group"
-            >
-              <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-blue-600 group-hover:text-white transition-colors">
-                <TrendingUp className="w-6 h-6" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">Investment</h3>
-              <p className="text-slate-600 mb-6 text-sm leading-relaxed">
-                Build a resilient portfolio and leverage compounding in India.
-              </p>
-              <Link 
-                to="/guides/investment" 
-                className="inline-flex items-center gap-2 text-primary font-bold hover:gap-3 transition-all text-sm"
-              >
-                Start Learning <ChevronRight className="w-4 h-4" />
-              </Link>
-            </motion.div>
-
-            <motion.div 
-              whileHover={{ y: -5 }}
-              className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl transition-all group"
-            >
-              <div className="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
-                <Shield className="w-6 h-6" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">Insurance</h3>
-              <p className="text-slate-600 mb-6 text-sm leading-relaxed">
-                Complete walkthrough of life and health insurance for Indian families.
-              </p>
-              <Link 
-                to="/guides/insurance" 
-                className="inline-flex items-center gap-2 text-primary font-bold hover:gap-3 transition-all text-sm"
-              >
-                Explore Guide <ChevronRight className="w-4 h-4" />
-              </Link>
-            </motion.div>
-
-            <motion.div 
-              whileHover={{ y: -5 }}
-              className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl transition-all group"
-            >
-              <div className="w-12 h-12 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-amber-600 group-hover:text-white transition-colors">
-                <Loader2 className="w-6 h-6" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">Retirement</h3>
-              <p className="text-slate-600 mb-6 text-sm leading-relaxed">
-                Build a bulletproof corpus for a worry-free post-work life.
-              </p>
-              <Link 
-                to="/guides/retirement" 
-                className="inline-flex items-center gap-2 text-primary font-bold hover:gap-3 transition-all text-sm"
-              >
-                Plan Future <ChevronRight className="w-4 h-4" />
-              </Link>
-            </motion.div>
-
-            <motion.div 
-              whileHover={{ y: -5 }}
-              className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl transition-all group"
-            >
-              <div className="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
-                <Info className="w-6 h-6" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">Tax Planning</h3>
-              <p className="text-slate-600 mb-6 text-sm leading-relaxed">
-                Minimize liability and maximize take-home pay legally.
-              </p>
-              <Link 
-                to="/guides/tax" 
-                className="inline-flex items-center gap-2 text-primary font-bold hover:gap-3 transition-all text-sm"
-              >
-                Save Tax <ChevronRight className="w-4 h-4" />
-              </Link>
-            </motion.div>
-
-            <motion.div 
-              whileHover={{ y: -5 }}
-              className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl transition-all group"
-            >
-              <div className="w-12 h-12 bg-rose-50 text-rose-600 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-rose-600 group-hover:text-white transition-colors">
-                <Sparkles className="w-6 h-6" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">Mutual Funds</h3>
-              <p className="text-slate-600 mb-6 text-sm leading-relaxed">
-                Master SIPs, ELSS, and professional wealth management.
-              </p>
-              <Link 
-                to="/guides/mutual-funds" 
-                className="inline-flex items-center gap-2 text-primary font-bold hover:gap-3 transition-all text-sm"
-              >
-                View Guide <ChevronRight className="w-4 h-4" />
-              </Link>
-            </motion.div>
-
-            <motion.div 
-              whileHover={{ y: -5 }}
-              className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl transition-all group"
-            >
-              <div className="w-12 h-12 bg-slate-50 text-slate-600 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-slate-900 group-hover:text-white transition-colors">
-                <BarChart2 className="w-6 h-6" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">Stock Market</h3>
-              <p className="text-slate-600 mb-6 text-sm leading-relaxed">
-                Demystifying the stock market for beginners in India.
-              </p>
-              <Link 
-                to="/guides/stocks" 
-                className="inline-flex items-center gap-2 text-primary font-bold hover:gap-3 transition-all text-sm"
-              >
-                Learn Basics <ChevronRight className="w-4 h-4" />
-              </Link>
-            </motion.div>
-          </div>
+          <ChromaGrid 
+            radius={300}
+            damping={0.45}
+            fadeOut={0.6}
+            ease="power3.out"
+            items={[
+              {
+                title: 'Investment',
+                icon: TrendingUp,
+                description: 'Build a resilient portfolio and leverage compounding in India.',
+                url: '/guides/investment',
+                borderColor: '#3B82F6',
+                gradient: 'linear-gradient(145deg, #3B82F6, #000)'
+              },
+              {
+                title: 'Insurance',
+                icon: Shield,
+                description: 'Complete walkthrough of life and health insurance for Indian families.',
+                url: '/guides/insurance',
+                borderColor: '#10B981',
+                gradient: 'linear-gradient(180deg, #10B981, #000)'
+              },
+              {
+                title: 'Retirement',
+                icon: Loader2,
+                description: 'Build a bulletproof corpus for a worry-free post-work life.',
+                url: '/guides/retirement',
+                borderColor: '#F59E0B',
+                gradient: 'linear-gradient(135deg, #F59E0B, #000)'
+              },
+              {
+                title: 'Tax Planning',
+                icon: Info,
+                description: 'Minimize liability and maximize take-home pay legally.',
+                url: '/guides/tax',
+                borderColor: '#6366F1',
+                gradient: 'linear-gradient(145deg, #6366F1, #000)'
+              },
+              {
+                title: 'Mutual Funds',
+                icon: Sparkles,
+                description: 'Master SIPs, ELSS, and professional wealth management.',
+                url: '/guides/mutual-funds',
+                borderColor: '#F43F5E',
+                gradient: 'linear-gradient(160deg, #F43F5E, #000)'
+              },
+              {
+                title: 'Stock Market',
+                icon: BarChart2,
+                description: 'Demystifying the stock market for beginners in India.',
+                url: '/guides/stocks',
+                borderColor: '#64748B',
+                gradient: 'linear-gradient(180deg, #64748B, #000)'
+              }
+            ]}
+          />
         </div>
       </section>
 
@@ -383,9 +331,25 @@ export default function Home() {
 
               {/* Insights Grid */}
               <section className="space-y-12">
-                {gridArticles.map((article) => (
-                  <ArticleCard key={article.id} article={article} />
-                ))}
+                <ChromaGrid 
+                  cols="grid-cols-1"
+                  radius={300}
+                  damping={0.45}
+                  fadeOut={0.6}
+                  ease="power3.out"
+                  items={gridArticles.map(article => ({
+                    title: article.title,
+                    description: article.excerpt,
+                    image: article.image,
+                    category: article.category,
+                    readTime: article.readTime,
+                    author: article.author,
+                    date: article.date,
+                    url: `/article/${article.id}`,
+                    borderColor: '#3B82F6',
+                    gradient: 'linear-gradient(145deg, #3B82F6, #000)'
+                  }))}
+                />
               </section>
             </>
           ) : (

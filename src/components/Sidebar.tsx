@@ -22,6 +22,41 @@ export default function Sidebar() {
     { type: 'CHECKLIST • 1.1 MB', name: 'Retirement Readiness Audit' },
   ];
 
+  const [email, setEmail] = useState('');
+  const [isSubscribing, setIsSubscribing] = useState(false);
+  const [subscribeStatus, setSubscribeStatus] = useState<'idle' | 'success' | 'error'>('idle');
+
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email.trim() || isSubscribing) return;
+
+    setIsSubscribing(true);
+    setSubscribeStatus('idle');
+
+    try {
+      const response = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      if (response.ok) {
+        setSubscribeStatus('success');
+        setEmail('');
+        setTimeout(() => setSubscribeStatus('idle'), 5000);
+      } else {
+        setSubscribeStatus('error');
+      }
+    } catch (error) {
+      console.error('Subscription error:', error);
+      setSubscribeStatus('error');
+    } finally {
+      setIsSubscribing(false);
+    }
+  };
+
   const fetchMarketPulse = async () => {
     setIsLoadingPulse(true);
     try {
@@ -204,15 +239,28 @@ export default function Sidebar() {
         <p className="text-sm text-slate-600 mb-6">
           Get market insights and financial tips delivered to your inbox every Monday.
         </p>
-        <form className="space-y-3" onSubmit={(e) => e.preventDefault()}>
+        <form className="space-y-3" onSubmit={handleSubscribe}>
           <input
             type="email"
             placeholder="Email address"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
             className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-sm focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
           />
-          <button className="w-full bg-primary text-slate-900 font-bold py-3 rounded-xl text-sm hover:brightness-110 transition-all shadow-md shadow-primary/20">
-            Subscribe Now
+          <button 
+            type="submit"
+            disabled={isSubscribing}
+            className="w-full bg-primary text-slate-900 font-bold py-3 rounded-xl text-sm hover:brightness-110 transition-all shadow-md shadow-primary/20 disabled:opacity-50 flex items-center justify-center gap-2"
+          >
+            {isSubscribing ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Subscribe Now'}
           </button>
+          {subscribeStatus === 'success' && (
+            <p className="text-xs text-emerald-600 font-bold mt-2">Thanks for subscribing!</p>
+          )}
+          {subscribeStatus === 'error' && (
+            <p className="text-xs text-rose-600 font-bold mt-2">Something went wrong. Try again.</p>
+          )}
         </form>
         <p className="text-[10px] text-slate-400 mt-4 uppercase tracking-widest font-bold">
           No spam. Ever. Unsubscribe anytime.

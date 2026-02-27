@@ -4,6 +4,8 @@ import { motion, AnimatePresence } from 'motion/react';
 import { ARTICLES, CATEGORIES } from '@/src/constants';
 import ArticleCard from '@/src/components/ArticleCard';
 import Sidebar from '@/src/components/Sidebar';
+import BlurText from '@/src/components/BlurText';
+import ChromaGrid from '@/src/components/ChromaGrid';
 import { cn } from '@/src/lib/utils';
 
 export default function Blogs() {
@@ -26,7 +28,11 @@ export default function Blogs() {
           {/* Main Content */}
           <main className="flex-1">
             <div className="mb-12">
-              <h1 className="text-4xl font-bold text-slate-900 mb-4 tracking-tight">Financial Blogs</h1>
+              <BlurText 
+                text="Financial Blogs" 
+                centered={false}
+                className="text-4xl font-bold text-slate-900 mb-4 tracking-tight"
+              />
               <p className="text-lg text-slate-600">Expert analysis, market trends, and financial wisdom for the modern Indian investor.</p>
             </div>
 
@@ -63,22 +69,25 @@ export default function Blogs() {
             </div>
 
             {/* Article Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <AnimatePresence mode="popLayout">
-                {filteredArticles.map((article) => (
-                  <motion.div
-                    key={article.id}
-                    layout
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.9 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <ArticleCard article={article} />
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-            </div>
+            <ChromaGrid 
+              cols="grid-cols-1 md:grid-cols-2"
+              radius={300}
+              damping={0.45}
+              fadeOut={0.6}
+              ease="power3.out"
+              items={filteredArticles.map(article => ({
+                title: article.title,
+                description: article.excerpt,
+                image: article.image,
+                category: article.category,
+                readTime: article.readTime,
+                author: article.author,
+                date: article.date,
+                url: `/article/${article.id}`,
+                borderColor: '#3B82F6',
+                gradient: 'linear-gradient(145deg, #3B82F6, #000)'
+              }))}
+            />
 
             {filteredArticles.length === 0 && (
               <div className="text-center py-20 bg-white rounded-3xl border border-dashed border-slate-300">

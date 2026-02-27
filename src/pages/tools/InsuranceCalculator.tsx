@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Shield, Info, AlertCircle, CheckCircle2, ArrowRight, TrendingUp, Sparkles, Plus, Trash2, Scale, RefreshCcw, Loader2 } from 'lucide-react';
+import BlurText from '@/src/components/BlurText';
 import { cn } from '@/src/lib/utils';
 import { GoogleGenAI } from "@google/genai";
 
@@ -84,7 +85,10 @@ export default function InsuranceCalculator() {
           <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center text-primary mx-auto mb-6">
             <Shield className="w-8 h-8" />
           </div>
-          <h1 className="text-4xl font-black text-slate-900 mb-4 tracking-tight">Insurance Coverage Assessment</h1>
+          <BlurText 
+            text="Insurance Coverage Assessment"
+            className="text-4xl font-black text-slate-900 mb-4 tracking-tight"
+          />
           <div className="flex justify-center gap-4 mb-8">
             <button
               onClick={() => setCalculationMethod('DIME')}

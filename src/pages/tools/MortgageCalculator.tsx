@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Calculator, Info, TrendingUp } from 'lucide-react';
 import { motion } from 'motion/react';
+import BlurText from '@/src/components/BlurText';
 import { GoogleGenAI } from "@google/genai";
 import { cn } from '@/src/lib/utils';
 
@@ -89,7 +90,11 @@ export default function MortgageCalculator() {
               <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center text-slate-900">
                 <Calculator className="w-6 h-6" />
               </div>
-              <h1 className="text-3xl font-black">Home Loan Calculator</h1>
+              <BlurText 
+                text="Home Loan Calculator"
+                centered={false}
+                className="text-3xl font-black"
+              />
             </div>
             <p className="text-slate-400 max-w-2xl leading-relaxed">
               Plan your home purchase in India with precision. Estimate your monthly EMIs based on current interest rates and loan terms.

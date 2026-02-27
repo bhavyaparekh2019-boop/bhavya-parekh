@@ -1,6 +1,8 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { PiggyBank, Target, Clock, ShieldCheck, Wallet, ArrowRight, CheckCircle2, AlertCircle } from 'lucide-react';
+import BlurText from '@/src/components/BlurText';
+import ChromaGrid from '@/src/components/ChromaGrid';
 
 const retirementSteps = [
   {
@@ -43,9 +45,12 @@ export default function RetirementGuide() {
             <span className="inline-block px-3 py-1 bg-primary/10 text-primary text-xs font-bold rounded-full mb-4 uppercase tracking-wider">
               Knowledge Base
             </span>
-            <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 tracking-tight">
-              The Ultimate <span className="text-primary">Retirement</span> Roadmap
-            </h1>
+            <BlurText 
+              text="The Ultimate Retirement Roadmap"
+              centered={false}
+              highlight="Retirement"
+              className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 tracking-tight"
+            />
             <p className="text-xl text-slate-600 leading-relaxed">
               Retirement is not an age; it's a financial status. Learn how to build a bulletproof corpus for a dignified and worry-free post-work life.
             </p>
@@ -63,24 +68,20 @@ export default function RetirementGuide() {
                 <Clock className="w-6 h-6 text-primary" />
                 4 Pillars of Retirement Planning
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {retirementSteps.map((step, idx) => (
-                  <motion.div 
-                    key={step.title}
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: idx * 0.1 }}
-                    className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm"
-                  >
-                    <div className={`w-14 h-14 rounded-2xl ${step.color} flex items-center justify-center mb-6`}>
-                      <step.icon className="w-7 h-7" />
-                    </div>
-                    <h3 className="text-xl font-bold text-slate-900 mb-3">{step.title}</h3>
-                    <p className="text-slate-600 text-sm leading-relaxed">{step.description}</p>
-                  </motion.div>
-                ))}
-              </div>
+              <ChromaGrid 
+                cols="grid-cols-1 md:grid-cols-2"
+                radius={300}
+                damping={0.45}
+                fadeOut={0.6}
+                ease="power3.out"
+                items={retirementSteps.map(step => ({
+                  title: step.title,
+                  description: step.description,
+                  icon: step.icon,
+                  borderColor: step.color.includes('blue') ? '#3B82F6' : step.color.includes('emerald') ? '#10B981' : step.color.includes('amber') ? '#F59E0B' : '#6366F1',
+                  gradient: `linear-gradient(145deg, ${step.color.includes('blue') ? '#3B82F6' : step.color.includes('emerald') ? '#10B981' : step.color.includes('amber') ? '#F59E0B' : '#6366F1'}, #000)`
+                }))}
+              />
             </section>
 
             {/* SWP Section */}
@@ -93,16 +94,27 @@ export default function RetirementGuide() {
                 <p className="text-slate-600 mb-6">
                   A Systematic Withdrawal Plan (SWP) allows you to withdraw a fixed amount from your mutual fund investments regularly. It is often more tax-efficient than traditional pensions or FDs.
                 </p>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="p-5 bg-slate-50 rounded-2xl border border-slate-100">
-                    <h4 className="font-bold text-slate-900 mb-2">Tax Efficiency</h4>
-                    <p className="text-xs text-slate-500">Only the capital gains portion of the withdrawal is taxed, not the entire amount.</p>
-                  </div>
-                  <div className="p-5 bg-slate-50 rounded-2xl border border-slate-100">
-                    <h4 className="font-bold text-slate-900 mb-2">Flexibility</h4>
-                    <p className="text-xs text-slate-500">You can increase, decrease, or stop the withdrawal amount at any time.</p>
-                  </div>
-                </div>
+                <ChromaGrid 
+                  cols="grid-cols-1 md:grid-cols-2"
+                  radius={300}
+                  damping={0.45}
+                  fadeOut={0.6}
+                  ease="power3.out"
+                  items={[
+                    {
+                      title: 'Tax Efficiency',
+                      description: 'Only the capital gains portion of the withdrawal is taxed, not the entire amount.',
+                      borderColor: '#3B82F6',
+                      gradient: 'linear-gradient(145deg, #3B82F6, #000)'
+                    },
+                    {
+                      title: 'Flexibility',
+                      description: 'You can increase, decrease, or stop the withdrawal amount at any time.',
+                      borderColor: '#10B981',
+                      gradient: 'linear-gradient(180deg, #10B981, #000)'
+                    }
+                  ]}
+                />
               </div>
               <div className="mt-8 pt-8 border-t border-slate-100">
                 <h4 className="font-bold text-slate-900 mb-4">The 3-Bucket Strategy for Withdrawals</h4>
@@ -191,50 +203,73 @@ export default function RetirementGuide() {
 
             <section className="bg-white p-10 rounded-[2.5rem] border border-slate-200 shadow-sm">
               <h2 className="text-2xl font-bold text-slate-900 mb-6">Estate Planning: Securing Your Legacy</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100">
-                  <h4 className="font-bold text-slate-900 mb-2">Wills & Nominations</h4>
-                  <p className="text-xs text-slate-600 mb-4">A nominee is only a "custodian." A Will is the legal document that determines who actually inherits your assets.</p>
-                  <ul className="text-[10px] text-slate-500 space-y-1">
-                    <li>• Register your Will for better legal standing.</li>
-                    <li>• Ensure all bank accounts and folios have nominees.</li>
-                  </ul>
-                </div>
-                <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100">
-                  <h4 className="font-bold text-slate-900 mb-2">Succession Planning</h4>
-                  <p className="text-xs text-slate-600 mb-4">For business owners, planning the transition of leadership and ownership is critical for continuity.</p>
-                  <ul className="text-[10px] text-slate-500 space-y-1">
-                    <li>• Create a family trust for complex estates.</li>
-                    <li>• Clearly define roles for the next generation.</li>
-                  </ul>
-                </div>
-              </div>
+              <ChromaGrid 
+                cols="grid-cols-1 md:grid-cols-2"
+                radius={300}
+                damping={0.45}
+                fadeOut={0.6}
+                ease="power3.out"
+                items={[
+                  {
+                    title: 'Wills & Nominations',
+                    description: 'A nominee is only a "custodian." A Will is the legal document that determines who actually inherits your assets.',
+                    borderColor: '#3B82F6',
+                    gradient: 'linear-gradient(145deg, #3B82F6, #000)'
+                  },
+                  {
+                    title: 'Succession Planning',
+                    description: 'For business owners, planning the transition of leadership and ownership is critical for continuity.',
+                    borderColor: '#10B981',
+                    gradient: 'linear-gradient(180deg, #10B981, #000)'
+                  }
+                ]}
+              />
             </section>
 
-            {/* Inflation Section */}
+            <section className="bg-white p-10 rounded-[2.5rem] border border-slate-200 shadow-sm">
+              <h2 className="text-2xl font-bold text-slate-900 mb-6">Legacy Planning: Beyond the Will</h2>
+              <ChromaGrid 
+                cols="grid-cols-1 md:grid-cols-2"
+                radius={300}
+                damping={0.45}
+                fadeOut={0.6}
+                ease="power3.out"
+                items={[
+                  {
+                    title: 'Private Family Trusts',
+                    description: 'A trust allows you to pass on assets without probate. It provides protection against creditors and disputes.',
+                    borderColor: '#3B82F6',
+                    gradient: 'linear-gradient(145deg, #3B82F6, #000)'
+                  },
+                  {
+                    title: 'Digital Asset Planning',
+                    description: 'Your legacy includes digital assets like social media, crypto-wallets, and online subscriptions.',
+                    borderColor: '#10B981',
+                    gradient: 'linear-gradient(180deg, #10B981, #000)'
+                  }
+                ]}
+              />
+            </section>
+
             <section className="bg-rose-50 p-10 rounded-[2.5rem] border border-rose-100">
               <h2 className="text-2xl font-bold text-rose-900 mb-6 flex items-center gap-3">
                 <AlertCircle className="w-6 h-6 text-rose-600" />
-                The Silent Killer: Inflation
+                The Silent Killer: Inflation & Healthcare
               </h2>
               <div className="prose prose-slate max-w-none">
                 <p className="text-rose-800 mb-6">
-                  Inflation erodes the purchasing power of your money. What costs ₹1 Lakh today will cost ₹4.3 Lakh in 25 years at 6% inflation.
+                  While general inflation is ~6%, medical inflation in India is rising at 14-15% annually. A retirement corpus that ignores this will be exhausted much sooner than expected.
                 </p>
                 <div className="bg-white p-6 rounded-2xl shadow-sm">
-                  <h4 className="font-bold text-slate-900 mb-4">Impact of 6% Inflation</h4>
+                  <h4 className="font-bold text-slate-900 mb-4">Projected Cost of Surgery (₹5 Lakh today)</h4>
                   <div className="space-y-3">
                     <div className="flex justify-between text-sm">
-                      <span className="text-slate-500">Today</span>
-                      <span className="font-bold text-slate-900">₹1,00,000</span>
+                      <span className="text-slate-500">In 10 Years (14% infl.)</span>
+                      <span className="font-bold text-rose-600">₹18.5 Lakh</span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-slate-500">In 10 Years</span>
-                      <span className="font-bold text-slate-900">₹1,79,085</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-slate-500">In 20 Years</span>
-                      <span className="font-bold text-slate-900">₹3,20,714</span>
+                      <span className="text-slate-500">In 20 Years (14% infl.)</span>
+                      <span className="font-bold text-rose-600">₹68.7 Lakh</span>
                     </div>
                   </div>
                 </div>

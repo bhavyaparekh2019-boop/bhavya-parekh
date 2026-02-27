@@ -7,16 +7,29 @@ import Logo from './Logo';
 export default function Footer() {
   const sections = [
     {
-      title: 'Services',
-      links: ['Wealth Management', 'Institutional Investing', 'Retirement Planning', 'Insurance Solutions'],
+      title: 'Guides',
+      links: [
+        { name: 'Investment', href: '/guides/investment' },
+        { name: 'Insurance', href: '/guides/insurance' },
+        { name: 'Retirement', href: '/guides/retirement' },
+        { name: 'Tax Planning', href: '/guides/tax' }
+      ],
     },
     {
       title: 'Company',
-      links: ['About Us', 'Our Team', 'Insights', 'Contact'],
+      links: [
+        { name: 'About Us', href: '/about' },
+        { name: 'Insights', href: '/insights' },
+        { name: 'Contact', href: '/contact' }
+      ],
     },
     {
-      title: 'Compliance',
-      links: ['Privacy Policy', 'Terms of Service', 'Disclosure', 'Security'],
+      title: 'Tools',
+      links: [
+        { name: 'SIP Calculator', href: '/tools/sip' },
+        { name: 'EMI Calculator', href: '/tools/mortgage' },
+        { name: 'ROI Calculator', href: '/tools/roi' }
+      ],
     },
   ];
 
@@ -47,9 +60,9 @@ export default function Footer() {
               <h4 className="font-bold text-slate-900 mb-6">{section.title}</h4>
               <ul className="space-y-4 text-sm text-slate-500">
                 {section.links.map((link) => (
-                  <li key={link}>
-                    <Link to="#" className="hover:text-primary transition-colors">
-                      {link}
+                  <li key={link.name}>
+                    <Link to={link.href} className="hover:text-primary transition-colors">
+                      {link.name}
                     </Link>
                   </li>
                 ))}

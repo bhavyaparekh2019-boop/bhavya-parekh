@@ -1,6 +1,9 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { BarChart2, TrendingUp, Activity, BookOpen, Globe, ArrowRight, CheckCircle2, AlertTriangle } from 'lucide-react';
+import BlurText from '@/src/components/BlurText';
+import ChromaGrid from '@/src/components/ChromaGrid';
+import { useModal } from '@/src/context/ModalContext';
 
 const marketConcepts = [
   {
@@ -30,6 +33,7 @@ const marketConcepts = [
 ];
 
 export default function StockMarketGuide() {
+  const { openConsultationModal } = useModal();
   return (
     <div className="bg-slate-50 min-h-screen pb-20">
       {/* Hero Section */}
@@ -43,9 +47,12 @@ export default function StockMarketGuide() {
             <span className="inline-block px-3 py-1 bg-primary/10 text-primary text-xs font-bold rounded-full mb-4 uppercase tracking-wider">
               Knowledge Base
             </span>
-            <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 tracking-tight">
-              Stock Market <span className="text-primary">Fundamentals</span>
-            </h1>
+            <BlurText 
+              text="Stock Market Fundamentals"
+              centered={false}
+              highlight="Fundamentals"
+              className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 tracking-tight"
+            />
             <p className="text-xl text-slate-600 leading-relaxed">
               Demystifying the stock market. Learn how it works, why companies go public, and how you can start your journey as a savvy investor.
             </p>
@@ -63,24 +70,20 @@ export default function StockMarketGuide() {
                 <BarChart2 className="w-6 h-6 text-primary" />
                 Core Market Concepts
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {marketConcepts.map((concept, idx) => (
-                  <motion.div 
-                    key={concept.title}
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: idx * 0.1 }}
-                    className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm"
-                  >
-                    <div className={`w-14 h-14 rounded-2xl ${concept.color} flex items-center justify-center mb-6`}>
-                      <concept.icon className="w-7 h-7" />
-                    </div>
-                    <h3 className="text-xl font-bold text-slate-900 mb-3">{concept.title}</h3>
-                    <p className="text-slate-600 text-sm leading-relaxed">{concept.description}</p>
-                  </motion.div>
-                ))}
-              </div>
+              <ChromaGrid 
+                cols="grid-cols-1 md:grid-cols-2"
+                radius={300}
+                damping={0.45}
+                fadeOut={0.6}
+                ease="power3.out"
+                items={marketConcepts.map(concept => ({
+                  title: concept.title,
+                  description: concept.description,
+                  icon: concept.icon,
+                  borderColor: concept.color.includes('blue') ? '#3B82F6' : concept.color.includes('emerald') ? '#10B981' : concept.color.includes('amber') ? '#F59E0B' : '#6366F1',
+                  gradient: `linear-gradient(145deg, ${concept.color.includes('blue') ? '#3B82F6' : concept.color.includes('emerald') ? '#10B981' : concept.color.includes('amber') ? '#F59E0B' : '#6366F1'}, #000)`
+                }))}
+              />
             </section>
 
             {/* Analysis Section */}
@@ -186,35 +189,75 @@ export default function StockMarketGuide() {
 
             <section className="bg-white p-10 rounded-[2.5rem] border border-slate-200 shadow-sm">
               <h2 className="text-2xl font-bold text-slate-900 mb-6">The 4 Stages of Market Cycles</h2>
-              <div className="space-y-8">
-                <div className="flex gap-6">
-                  <div className="w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-900 font-bold shrink-0">1</div>
-                  <div>
-                    <h4 className="font-bold text-slate-900 mb-1">Accumulation Phase</h4>
-                    <p className="text-sm text-slate-600">Occurs after the market has bottomed. Institutional investors start buying quietly. Sentiment is still negative.</p>
-                  </div>
-                </div>
-                <div className="flex gap-6">
-                  <div className="w-12 h-12 bg-emerald-100 rounded-2xl flex items-center justify-center text-emerald-600 font-bold shrink-0">2</div>
-                  <div>
-                    <h4 className="font-bold text-slate-900 mb-1">Markup Phase (Bull Market)</h4>
-                    <p className="text-sm text-slate-600">Prices start rising steadily. Media coverage increases, and retail investors join in. Sentiment becomes euphoric.</p>
-                  </div>
-                </div>
-                <div className="flex gap-6">
-                  <div className="w-12 h-12 bg-amber-100 rounded-2xl flex items-center justify-center text-amber-600 font-bold shrink-0">3</div>
-                  <div>
-                    <h4 className="font-bold text-slate-900 mb-1">Distribution Phase</h4>
-                    <p className="text-sm text-slate-600">Prices flatten out as "smart money" starts selling to retail investors. Volatility increases.</p>
-                  </div>
-                </div>
-                <div className="flex gap-6">
-                  <div className="w-12 h-12 bg-rose-100 rounded-2xl flex items-center justify-center text-rose-600 font-bold shrink-0">4</div>
-                  <div>
-                    <h4 className="font-bold text-slate-900 mb-1">Markdown Phase (Bear Market)</h4>
-                    <p className="text-sm text-slate-600">Prices fall rapidly. Panic selling ensues. The cycle eventually returns to accumulation.</p>
-                  </div>
-                </div>
+              <ChromaGrid 
+                cols="grid-cols-1 md:grid-cols-2"
+                radius={300}
+                damping={0.45}
+                fadeOut={0.6}
+                ease="power3.out"
+                items={[
+                  {
+                    title: 'Accumulation Phase',
+                    description: 'Occurs after the market has bottomed. Institutional investors start buying quietly. Sentiment is still negative.',
+                    borderColor: '#3B82F6',
+                    gradient: 'linear-gradient(145deg, #3B82F6, #000)'
+                  },
+                  {
+                    title: 'Markup Phase (Bull)',
+                    description: 'Prices start rising steadily. Media coverage increases, and retail investors join in. Sentiment becomes euphoric.',
+                    borderColor: '#10B981',
+                    gradient: 'linear-gradient(180deg, #10B981, #000)'
+                  },
+                  {
+                    title: 'Distribution Phase',
+                    description: 'Prices flatten out as "smart money" starts selling to retail investors. Volatility increases.',
+                    borderColor: '#F59E0B',
+                    gradient: 'linear-gradient(145deg, #F59E0B, #000)'
+                  },
+                  {
+                    title: 'Markdown Phase (Bear)',
+                    description: 'Prices fall rapidly. Panic selling ensues. The cycle eventually returns to accumulation.',
+                    borderColor: '#F43F5E',
+                    gradient: 'linear-gradient(145deg, #F43F5E, #000)'
+                  }
+                ]}
+              />
+            </section>
+
+            <section className="bg-white p-10 rounded-[2.5rem] border border-slate-200 shadow-sm">
+              <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+                <AlertTriangle className="w-6 h-6 text-amber-500" />
+                Derivatives: Futures & Options (F&O)
+              </h2>
+              <p className="text-sm text-slate-600 mb-8 leading-relaxed">
+                Derivatives are financial contracts that derive their value from an underlying asset. While they offer high leverage, they are extremely risky for retail investors.
+              </p>
+              <ChromaGrid 
+                cols="grid-cols-1 md:grid-cols-2"
+                radius={300}
+                damping={0.45}
+                fadeOut={0.6}
+                ease="power3.out"
+                items={[
+                  {
+                    title: 'Futures',
+                    description: 'Agreement to buy or sell an asset at a predetermined price on a specified future date.',
+                    borderColor: '#3B82F6',
+                    gradient: 'linear-gradient(145deg, #3B82F6, #000)'
+                  },
+                  {
+                    title: 'Options',
+                    description: 'Right (but not obligation) to buy (Call) or sell (Put) an asset. Sellers take on significant risk.',
+                    borderColor: '#10B981',
+                    gradient: 'linear-gradient(180deg, #10B981, #000)'
+                  }
+                ]}
+              />
+              <div className="mt-8 p-6 bg-amber-50 rounded-2xl border border-amber-100">
+                <h4 className="font-bold text-amber-900 text-sm mb-2">BHP's Warning on F&O</h4>
+                <p className="text-xs text-amber-800">
+                  SEBI data shows that 9 out of 10 individual traders in the equity F&O segment incur losses. We recommend derivatives only for hedging purposes for sophisticated portfolios.
+                </p>
               </div>
             </section>
 
@@ -293,7 +336,10 @@ export default function StockMarketGuide() {
               <p className="text-sm text-slate-600 mb-6">
                 Our advisors can help you pick the right stocks or funds based on your risk profile and goals.
               </p>
-              <button className="w-full bg-primary text-slate-900 font-bold py-4 rounded-2xl text-sm hover:brightness-105 transition-all flex items-center justify-center gap-2">
+              <button 
+                onClick={openConsultationModal}
+                className="w-full bg-primary text-slate-900 font-bold py-4 rounded-2xl text-sm hover:brightness-105 transition-all flex items-center justify-center gap-2"
+              >
                 Consult an Advisor <ArrowRight className="w-4 h-4" />
               </button>
             </div>

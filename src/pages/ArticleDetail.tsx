@@ -3,6 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Clock, Calendar, User, Share2, Bookmark, MessageSquare, Sparkles, Loader2, Info } from 'lucide-react';
 import { ARTICLES } from '@/src/constants';
 import Sidebar from '@/src/components/Sidebar';
+import BlurText from '@/src/components/BlurText';
 import { cn } from '@/src/lib/utils';
 import { GoogleGenAI } from "@google/genai";
 import { motion, AnimatePresence } from 'motion/react';
@@ -82,9 +83,11 @@ export default function ArticleDetail() {
             <span className="inline-block bg-primary text-slate-900 text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded mb-4">
               {article.category}
             </span>
-            <h1 className="text-4xl md:text-6xl font-black text-white leading-tight max-w-4xl mb-6">
-              {article.title}
-            </h1>
+            <BlurText 
+              text={article.title}
+              centered={false}
+              className="text-4xl md:text-6xl font-black text-white leading-tight max-w-4xl mb-6"
+            />
             
             <div className="flex flex-wrap items-center gap-6 text-white/70 text-sm">
               <div className="flex items-center gap-2">

@@ -1,6 +1,8 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { Layers, Zap, BarChart3, ShieldCheck, Info, ArrowRight, CheckCircle2, HelpCircle } from 'lucide-react';
+import { Layers, Zap, BarChart3, ShieldCheck, Info, ArrowRight, CheckCircle2, HelpCircle, Sparkles, Target } from 'lucide-react';
+import BlurText from '@/src/components/BlurText';
+import ChromaGrid from '@/src/components/ChromaGrid';
 
 const fundTypes = [
   {
@@ -43,9 +45,12 @@ export default function MutualFundsGuide() {
             <span className="inline-block px-3 py-1 bg-primary/10 text-primary text-xs font-bold rounded-full mb-4 uppercase tracking-wider">
               Knowledge Base
             </span>
-            <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 tracking-tight">
-              Mutual Funds: <span className="text-primary">Wealth Simplified</span>
-            </h1>
+            <BlurText 
+              text="Mutual Funds: Wealth Simplified"
+              centered={false}
+              highlight="Wealth Simplified"
+              className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 tracking-tight"
+            />
             <p className="text-xl text-slate-600 leading-relaxed">
               Mutual funds allow you to pool your money with other investors to be managed by professionals. It's the most efficient way for retail investors to participate in the Indian growth story.
             </p>
@@ -65,42 +70,50 @@ export default function MutualFundsGuide() {
                 </div>
                 <h2 className="text-2xl font-bold text-slate-900">SIP vs. Lumpsum</h2>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="space-y-4">
-                  <h4 className="font-bold text-slate-900 text-lg">SIP (Systematic Investment Plan)</h4>
-                  <p className="text-sm text-slate-600 leading-relaxed">
-                    Invest a fixed amount regularly (monthly/quarterly). It averages out the cost of purchase and instills financial discipline.
-                  </p>
-                  <ul className="space-y-2 text-xs text-slate-500">
-                    <li className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3 text-emerald-500" /> Rupee Cost Averaging</li>
-                    <li className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3 text-emerald-500" /> Power of Compounding</li>
-                    <li className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3 text-emerald-500" /> Start with as low as ₹500</li>
-                  </ul>
-                </div>
-                <div className="space-y-4">
-                  <h4 className="font-bold text-slate-900 text-lg">Lumpsum Investment</h4>
-                  <p className="text-sm text-slate-600 leading-relaxed">
-                    Invest a large amount at once. Best suited when the market is undervalued or when you have a windfall (bonus/inheritance).
-                  </p>
-                  <ul className="space-y-2 text-xs text-slate-500">
-                    <li className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3 text-blue-500" /> High returns in bull markets</li>
-                    <li className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3 text-blue-500" /> No recurring commitment</li>
-                    <li className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3 text-blue-500" /> Requires market timing skills</li>
-                  </ul>
-                </div>
-              </div>
+              <ChromaGrid 
+                cols="grid-cols-1 md:grid-cols-2"
+                radius={300}
+                damping={0.45}
+                fadeOut={0.6}
+                ease="power3.out"
+                items={[
+                  {
+                    title: 'SIP (Systematic Investment Plan)',
+                    description: 'Invest a fixed amount regularly. It averages out the cost of purchase and instills financial discipline.',
+                    borderColor: '#3B82F6',
+                    gradient: 'linear-gradient(145deg, #3B82F6, #000)'
+                  },
+                  {
+                    title: 'Lumpsum Investment',
+                    description: 'Invest a large amount at once. Best suited when the market is undervalued or when you have a windfall.',
+                    borderColor: '#10B981',
+                    gradient: 'linear-gradient(180deg, #10B981, #000)'
+                  }
+                ]}
+              />
               <div className="mt-8 pt-8 border-t border-slate-100">
                 <h4 className="font-bold text-slate-900 mb-4">Advanced Strategies: STP & SWP</h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="p-5 bg-slate-50 rounded-2xl border border-slate-100">
-                    <h5 className="font-bold text-slate-900 text-sm mb-2">STP (Systematic Transfer Plan)</h5>
-                    <p className="text-xs text-slate-500">Transfer a fixed amount from one fund (usually Debt) to another (usually Equity). Ideal for investing a large lumpsum gradually to avoid market timing risk.</p>
-                  </div>
-                  <div className="p-5 bg-slate-50 rounded-2xl border border-slate-100">
-                    <h5 className="font-bold text-slate-900 text-sm mb-2">SWP (Systematic Withdrawal Plan)</h5>
-                    <p className="text-xs text-slate-500">Withdraw a fixed amount regularly from your fund. Ideal for generating a steady monthly income during retirement while the remaining capital stays invested.</p>
-                  </div>
-                </div>
+                <ChromaGrid 
+                  cols="grid-cols-1 md:grid-cols-2"
+                  radius={300}
+                  damping={0.45}
+                  fadeOut={0.6}
+                  ease="power3.out"
+                  items={[
+                    {
+                      title: 'STP (Systematic Transfer Plan)',
+                      description: 'Transfer a fixed amount from one fund to another. Ideal for investing a large lumpsum gradually.',
+                      borderColor: '#3B82F6',
+                      gradient: 'linear-gradient(145deg, #3B82F6, #000)'
+                    },
+                    {
+                      title: 'SWP (Systematic Withdrawal Plan)',
+                      description: 'Withdraw a fixed amount regularly from your fund. Ideal for generating a steady monthly income.',
+                      borderColor: '#10B981',
+                      gradient: 'linear-gradient(180deg, #10B981, #000)'
+                    }
+                  ]}
+                />
               </div>
             </section>
 
@@ -110,31 +123,20 @@ export default function MutualFundsGuide() {
                 <Layers className="w-6 h-6 text-primary" />
                 Categories of Mutual Funds
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {fundTypes.map((fund, idx) => (
-                  <motion.div 
-                    key={fund.title}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: idx * 0.1 }}
-                    className="bg-white p-8 rounded-3xl border border-slate-200 hover:border-primary transition-colors group"
-                  >
-                    <div className={`w-12 h-12 rounded-xl ${fund.color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
-                      <BarChart3 className="w-6 h-6" />
-                    </div>
-                    <h3 className="text-xl font-bold text-slate-900 mb-3">{fund.title}</h3>
-                    <p className="text-slate-600 text-sm mb-6 leading-relaxed">{fund.description}</p>
-                    <div className="flex flex-wrap gap-2">
-                      {fund.subtypes.map(sub => (
-                        <span key={sub} className="px-2 py-1 bg-slate-50 text-slate-500 text-[10px] font-bold rounded-md border border-slate-100 uppercase tracking-wider">
-                          {sub}
-                        </span>
-                      ))}
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
+            <ChromaGrid 
+              cols="grid-cols-1 md:grid-cols-2"
+              radius={300}
+              damping={0.45}
+              fadeOut={0.6}
+              ease="power3.out"
+              items={fundTypes.map(fund => ({
+                title: fund.title,
+                description: fund.description,
+                icon: BarChart3,
+                borderColor: fund.color.includes('blue') ? '#3B82F6' : fund.color.includes('emerald') ? '#10B981' : fund.color.includes('amber') ? '#F59E0B' : '#6366F1',
+                gradient: `linear-gradient(145deg, ${fund.color.includes('blue') ? '#3B82F6' : fund.color.includes('emerald') ? '#10B981' : fund.color.includes('amber') ? '#F59E0B' : '#6366F1'}, #000)`
+              }))}
+            />
               <div className="mt-8 bg-white p-8 rounded-3xl border border-slate-200">
                 <h4 className="font-bold text-slate-900 mb-6">How to Read a Fund Factsheet</h4>
                 <p className="text-sm text-slate-600 mb-6">The monthly factsheet is the most important document for an investor. Here's what to look for:</p>
@@ -178,28 +180,117 @@ export default function MutualFundsGuide() {
               </div>
             </section>
 
+            <section className="bg-white p-10 rounded-[2.5rem] border border-slate-200 shadow-sm">
+              <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+                <Sparkles className="w-6 h-6 text-primary" />
+                Advanced Mutual Fund Categories
+              </h2>
+              <ChromaGrid 
+                cols="grid-cols-1 md:grid-cols-2"
+                radius={300}
+                damping={0.45}
+                fadeOut={0.6}
+                ease="power3.out"
+                items={[
+                  {
+                    title: 'Arbitrage Funds',
+                    description: 'Exploit price difference between cash and derivatives market. Low-risk and taxed as equity funds.',
+                    borderColor: '#3B82F6',
+                    gradient: 'linear-gradient(145deg, #3B82F6, #000)'
+                  },
+                  {
+                    title: 'Quant Funds',
+                    description: 'Investment decisions are made by mathematical models and algorithms. Removes emotional bias.',
+                    borderColor: '#10B981',
+                    gradient: 'linear-gradient(180deg, #10B981, #000)'
+                  },
+                  {
+                    title: 'ESG Funds',
+                    description: 'Focus on companies with high Environmental, Social, and Governance standards.',
+                    borderColor: '#F59E0B',
+                    gradient: 'linear-gradient(145deg, #F59E0B, #000)'
+                  },
+                  {
+                    title: 'International Funds',
+                    description: 'Invest in global markets like US or Europe. Provides geographical diversification.',
+                    borderColor: '#6366F1',
+                    gradient: 'linear-gradient(145deg, #6366F1, #000)'
+                  }
+                ]}
+              />
+            </section>
+
+            <section className="bg-slate-900 text-white p-10 rounded-[2.5rem] shadow-2xl">
+              <h2 className="text-2xl font-bold mb-8 flex items-center gap-3">
+                <Target className="w-6 h-6 text-primary" />
+                BHP's 5-Step Fund Selection Process
+              </h2>
+              <div className="space-y-6">
+                <div className="flex gap-4 items-start">
+                  <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-slate-900 font-bold shrink-0">1</div>
+                  <div>
+                    <h4 className="font-bold">Rolling Returns Analysis</h4>
+                    <p className="text-sm text-slate-400">We don't look at point-to-point returns. We analyze performance over multiple 3-year and 5-year periods to check consistency.</p>
+                  </div>
+                </div>
+                <div className="flex gap-4 items-start">
+                  <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-slate-900 font-bold shrink-0">2</div>
+                  <div>
+                    <h4 className="font-bold">Fund Manager Track Record</h4>
+                    <p className="text-sm text-slate-400">We evaluate the manager's experience, investment philosophy, and performance across different market cycles.</p>
+                  </div>
+                </div>
+                <div className="flex gap-4 items-start">
+                  <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-slate-900 font-bold shrink-0">3</div>
+                  <div>
+                    <h4 className="font-bold">Portfolio Quality Check</h4>
+                    <p className="text-sm text-slate-400">Deep dive into the underlying stocks/bonds. We look for high-quality companies with strong balance sheets.</p>
+                  </div>
+                </div>
+                <div className="flex gap-4 items-start">
+                  <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-slate-900 font-bold shrink-0">4</div>
+                  <div>
+                    <h4 className="font-bold">Risk-Adjusted Returns</h4>
+                    <p className="text-sm text-slate-400">Using ratios like Sharpe and Sortino to ensure the fund isn't taking excessive risk for the returns generated.</p>
+                  </div>
+                </div>
+                <div className="flex gap-4 items-start">
+                  <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-slate-900 font-bold shrink-0">5</div>
+                  <div>
+                    <h4 className="font-bold">Expense Ratio & Exit Load</h4>
+                    <p className="text-sm text-slate-400">Ensuring the costs are reasonable and aligned with the fund's strategy.</p>
+                  </div>
+                </div>
+              </div>
+            </section>
+
             {/* Taxation Section */}
             <section className="bg-white p-10 rounded-[2.5rem] border border-slate-200 shadow-sm">
               <h2 className="text-2xl font-bold text-slate-900 mb-8 flex items-center gap-3">
                 <BarChart3 className="w-6 h-6 text-primary" />
                 Taxation on Mutual Funds (India)
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100">
-                  <h4 className="font-bold text-slate-900 mb-3">Equity-Oriented Funds</h4>
-                  <ul className="text-sm text-slate-600 space-y-3">
-                    <li><span className="font-bold text-slate-900">STCG (held {'<'} 1 yr):</span> 15% flat tax.</li>
-                    <li><span className="font-bold text-slate-900">LTCG (held {'>'} 1 yr):</span> 10% tax on gains above ₹1 Lakh.</li>
-                  </ul>
-                </div>
-                <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100">
-                  <h4 className="font-bold text-slate-900 mb-3">Debt-Oriented Funds</h4>
-                  <ul className="text-sm text-slate-600 space-y-3">
-                    <li><span className="font-bold text-slate-900">All Gains:</span> Taxed as per your income tax slab rate (as per latest 2023 rules).</li>
-                    <li><span className="font-bold text-slate-900">Indexation:</span> No longer available for debt funds.</li>
-                  </ul>
-                </div>
-              </div>
+              <ChromaGrid 
+                cols="grid-cols-1 md:grid-cols-2"
+                radius={300}
+                damping={0.45}
+                fadeOut={0.6}
+                ease="power3.out"
+                items={[
+                  {
+                    title: 'Equity-Oriented Funds',
+                    description: 'STCG (< 1 yr): 15% flat tax. LTCG (> 1 yr): 10% tax on gains above ₹1 Lakh.',
+                    borderColor: '#3B82F6',
+                    gradient: 'linear-gradient(145deg, #3B82F6, #000)'
+                  },
+                  {
+                    title: 'Debt-Oriented Funds',
+                    description: 'All Gains: Taxed as per your income tax slab rate. Indexation is no longer available.',
+                    borderColor: '#10B981',
+                    gradient: 'linear-gradient(180deg, #10B981, #000)'
+                  }
+                ]}
+              />
             </section>
 
             {/* Common Mistakes */}

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { Calculator, TrendingUp, PieChart, ArrowRight, Info, RefreshCcw } from 'lucide-react';
+import { Calculator, TrendingUp, PieChart, ArrowRight, Info, RefreshCcw, Zap, Target } from 'lucide-react';
+import BlurText from '@/src/components/BlurText';
+import ChromaGrid from '@/src/components/ChromaGrid';
 import { cn } from '@/src/lib/utils';
 
 export default function SIPCalculator() {
@@ -42,7 +44,11 @@ export default function SIPCalculator() {
     <div className="bg-slate-50 min-h-screen pt-24 pb-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-12">
-          <h1 className="text-4xl font-bold text-slate-900 mb-4 tracking-tight">SIP Calculator</h1>
+          <BlurText 
+            text="SIP Calculator"
+            centered={false}
+            className="text-4xl font-bold text-slate-900 mb-4 tracking-tight"
+          />
           <p className="text-lg text-slate-600">Plan your wealth creation journey with our Systematic Investment Plan calculator.</p>
         </div>
 
@@ -122,20 +128,29 @@ export default function SIPCalculator() {
                 <Info className="w-6 h-6 text-primary" />
                 Why Start a SIP?
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="space-y-4">
-                  <h4 className="font-bold text-slate-900">Rupee Cost Averaging</h4>
-                  <p className="text-sm text-slate-600 leading-relaxed">
-                    When markets are low, your SIP buys more units. When markets are high, it buys fewer. Over time, this averages out the cost of your investment.
-                  </p>
-                </div>
-                <div className="space-y-4">
-                  <h4 className="font-bold text-slate-900">Power of Compounding</h4>
-                  <p className="text-sm text-slate-600 leading-relaxed">
-                    The returns you earn also start earning returns. The longer you stay invested, the more dramatic this effect becomes.
-                  </p>
-                </div>
-              </div>
+              <ChromaGrid 
+                cols="grid-cols-1 md:grid-cols-2"
+                radius={300}
+                damping={0.45}
+                fadeOut={0.6}
+                ease="power3.out"
+                items={[
+                  {
+                    title: 'Rupee Cost Averaging',
+                    description: 'When markets are low, your SIP buys more units. When markets are high, it buys fewer. Over time, this averages out the cost of your investment.',
+                    icon: RefreshCcw,
+                    borderColor: '#3B82F6',
+                    gradient: 'linear-gradient(145deg, #3B82F6, #000)'
+                  },
+                  {
+                    title: 'Power of Compounding',
+                    description: 'The returns you earn also start earning returns. The longer you stay invested, the more dramatic this effect becomes.',
+                    icon: Zap,
+                    borderColor: '#10B981',
+                    gradient: 'linear-gradient(180deg, #10B981, #000)'
+                  }
+                ]}
+              />
             </div>
           </div>
 

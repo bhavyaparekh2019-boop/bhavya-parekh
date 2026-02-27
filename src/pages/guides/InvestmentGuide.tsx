@@ -1,6 +1,8 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { TrendingUp, PieChart, Landmark, Coins, Building2, ArrowUpRight, Target, Zap } from 'lucide-react';
+import BlurText from '@/src/components/BlurText';
+import ChromaGrid from '@/src/components/ChromaGrid';
 
 const assetClasses = [
   {
@@ -51,9 +53,12 @@ export default function InvestmentGuide() {
             <span className="inline-block px-3 py-1 bg-primary/10 text-primary text-xs font-bold rounded-full mb-4 uppercase tracking-wider">
               Knowledge Base
             </span>
-            <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 tracking-tight">
-              Mastering the Art of <span className="text-primary">Investing</span>
-            </h1>
+            <BlurText 
+              text="Mastering the Art of Investing"
+              centered={false}
+              highlight="Investing"
+              className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 tracking-tight"
+            />
             <p className="text-xl text-slate-600 leading-relaxed">
               Investing is the process of putting your money to work to build wealth over time. It's not about timing the market, but time in the market.
             </p>
@@ -71,34 +76,22 @@ export default function InvestmentGuide() {
                 <PieChart className="w-6 h-6 text-primary" />
                 Understanding Asset Classes
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {assetClasses.map((asset, idx) => (
-                  <motion.div 
-                    key={asset.title}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: idx * 0.1 }}
-                    className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm"
-                  >
-                    <div className={`w-12 h-12 rounded-xl ${asset.color} flex items-center justify-center mb-4`}>
-                      <asset.icon className="w-6 h-6" />
-                    </div>
-                    <h3 className="text-lg font-bold text-slate-900 mb-2">{asset.title}</h3>
-                    <p className="text-slate-600 text-sm mb-4">{asset.description}</p>
-                    <div className="flex justify-between items-center pt-4 border-t border-slate-100">
-                      <div>
-                        <p className="text-[10px] uppercase font-bold text-slate-400">Risk</p>
-                        <p className="text-sm font-bold text-slate-900">{asset.risk}</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-[10px] uppercase font-bold text-slate-400">Avg. Returns</p>
-                        <p className="text-sm font-bold text-primary">{asset.returns}</p>
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
+              <ChromaGrid 
+                cols="grid-cols-1 md:grid-cols-2"
+                radius={300}
+                damping={0.45}
+                fadeOut={0.6}
+                ease="power3.out"
+                items={assetClasses.map(asset => ({
+                  title: asset.title,
+                  description: asset.description,
+                  icon: asset.icon,
+                  subtitle: `Returns: ${asset.returns}`,
+                  handle: `Risk: ${asset.risk}`,
+                  borderColor: asset.color.includes('blue') ? '#3B82F6' : asset.color.includes('emerald') ? '#10B981' : asset.color.includes('amber') ? '#F59E0B' : '#6366F1',
+                  gradient: `linear-gradient(145deg, ${asset.color.includes('blue') ? '#3B82F6' : asset.color.includes('emerald') ? '#10B981' : asset.color.includes('amber') ? '#F59E0B' : '#6366F1'}, #000)`
+                }))}
+              />
             </section>
 
             <section className="bg-white p-8 rounded-3xl border border-slate-200">
@@ -183,32 +176,27 @@ export default function InvestmentGuide() {
                 <Target className="w-6 h-6 text-primary" />
                 Strategic Asset Allocation
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div>
-                  <h4 className="font-bold text-slate-900 mb-3">Aggressive (Age 20-35)</h4>
-                  <div className="flex items-center gap-2 mb-4">
-                    <div className="h-4 w-3/4 bg-primary rounded-full" title="Equity" />
-                    <div className="h-4 w-1/4 bg-slate-200 rounded-full" title="Debt" />
-                  </div>
-                  <ul className="text-xs text-slate-600 space-y-2">
-                    <li>• 70-80% Equity for long-term growth</li>
-                    <li>• 20-30% Debt for stability</li>
-                    <li>• High risk tolerance, long horizon</li>
-                  </ul>
-                </div>
-                <div>
-                  <h4 className="font-bold text-slate-900 mb-3">Conservative (Age 50+)</h4>
-                  <div className="flex items-center gap-2 mb-4">
-                    <div className="h-4 w-1/3 bg-primary rounded-full" title="Equity" />
-                    <div className="h-4 w-2/3 bg-slate-200 rounded-full" title="Debt" />
-                  </div>
-                  <ul className="text-xs text-slate-600 space-y-2">
-                    <li>• 30-40% Equity to beat inflation</li>
-                    <li>• 60-70% Debt for capital protection</li>
-                    <li>• Low risk tolerance, focus on income</li>
-                  </ul>
-                </div>
-              </div>
+              <ChromaGrid 
+                cols="grid-cols-1 md:grid-cols-2"
+                radius={300}
+                damping={0.45}
+                fadeOut={0.6}
+                ease="power3.out"
+                items={[
+                  {
+                    title: 'Aggressive (Age 20-35)',
+                    description: '70-80% Equity for long-term growth. 20-30% Debt for stability. High risk tolerance, long horizon.',
+                    borderColor: '#3B82F6',
+                    gradient: 'linear-gradient(145deg, #3B82F6, #000)'
+                  },
+                  {
+                    title: 'Conservative (Age 50+)',
+                    description: '30-40% Equity to beat inflation. 60-70% Debt for capital protection. Low risk tolerance, focus on income.',
+                    borderColor: '#10B981',
+                    gradient: 'linear-gradient(180deg, #10B981, #000)'
+                  }
+                ]}
+              />
               <div className="mt-8 pt-8 border-t border-slate-100">
                 <h4 className="font-bold text-slate-900 mb-4">Portfolio Rebalancing</h4>
                 <p className="text-sm text-slate-600 mb-4">
@@ -225,26 +213,27 @@ export default function InvestmentGuide() {
                 <Landmark className="w-6 h-6 text-primary" />
                 Active vs. Passive Investing
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100">
-                  <h4 className="font-bold text-slate-900 mb-2">Active Investing</h4>
-                  <p className="text-xs text-slate-600 mb-4">Aims to "beat the market" through research, timing, and individual stock picking.</p>
-                  <ul className="text-[10px] text-slate-500 space-y-1">
-                    <li>• Higher potential returns</li>
-                    <li>• Higher costs (management fees)</li>
-                    <li>• Requires significant time and expertise</li>
-                  </ul>
-                </div>
-                <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100">
-                  <h4 className="font-bold text-slate-900 mb-2">Passive Investing</h4>
-                  <p className="text-xs text-slate-600 mb-4">Aims to "match the market" by tracking an index like Nifty 50.</p>
-                  <ul className="text-[10px] text-slate-500 space-y-1">
-                    <li>• Lower costs (Index funds/ETFs)</li>
-                    <li>• Consistent market returns</li>
-                    <li>• "Set it and forget it" approach</li>
-                  </ul>
-                </div>
-              </div>
+              <ChromaGrid 
+                cols="grid-cols-1 md:grid-cols-2"
+                radius={300}
+                damping={0.45}
+                fadeOut={0.6}
+                ease="power3.out"
+                items={[
+                  {
+                    title: 'Active Investing',
+                    description: 'Aims to "beat the market" through research, timing, and individual stock picking. Higher potential returns but higher costs.',
+                    borderColor: '#3B82F6',
+                    gradient: 'linear-gradient(145deg, #3B82F6, #000)'
+                  },
+                  {
+                    title: 'Passive Investing',
+                    description: 'Aims to "match the market" by tracking an index like Nifty 50. Lower costs and consistent market returns.',
+                    borderColor: '#10B981',
+                    gradient: 'linear-gradient(180deg, #10B981, #000)'
+                  }
+                ]}
+              />
             </section>
 
             <section className="bg-amber-50 p-8 rounded-3xl border border-amber-100">
@@ -255,22 +244,110 @@ export default function InvestmentGuide() {
               <p className="text-sm text-amber-800 mb-6">
                 Investing is 20% knowledge and 80% behavior. Your own psychology is often your biggest enemy.
               </p>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="bg-white p-4 rounded-xl shadow-sm">
-                  <h5 className="font-bold text-slate-900 text-xs mb-1">Loss Aversion</h5>
-                  <p className="text-[10px] text-slate-500">The pain of losing ₹10,000 is twice as powerful as the joy of gaining ₹10,000.</p>
-                </div>
-                <div className="bg-white p-4 rounded-xl shadow-sm">
-                  <h5 className="font-bold text-slate-900 text-xs mb-1">Herd Mentality</h5>
-                  <p className="text-[10px] text-slate-500">Buying just because everyone else is buying (FOMO) often leads to buying at peaks.</p>
-                </div>
-                <div className="bg-white p-4 rounded-xl shadow-sm">
-                  <h5 className="font-bold text-slate-900 text-xs mb-1">Confirmation Bias</h5>
-                  <p className="text-[10px] text-slate-500">Seeking information that only supports your existing beliefs about a stock.</p>
-                </div>
-              </div>
+              <ChromaGrid 
+                cols="grid-cols-1 md:grid-cols-3"
+                radius={300}
+                damping={0.45}
+                fadeOut={0.6}
+                ease="power3.out"
+                items={[
+                  {
+                    title: 'Loss Aversion',
+                    description: 'The pain of losing ₹10,000 is twice as powerful as the joy of gaining ₹10,000.',
+                    borderColor: '#F43F5E',
+                    gradient: 'linear-gradient(145deg, #F43F5E, #000)'
+                  },
+                  {
+                    title: 'Herd Mentality',
+                    description: 'Buying just because everyone else is buying (FOMO) often leads to buying at peaks.',
+                    borderColor: '#F59E0B',
+                    gradient: 'linear-gradient(145deg, #F59E0B, #000)'
+                  },
+                  {
+                    title: 'Confirmation Bias',
+                    description: 'Seeking information that only supports your existing beliefs about a stock.',
+                    borderColor: '#3B82F6',
+                    gradient: 'linear-gradient(145deg, #3B82F6, #000)'
+                  }
+                ]}
+              />
             </section>
 
+            <section className="bg-white p-8 rounded-3xl border border-slate-200">
+              <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+                <Building2 className="w-6 h-6 text-primary" />
+                Alternative Investments: Beyond Stocks & Bonds
+              </h2>
+              <p className="text-sm text-slate-600 mb-6">
+                For high-net-worth individuals and sophisticated investors, alternative assets provide diversification and non-correlated returns.
+              </p>
+              <ChromaGrid 
+                cols="grid-cols-1 md:grid-cols-2"
+                radius={300}
+                damping={0.45}
+                fadeOut={0.6}
+                ease="power3.out"
+                items={[
+                  {
+                    title: 'REITs & InvITs',
+                    description: 'Real Estate Investment Trusts and Infrastructure Investment Trusts allow you to invest in large-scale projects with small amounts.',
+                    borderColor: '#3B82F6',
+                    gradient: 'linear-gradient(145deg, #3B82F6, #000)'
+                  },
+                  {
+                    title: 'Private Equity & VC',
+                    description: 'Investing in unlisted companies or startups. High risk but potential for exponential returns over a 7-10 year horizon.',
+                    borderColor: '#10B981',
+                    gradient: 'linear-gradient(180deg, #10B981, #000)'
+                  },
+                  {
+                    title: 'Hedge Funds / AIFs',
+                    description: 'Alternative Investment Funds use complex strategies like long-short, arbitrage, and leverage to generate alpha.',
+                    borderColor: '#F59E0B',
+                    gradient: 'linear-gradient(145deg, #F59E0B, #000)'
+                  },
+                  {
+                    title: 'Structured Products',
+                    description: 'Customized investment products linked to an underlying asset with built-in downside protection or enhanced upside.',
+                    borderColor: '#6366F1',
+                    gradient: 'linear-gradient(145deg, #6366F1, #000)'
+                  }
+                ]}
+              />
+            </section>
+
+            <section className="bg-primary/10 p-8 rounded-3xl border border-primary/20">
+              <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+                <Target className="w-6 h-6 text-primary" />
+                BHP's Core Portfolio Construction Model
+              </h2>
+              <div className="space-y-6">
+                <p className="text-sm text-slate-700">
+                  We follow a "Core & Satellite" approach to portfolio construction, ensuring stability while capturing high-growth opportunities.
+                </p>
+                <ChromaGrid 
+                  cols="grid-cols-1 md:grid-cols-2"
+                  radius={300}
+                  damping={0.45}
+                  fadeOut={0.6}
+                  ease="power3.out"
+                  items={[
+                    {
+                      title: 'The Core (70-80%)',
+                      description: 'Stable, long-term investments like Large-cap Index funds, PPF, and High-grade Bonds.',
+                      borderColor: '#3B82F6',
+                      gradient: 'linear-gradient(145deg, #3B82F6, #000)'
+                    },
+                    {
+                      title: 'The Satellite (20-30%)',
+                      description: 'Tactical bets in Mid-cap, Small-cap, Sectoral funds, or Alternatives.',
+                      borderColor: '#10B981',
+                      gradient: 'linear-gradient(180deg, #10B981, #000)'
+                    }
+                  ]}
+                />
+              </div>
+            </section>
             <section className="bg-slate-900 text-white p-8 rounded-3xl">
               <h2 className="text-2xl font-bold mb-6">Taxation on Investments (India)</h2>
               <div className="space-y-6">
@@ -300,23 +377,25 @@ export default function InvestmentGuide() {
                 <Target className="w-6 h-6 text-primary" />
                 Investment Vehicles in India
               </h2>
-              <div className="space-y-4">
-                {[
+              <ChromaGrid 
+                cols="grid-cols-1"
+                radius={300}
+                damping={0.45}
+                fadeOut={0.6}
+                ease="power3.out"
+                items={[
                   { name: 'Mutual Funds', desc: 'Professionally managed pools of money investing in stocks or bonds. Ideal for SIPs.' },
                   { name: 'Public Provident Fund (PPF)', desc: 'Safe, long-term debt instrument with tax-free returns (Section 80C).' },
                   { name: 'National Pension System (NPS)', desc: 'Market-linked retirement product with additional tax benefits.' },
                   { name: 'Direct Equities', desc: 'Buying shares of companies directly. Requires research and active monitoring.' },
                   { name: 'Fixed Deposits (FD)', desc: 'Guaranteed returns from banks. Low risk but often barely beats inflation.' }
-                ].map((item, i) => (
-                  <div key={i} className="bg-white p-5 rounded-xl border border-slate-200 flex items-center justify-between group hover:border-primary transition-colors">
-                    <div>
-                      <h4 className="font-bold text-slate-900">{item.name}</h4>
-                      <p className="text-sm text-slate-500">{item.desc}</p>
-                    </div>
-                    <ArrowUpRight className="w-5 h-5 text-slate-300 group-hover:text-primary transition-colors" />
-                  </div>
-                ))}
-              </div>
+                ].map(item => ({
+                  title: item.name,
+                  description: item.desc,
+                  borderColor: '#3B82F6',
+                  gradient: 'linear-gradient(145deg, #3B82F6, #000)'
+                }))}
+              />
             </section>
           </div>
 

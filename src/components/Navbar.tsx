@@ -3,10 +3,12 @@ import { Link, useLocation } from 'react-router-dom';
 import { Search, Menu, X, User, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '@/src/lib/utils';
+import { useModal } from '@/src/context/ModalContext';
 
 import Logo from './Logo';
 
 export default function Navbar() {
+  const { openConsultationModal } = useModal();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isToolsOpen, setIsToolsOpen] = useState(false);
@@ -119,12 +121,12 @@ export default function Navbar() {
                 </Link>
               ))}
             </nav>
-            <Link
-              to="/contact"
+            <button
+              onClick={openConsultationModal}
               className="bg-primary text-slate-900 px-8 py-3 rounded-full font-black text-xs uppercase tracking-widest hover:brightness-110 transition-all shadow-xl shadow-primary/20"
             >
               Get Started &rarr;
-            </Link>
+            </button>
           </div>
         </div>
       </div>
@@ -180,13 +182,15 @@ export default function Navbar() {
             </div>
           </div>
 
-          <Link
-            to="/contact"
+          <button
             className="block w-full bg-primary text-slate-900 text-center py-5 rounded-2xl font-black uppercase tracking-widest shadow-xl shadow-primary/20"
-            onClick={() => setIsMobileMenuOpen(false)}
+            onClick={() => {
+              setIsMobileMenuOpen(false);
+              openConsultationModal();
+            }}
           >
             Get Started
-          </Link>
+          </button>
         </div>
       )}
     </header>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, PiggyBank, Info, TrendingUp, Target } from 'lucide-react';
 import { motion } from 'motion/react';
+import BlurText from '@/src/components/BlurText';
 import { GoogleGenAI } from "@google/genai";
 import { cn } from '@/src/lib/utils';
 
@@ -83,7 +84,11 @@ export default function RetirementPlanner() {
               <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center text-slate-900">
                 <PiggyBank className="w-6 h-6" />
               </div>
-              <h1 className="text-3xl font-black">Retirement Planner</h1>
+              <BlurText 
+                text="Retirement Planner"
+                centered={false}
+                className="text-3xl font-black"
+              />
             </div>
             <p className="text-slate-400 max-w-2xl leading-relaxed">
               Visualize your financial future in India. See how your EPF, NPS, and personal savings grow over time to meet your retirement goals.
