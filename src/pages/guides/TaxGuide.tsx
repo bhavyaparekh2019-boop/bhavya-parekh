@@ -35,26 +35,43 @@ export default function TaxGuide() {
   return (
     <div className="bg-slate-50 min-h-screen pb-20">
       {/* Hero Section */}
-      <section className="bg-white border-b border-slate-200 pt-24 pb-16">
+      <section className="bg-white border-b border-slate-200 pt-24 pb-16 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="max-w-3xl"
-          >
-            <span className="inline-block px-3 py-1 bg-primary/10 text-primary text-xs font-bold rounded-full mb-4 uppercase tracking-wider">
-              Knowledge Base
-            </span>
-            <BlurText 
-              text="Smart Tax Planning for 2024"
-              centered={false}
-              highlight="Tax Planning"
-              className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 tracking-tight"
-            />
-            <p className="text-xl text-slate-600 leading-relaxed">
-              Don't just pay taxes; plan them. Learn how to legally minimize your tax liability and maximize your take-home pay using the latest Indian tax laws.
-            </p>
-          </motion.div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="max-w-3xl"
+            >
+              <span className="inline-block px-3 py-1 bg-primary/10 text-primary text-xs font-bold rounded-full mb-4 uppercase tracking-wider">
+                Knowledge Base
+              </span>
+              <BlurText 
+                text="Smart Tax Planning for 2024"
+                centered={false}
+                highlight="Tax Planning"
+                className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 tracking-tight"
+              />
+              <p className="text-xl text-slate-600 leading-relaxed">
+                Don't just pay taxes; plan them. Learn how to legally minimize your tax liability and maximize your take-home pay using the latest Indian tax laws.
+              </p>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.2, duration: 0.8 }}
+              className="hidden lg:block"
+            >
+              <div className="aspect-video rounded-[2.5rem] overflow-hidden shadow-2xl border-4 border-white">
+                <img 
+                  src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&q=80&w=1200&h=675" 
+                  alt="Tax Planning" 
+                  className="w-full h-full object-cover"
+                  referrerPolicy="no-referrer"
+                />
+              </div>
+            </motion.div>
+          </div>
         </div>
       </section>
 

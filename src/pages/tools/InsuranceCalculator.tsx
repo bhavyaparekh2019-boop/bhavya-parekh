@@ -80,35 +80,60 @@ export default function InsuranceCalculator() {
 
   return (
     <div className="min-h-screen bg-slate-50 py-12 md:py-24">
+      <div className="max-w-7xl mx-auto px-4 mb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center bg-white p-8 md:p-12 rounded-[3rem] border border-slate-200 shadow-sm overflow-hidden">
+          <div>
+            <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center text-primary mb-6">
+              <Shield className="w-8 h-8" />
+            </div>
+            <BlurText 
+              text="Insurance Coverage Assessment"
+              className="text-4xl md:text-5xl font-black text-slate-900 mb-6 tracking-tight"
+            />
+            <p className="text-xl text-slate-600 leading-relaxed mb-8">
+              Protect what matters most. Use our advanced calculators to determine the ideal coverage for your family's security and peace of mind.
+            </p>
+            <div className="flex gap-4">
+              <button
+                onClick={() => setCalculationMethod('DIME')}
+                className={cn(
+                  "px-8 py-3 rounded-full text-xs font-black uppercase tracking-widest transition-all",
+                  calculationMethod === 'DIME' ? "bg-primary text-slate-900 shadow-lg shadow-primary/20" : "bg-slate-50 text-slate-400 border border-slate-200 hover:border-primary/50"
+                )}
+              >
+                DIME Method
+              </button>
+              <button
+                onClick={() => setCalculationMethod('HLV')}
+                className={cn(
+                  "px-8 py-3 rounded-full text-xs font-black uppercase tracking-widest transition-all",
+                  calculationMethod === 'HLV' ? "bg-primary text-slate-900 shadow-lg shadow-primary/20" : "bg-slate-50 text-slate-400 border border-slate-200 hover:border-primary/50"
+                )}
+              >
+                HLV Method
+              </button>
+            </div>
+          </div>
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.2 }}
+            className="hidden lg:block"
+          >
+            <div className="aspect-video rounded-3xl overflow-hidden shadow-2xl">
+              <img 
+                src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&q=80&w=1200&h=675" 
+                alt="Insurance Protection" 
+                className="w-full h-full object-cover"
+                referrerPolicy="no-referrer"
+              />
+            </div>
+          </motion.div>
+        </div>
+      </div>
+
       <div className="max-w-4xl mx-auto px-4">
         <div className="text-center mb-12">
-          <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center text-primary mx-auto mb-6">
-            <Shield className="w-8 h-8" />
-          </div>
-          <BlurText 
-            text="Insurance Coverage Assessment"
-            className="text-4xl font-black text-slate-900 mb-4 tracking-tight"
-          />
-          <div className="flex justify-center gap-4 mb-8">
-            <button
-              onClick={() => setCalculationMethod('DIME')}
-              className={cn(
-                "px-6 py-2 rounded-full text-xs font-black uppercase tracking-widest transition-all",
-                calculationMethod === 'DIME' ? "bg-primary text-slate-900 shadow-lg shadow-primary/20" : "bg-white text-slate-400 border border-slate-200 hover:border-primary/50"
-              )}
-            >
-              DIME Method
-            </button>
-            <button
-              onClick={() => setCalculationMethod('HLV')}
-              className={cn(
-                "px-6 py-2 rounded-full text-xs font-black uppercase tracking-widest transition-all",
-                calculationMethod === 'HLV' ? "bg-primary text-slate-900 shadow-lg shadow-primary/20" : "bg-white text-slate-400 border border-slate-200 hover:border-primary/50"
-              )}
-            >
-              HLV Method
-            </button>
-          </div>
           <p className="text-lg text-slate-600 max-w-2xl mx-auto">
             {calculationMethod === 'DIME' 
               ? "Calculate needs based on Debt, Income, Mortgage, and Education."

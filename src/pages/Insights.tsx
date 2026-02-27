@@ -23,19 +23,43 @@ export default function Blogs() {
 
   return (
     <div className="bg-slate-50 min-h-screen pt-24 pb-20">
+      {/* Hero Section */}
+      <section className="bg-white border-b border-slate-200 py-16 mb-12 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <BlurText 
+                text="Financial Blogs & Insights" 
+                centered={false}
+                className="text-4xl md:text-6xl font-black text-slate-900 mb-6 tracking-tight"
+              />
+              <p className="text-xl text-slate-600 leading-relaxed">
+                Expert analysis, market trends, and financial wisdom for the modern Indian investor. Stay ahead with our latest market updates.
+              </p>
+            </div>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.2, duration: 0.8 }}
+              className="hidden lg:block"
+            >
+              <div className="aspect-video rounded-[2.5rem] overflow-hidden shadow-2xl border-4 border-white">
+                <img 
+                  src="https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&q=80&w=1200&h=675" 
+                  alt="Financial Insights" 
+                  className="w-full h-full object-cover"
+                  referrerPolicy="no-referrer"
+                />
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col lg:flex-row gap-12">
           {/* Main Content */}
           <main className="flex-1">
-            <div className="mb-12">
-              <BlurText 
-                text="Financial Blogs" 
-                centered={false}
-                className="text-4xl font-bold text-slate-900 mb-4 tracking-tight"
-              />
-              <p className="text-lg text-slate-600">Expert analysis, market trends, and financial wisdom for the modern Indian investor.</p>
-            </div>
-
             {/* Search & Categories */}
             <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm mb-12">
               <div className="flex flex-col md:flex-row gap-6 items-center justify-between">

@@ -35,7 +35,7 @@ export const ARTICLES: Article[] = [
     author: 'Sarah Jenkins, Senior Advisor',
     date: 'Feb 24, 2024',
     readTime: '12 min read',
-    image: 'https://picsum.photos/seed/nifty/1200/800',
+    image: 'https://images.unsplash.com/photo-1611974717483-5867ff2096c4?auto=format&fit=crop&q=80&w=1200&h=800',
     featured: true,
   },
   {
@@ -61,7 +61,7 @@ export const ARTICLES: Article[] = [
     author: 'Michael Chen',
     date: 'Feb 20, 2024',
     readTime: '15 min read',
-    image: 'https://picsum.photos/seed/retirement-india/1200/800',
+    image: 'https://images.unsplash.com/photo-1536940135352-b4b3875df888?auto=format&fit=crop&q=80&w=1200&h=800',
   },
   {
     id: '4',
@@ -83,7 +83,7 @@ export const ARTICLES: Article[] = [
     author: 'David Rodriguez',
     date: 'Feb 15, 2024',
     readTime: '14 min read',
-    image: 'https://picsum.photos/seed/ai-india/1200/800',
+    image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=1200&h=800',
   },
   {
     id: '5',
@@ -105,7 +105,7 @@ export const ARTICLES: Article[] = [
     author: 'Robert Taylor',
     date: 'Feb 10, 2024',
     readTime: '13 min read',
-    image: 'https://picsum.photos/seed/succession/1200/800',
+    image: 'https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&q=80&w=1200&h=800',
   },
   {
     id: '6',
@@ -127,7 +127,7 @@ export const ARTICLES: Article[] = [
     author: 'Sarah Jenkins, Senior Advisor',
     date: 'Jan 28, 2024',
     readTime: '11 min read',
-    image: 'https://picsum.photos/seed/esg-india/1200/800',
+    image: 'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&q=80&w=1200&h=800',
   },
   {
     id: '7',
@@ -149,7 +149,7 @@ export const ARTICLES: Article[] = [
     author: 'Michael Chen',
     date: 'Feb 05, 2024',
     readTime: '13 min read',
-    image: 'https://picsum.photos/seed/upi-future/1200/800',
+    image: 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&q=80&w=1200&h=800',
   },
   {
     id: '8',
@@ -171,7 +171,7 @@ export const ARTICLES: Article[] = [
     author: 'Emma Wilson',
     date: 'Mar 15, 2024',
     readTime: '16 min read',
-    image: 'https://picsum.photos/seed/corporate-india/1200/800',
+    image: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&q=80&w=1200&h=800',
   },
   {
     id: '9',
@@ -193,7 +193,7 @@ export const ARTICLES: Article[] = [
     author: 'Robert Taylor',
     date: 'Apr 12, 2024',
     readTime: '14 min read',
-    image: 'https://picsum.photos/seed/life-ins-india/1200/800',
+    image: 'https://images.unsplash.com/photo-1509059852496-f3822ae057bf?auto=format&fit=crop&q=80&w=1200&h=800',
   },
   {
     id: '10',
@@ -215,7 +215,7 @@ export const ARTICLES: Article[] = [
     author: 'Emma Wilson',
     date: 'May 12, 2024',
     readTime: '8 min read',
-    image: 'https://picsum.photos/seed/businessinsurance/800/600',
+    image: 'https://images.unsplash.com/photo-1512428559087-560fa5ceab42?auto=format&fit=crop&q=80&w=800&h=600',
   },
   {
     id: '11',
@@ -237,7 +237,7 @@ export const ARTICLES: Article[] = [
     author: 'Sarah Jenkins, Senior Advisor',
     date: 'Jun 25, 2024',
     readTime: '13 min read',
-    image: 'https://picsum.photos/seed/health-ins-india/1200/800',
+    image: 'https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&q=80&w=1200&h=800',
   },
   {
     id: '12',
@@ -259,7 +259,7 @@ export const ARTICLES: Article[] = [
     author: 'Sarah Jenkins, Senior Advisor',
     date: 'Jul 15, 2024',
     readTime: '15 min read',
-    image: 'https://picsum.photos/seed/alt-assets-india/1200/800',
+    image: 'https://images.unsplash.com/photo-1613243555988-441166d4d6fd?auto=format&fit=crop&q=80&w=1200&h=800',
   },
   {
     id: '13',
@@ -281,7 +281,7 @@ export const ARTICLES: Article[] = [
     author: 'David Rodriguez',
     date: 'Jul 20, 2024',
     readTime: '14 min read',
-    image: 'https://picsum.photos/seed/renewable-india/1200/800',
+    image: 'https://images.unsplash.com/photo-1466611653911-954554097482?auto=format&fit=crop&q=80&w=1200&h=800',
   },
   {
     id: '14',
@@ -303,7 +303,7 @@ export const ARTICLES: Article[] = [
     author: 'Michael Chen',
     date: 'Aug 05, 2024',
     readTime: '16 min read',
-    image: 'https://picsum.photos/seed/fire-india/1200/800',
+    image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&q=80&w=1200&h=800',
   },
   {
     id: '15',
@@ -325,7 +325,7 @@ export const ARTICLES: Article[] = [
     author: 'Robert Taylor',
     date: 'Aug 10, 2024',
     readTime: '15 min read',
-    image: 'https://picsum.photos/seed/real-estate-india/1200/800',
+    image: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&q=80&w=1200&h=800',
   },
   {
     id: '16',
@@ -347,7 +347,7 @@ export const ARTICLES: Article[] = [
     author: 'Robert Taylor',
     date: 'Aug 20, 2024',
     readTime: '15 min read',
-    image: 'https://picsum.photos/seed/cyber-india/1200/800',
+    image: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&q=80&w=1200&h=800',
   },
   {
     id: '17',
@@ -369,7 +369,7 @@ export const ARTICLES: Article[] = [
     author: 'David Rodriguez',
     date: 'Aug 25, 2024',
     readTime: '14 min read',
-    image: 'https://picsum.photos/seed/geopolitics-india/1200/800',
+    image: 'https://images.unsplash.com/photo-1526772662000-3f88f10405ff?auto=format&fit=crop&q=80&w=1200&h=800',
   },
   {
     id: '18',
@@ -391,7 +391,7 @@ export const ARTICLES: Article[] = [
     author: 'Sarah Jenkins, Senior Advisor',
     date: 'Aug 30, 2024',
     readTime: '15 min read',
-    image: 'https://picsum.photos/seed/nri-tax/1200/800',
+    image: 'https://images.unsplash.com/photo-1503220317375-aaad61436b1b?auto=format&fit=crop&q=80&w=1200&h=800',
   },
   {
     id: '19',
@@ -413,7 +413,7 @@ export const ARTICLES: Article[] = [
     author: 'David Rodriguez',
     date: 'Sep 01, 2024',
     readTime: '10 min read',
-    image: 'https://picsum.photos/seed/silver/800/600',
+    image: 'https://images.unsplash.com/photo-1516733725897-1aa73b87c8e8?auto=format&fit=crop&q=80&w=800&h=600',
   },
   {
     id: '20',
@@ -435,7 +435,7 @@ export const ARTICLES: Article[] = [
     author: 'Michael Chen',
     date: 'Sep 10, 2024',
     readTime: '12 min read',
-    image: 'https://picsum.photos/seed/healthretirement/800/600',
+    image: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&q=80&w=800&h=600',
   },
   {
     id: '21',
@@ -457,7 +457,7 @@ export const ARTICLES: Article[] = [
     author: 'Emma Wilson',
     date: 'Sep 18, 2024',
     readTime: '8 min read',
-    image: 'https://picsum.photos/seed/workingcapital/800/600',
+    image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&q=80&w=800&h=600',
   },
   {
     id: '22',
@@ -479,7 +479,7 @@ export const ARTICLES: Article[] = [
     author: 'Robert Taylor',
     date: 'Sep 25, 2024',
     readTime: '7 min read',
-    image: 'https://picsum.photos/seed/umbrella/800/600',
+    image: 'https://images.unsplash.com/photo-1530629013299-6cb10d168419?auto=format&fit=crop&q=80&w=800&h=600',
   },
   {
     id: '23',
@@ -501,7 +501,7 @@ export const ARTICLES: Article[] = [
     author: 'Sarah Jenkins, Senior Advisor',
     date: 'Oct 02, 2024',
     readTime: '11 min read',
-    image: 'https://picsum.photos/seed/asia/800/600',
+    image: 'https://images.unsplash.com/photo-1444723121867-7a241cacace9?auto=format&fit=crop&q=80&w=800&h=600',
   },
   {
     id: '24',
@@ -523,7 +523,7 @@ export const ARTICLES: Article[] = [
     author: 'David Rodriguez',
     date: 'Oct 10, 2024',
     readTime: '10 min read',
-    image: 'https://picsum.photos/seed/behavioral/800/600',
+    image: 'https://images.unsplash.com/photo-1507413245164-6160d8298b31?auto=format&fit=crop&q=80&w=800&h=600',
   },
   {
     id: '25',
@@ -545,7 +545,7 @@ export const ARTICLES: Article[] = [
     author: 'Emma Wilson',
     date: 'Oct 18, 2024',
     readTime: '9 min read',
-    image: 'https://picsum.photos/seed/supplychain/800/600',
+    image: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&q=80&w=800&h=600',
   },
   {
     id: '26',
@@ -567,7 +567,7 @@ export const ARTICLES: Article[] = [
     author: 'Michael Chen',
     date: 'Oct 25, 2024',
     readTime: '11 min read',
-    image: 'https://picsum.photos/seed/socialsecurity/800/600',
+    image: 'https://images.unsplash.com/photo-1554224155-1697b34ee7f5?auto=format&fit=crop&q=80&w=800&h=600',
   },
   {
     id: '27',
@@ -589,7 +589,7 @@ export const ARTICLES: Article[] = [
     author: 'Emma Wilson',
     date: 'Nov 02, 2024',
     readTime: '8 min read',
-    image: 'https://picsum.photos/seed/esgreporting/800/600',
+    image: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&q=80&w=800&h=600',
   },
   {
     id: '28',
@@ -611,7 +611,7 @@ export const ARTICLES: Article[] = [
     author: 'Robert Taylor',
     date: 'Nov 10, 2024',
     readTime: '7 min read',
-    image: 'https://picsum.photos/seed/homeinsurance/800/600',
+    image: 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&q=80&w=800&h=600',
   },
   {
     id: '29',
@@ -633,7 +633,7 @@ export const ARTICLES: Article[] = [
     author: 'Sarah Jenkins, Senior Advisor',
     date: 'Nov 18, 2024',
     readTime: '10 min read',
-    image: 'https://picsum.photos/seed/commodities/800/600',
+    image: 'https://images.unsplash.com/photo-1610375461246-83df859d849d?auto=format&fit=crop&q=80&w=800&h=600',
   },
   {
     id: '30',
@@ -655,7 +655,7 @@ export const ARTICLES: Article[] = [
     author: 'David Rodriguez',
     date: 'Dec 01, 2024',
     readTime: '12 min read',
-    image: 'https://picsum.photos/seed/familyoffice/800/600',
+    image: 'https://images.unsplash.com/photo-1560520653-9e0e4c89eb11?auto=format&fit=crop&q=80&w=800&h=600',
   },
   {
     id: '31',
@@ -677,7 +677,7 @@ export const ARTICLES: Article[] = [
     author: 'Emma Wilson',
     date: 'Dec 10, 2024',
     readTime: '9 min read',
-    image: 'https://picsum.photos/seed/tokenization/800/600',
+    image: 'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&q=80&w=800&h=600',
   },
   {
     id: '32',
@@ -699,7 +699,7 @@ export const ARTICLES: Article[] = [
     author: 'Robert Taylor',
     date: 'Dec 18, 2024',
     readTime: '8 min read',
-    image: 'https://picsum.photos/seed/estateplanning/800/600',
+    image: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&q=80&w=800&h=600',
   },
   {
     id: '33',
@@ -721,7 +721,7 @@ export const ARTICLES: Article[] = [
     author: 'Emma Wilson',
     date: 'Jan 05, 2025',
     readTime: '10 min read',
-    image: 'https://picsum.photos/seed/venturecapital/800/600',
+    image: 'https://images.unsplash.com/photo-1553729459-efe14ef6055d?auto=format&fit=crop&q=80&w=800&h=600',
   },
   {
     id: '34',
@@ -743,7 +743,7 @@ export const ARTICLES: Article[] = [
     author: 'Robert Taylor',
     date: 'Jan 12, 2025',
     readTime: '9 min read',
-    image: 'https://picsum.photos/seed/disability/800/600',
+    image: 'https://images.unsplash.com/photo-1508847154043-be5407fcaa5a?auto=format&fit=crop&q=80&w=800&h=600',
   },
   {
     id: '35',
@@ -765,7 +765,7 @@ export const ARTICLES: Article[] = [
     author: 'Sarah Jenkins, Senior Advisor',
     date: 'Jan 20, 2025',
     readTime: '11 min read',
-    image: 'https://picsum.photos/seed/inflation/800/600',
+    image: 'https://images.unsplash.com/photo-1543286386-713bdd548da4?auto=format&fit=crop&q=80&w=800&h=600',
   },
   {
     id: '36',
@@ -787,7 +787,7 @@ export const ARTICLES: Article[] = [
     author: 'Sarah Jenkins, Senior Advisor',
     date: 'Jan 28, 2025',
     readTime: '12 min read',
-    image: 'https://picsum.photos/seed/privateequity/800/600',
+    image: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&q=80&w=800&h=600',
   },
   {
     id: '37',

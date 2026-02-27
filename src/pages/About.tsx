@@ -52,34 +52,52 @@ export default function About() {
   return (
     <main className="bg-slate-50 min-h-screen pb-20">
       {/* Hero Section */}
-      <section className="bg-white border-b border-slate-200 pt-24 pb-16">
+      <section className="bg-white border-b border-slate-200 pt-24 pb-16 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div className="max-w-3xl">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest mb-6"
+              >
+                <Users className="w-3 h-3" />
+                About BHP Finance
+              </motion.div>
+              <BlurText
+                text="Welcome to BHP Finance"
+                centered={false}
+                className="text-4xl md:text-6xl font-black text-slate-900 mb-8 tracking-tight"
+              />
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="space-y-6 text-lg text-slate-600 leading-relaxed"
+              >
+                <p>
+                  At <span className="font-bold text-slate-900">BHP Finance</span>, we believe financial security is not just about money — it's about confidence, stability, and peace of mind. Our mission is to provide reliable, transparent, and customer-focused financial solutions that empower individuals, families, and businesses to achieve their goals.
+                </p>
+                <p>
+                  Founded with a vision to simplify finance, BHP Finance has grown into a trusted name built on integrity, professionalism, and long-term relationships. We understand that every client's financial journey is unique, and we are committed to offering personalized guidance and tailored solutions that truly make a difference.
+                </p>
+              </motion.div>
+            </div>
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest mb-6"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.2, duration: 0.8 }}
+              className="hidden lg:block relative"
             >
-              <Users className="w-3 h-3" />
-              About BHP Finance
-            </motion.div>
-            <BlurText
-              text="Welcome to BHP Finance"
-              centered={false}
-              className="text-4xl md:text-6xl font-black text-slate-900 mb-8 tracking-tight"
-            />
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="space-y-6 text-lg text-slate-600 leading-relaxed"
-            >
-              <p>
-                At <span className="font-bold text-slate-900">BHP Finance</span>, we believe financial security is not just about money — it's about confidence, stability, and peace of mind. Our mission is to provide reliable, transparent, and customer-focused financial solutions that empower individuals, families, and businesses to achieve their goals.
-              </p>
-              <p>
-                Founded with a vision to simplify finance, BHP Finance has grown into a trusted name built on integrity, professionalism, and long-term relationships. We understand that every client's financial journey is unique, and we are committed to offering personalized guidance and tailored solutions that truly make a difference.
-              </p>
+              <div className="aspect-square rounded-[3rem] overflow-hidden shadow-2xl border-8 border-white">
+                <img 
+                  src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&q=80&w=1000&h=1000" 
+                  alt="About BHP Finance" 
+                  className="w-full h-full object-cover"
+                  referrerPolicy="no-referrer"
+                />
+              </div>
+              <div className="absolute -top-10 -right-10 bg-primary p-10 rounded-full shadow-2xl animate-pulse" />
             </motion.div>
           </div>
         </div>
@@ -193,7 +211,7 @@ export default function About() {
             <div className="relative">
               <div className="aspect-square rounded-[2.5rem] overflow-hidden">
                 <img 
-                  src="https://picsum.photos/seed/finance-commitment/800/800" 
+                  src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=800&h=800" 
                   alt="Commitment" 
                   className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"

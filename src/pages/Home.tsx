@@ -112,53 +112,81 @@ export default function Home() {
           <div className="absolute top-1/2 -left-24 w-64 h-64 bg-primary rounded-full blur-3xl opacity-50" />
         </div>
 
-        <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
-          <BlurText
-            text="Financial Wisdom for Your Future"
-            delay={150}
-            animateBy="words"
-            direction="top"
-            highlight="Your Future"
-            onAnimationComplete={handleAnimationComplete}
-            className="text-5xl md:text-7xl font-black text-slate-900 leading-[1.1] mb-8 tracking-tight"
-          />
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="text-xl text-slate-600 mb-12 max-w-2xl mx-auto leading-relaxed"
-          >
-            BHP Insights: Expert Market Analysis, Professional Guidance, and the tools you need to build long-term wealth in the Indian market.
-          </motion.p>
-
-          {/* Hero Search */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.2 }}
-            className="max-w-2xl mx-auto"
-          >
-            <form 
-              onSubmit={handleSmartSearch}
-              className="relative flex items-center bg-slate-50 border border-slate-200 rounded-2xl p-2 focus-within:ring-4 focus-within:ring-primary/10 transition-all shadow-sm"
-            >
-              <Search className="ml-4 text-slate-400 w-5 h-5" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search for financial topics, guides, or market reports..."
-                className="w-full bg-transparent border-none focus:ring-0 text-slate-900 placeholder:text-slate-400 text-base py-3 px-4"
+        <div className="max-w-7xl mx-auto px-4 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div className="text-left">
+              <BlurText
+                text="Financial Wisdom for Your Future"
+                delay={150}
+                animateBy="words"
+                direction="top"
+                highlight="Your Future"
+                onAnimationComplete={handleAnimationComplete}
+                className="text-5xl md:text-7xl font-black text-slate-900 leading-[1.1] mb-8 tracking-tight"
               />
-              <button 
-                type="submit"
-                disabled={isSearching}
-                className="bg-primary text-slate-900 px-8 py-3 rounded-xl font-bold text-sm hover:brightness-110 transition-all shadow-lg shadow-primary/20 disabled:opacity-50 flex items-center gap-2"
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="text-xl text-slate-600 mb-12 max-w-2xl leading-relaxed"
               >
-                {isSearching ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Search'}
-              </button>
-            </form>
-          </motion.div>
+                BHP Insights: Expert Market Analysis, Professional Guidance, and the tools you need to build long-term wealth in the Indian market.
+              </motion.p>
+
+              {/* Hero Search */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.2 }}
+                className="max-w-2xl"
+              >
+                <form 
+                  onSubmit={handleSmartSearch}
+                  className="relative flex items-center bg-slate-50 border border-slate-200 rounded-2xl p-2 focus-within:ring-4 focus-within:ring-primary/10 transition-all shadow-sm"
+                >
+                  <Search className="ml-4 text-slate-400 w-5 h-5" />
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search for financial topics..."
+                    className="w-full bg-transparent border-none focus:ring-0 text-slate-900 placeholder:text-slate-400 text-base py-3 px-4"
+                  />
+                  <button 
+                    type="submit"
+                    disabled={isSearching}
+                    className="bg-primary text-slate-900 px-8 py-3 rounded-xl font-bold text-sm hover:brightness-110 transition-all shadow-lg shadow-primary/20 disabled:opacity-50 flex items-center gap-2"
+                  >
+                    {isSearching ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Search'}
+                  </button>
+                </form>
+              </motion.div>
+            </div>
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.3, duration: 0.8 }}
+              className="hidden lg:block relative"
+            >
+              <div className="aspect-[4/3] rounded-[3rem] overflow-hidden shadow-2xl border-8 border-white">
+                <img 
+                  src="https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&q=80&w=1200&h=900" 
+                  alt="Financial Growth" 
+                  className="w-full h-full object-cover"
+                  referrerPolicy="no-referrer"
+                />
+              </div>
+              <div className="absolute -bottom-10 -left-10 bg-white p-6 rounded-3xl shadow-xl border border-slate-100 max-w-[200px]">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600">
+                    <TrendingUp className="w-5 h-5" />
+                  </div>
+                  <span className="text-xs font-black text-slate-900 uppercase tracking-widest">Growth</span>
+                </div>
+                <p className="text-sm text-slate-500 font-medium">Consistent market outperformance since 2018.</p>
+              </div>
+            </motion.div>
+          </div>
         </div>
       </section>
 
@@ -218,6 +246,74 @@ export default function Home() {
           </motion.section>
         )}
       </AnimatePresence>
+
+      {/* Why Choose Us Section */}
+      <section className="bg-white py-24 border-b border-slate-200">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <h2 className="text-3xl md:text-5xl font-black text-slate-900 mb-6 tracking-tight">Why Choose BHP Finance?</h2>
+            <p className="text-lg text-slate-600 leading-relaxed">
+              We combine deep market expertise with personalized strategies to help you navigate the complexities of the Indian financial landscape.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <motion.div 
+              whileHover={{ y: -10 }}
+              className="group"
+            >
+              <div className="aspect-[4/5] rounded-[2rem] overflow-hidden mb-6 shadow-xl border border-slate-100">
+                <img 
+                  src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&q=80&w=800&h=1000" 
+                  alt="Expert Advice" 
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  referrerPolicy="no-referrer"
+                />
+              </div>
+              <h3 className="text-xl font-bold text-slate-900 mb-2">Expert Financial Advice</h3>
+              <p className="text-slate-600 text-sm leading-relaxed">
+                Our team of certified advisors provides data-driven insights tailored to your specific goals.
+              </p>
+            </motion.div>
+
+            <motion.div 
+              whileHover={{ y: -10 }}
+              className="group"
+            >
+              <div className="aspect-[4/5] rounded-[2rem] overflow-hidden mb-6 shadow-xl border border-slate-100">
+                <img 
+                  src="https://images.unsplash.com/photo-1450101496193-8f48505ce424?auto=format&fit=crop&q=80&w=800&h=1000" 
+                  alt="Secure Future" 
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  referrerPolicy="no-referrer"
+                />
+              </div>
+              <h3 className="text-xl font-bold text-slate-900 mb-2">Secure Your Future</h3>
+              <p className="text-slate-600 text-sm leading-relaxed">
+                Comprehensive insurance and retirement planning to ensure long-term stability for your family.
+              </p>
+            </motion.div>
+
+            <motion.div 
+              whileHover={{ y: -10 }}
+              className="group"
+            >
+              <div className="aspect-[4/5] rounded-[2rem] overflow-hidden mb-6 shadow-xl border border-slate-100">
+                <img 
+                  src="https://images.unsplash.com/photo-1611974714024-4607a50d6c25?auto=format&fit=crop&q=80&w=800&h=1000" 
+                  alt="Market Growth" 
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  referrerPolicy="no-referrer"
+                />
+              </div>
+              <h3 className="text-xl font-bold text-slate-900 mb-2">Maximize Market Growth</h3>
+              <p className="text-slate-600 text-sm leading-relaxed">
+                Strategic investment solutions in mutual funds and stocks to capitalize on the Indian growth story.
+              </p>
+            </motion.div>
+          </div>
+        </div>
+      </section>
 
       {/* Knowledge Center Section */}
       <section className="bg-slate-50 py-16 border-b border-slate-200">
