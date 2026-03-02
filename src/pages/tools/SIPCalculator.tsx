@@ -139,6 +139,12 @@ export default function SIPCalculator() {
                     title: 'Rupee Cost Averaging',
                     description: 'When markets are low, your SIP buys more units. When markets are high, it buys fewer. Over time, this averages out the cost of your investment.',
                     icon: RefreshCcw,
+                    details: [
+                      'Eliminates the need to time the market.',
+                      'Lowers the average cost per unit.',
+                      'Disciplined approach to investing.',
+                      'Beneficial during market volatility.'
+                    ],
                     borderColor: '#3B82F6',
                     gradient: 'linear-gradient(145deg, #3B82F6, #000)'
                   },
@@ -146,6 +152,12 @@ export default function SIPCalculator() {
                     title: 'Power of Compounding',
                     description: 'The returns you earn also start earning returns. The longer you stay invested, the more dramatic this effect becomes.',
                     icon: Zap,
+                    details: [
+                      'Exponential growth over long periods.',
+                      'Earnings on your earnings.',
+                      'Small amounts grow into large corpuses.',
+                      'Time is the most important factor.'
+                    ],
                     borderColor: '#10B981',
                     gradient: 'linear-gradient(180deg, #10B981, #000)'
                   }

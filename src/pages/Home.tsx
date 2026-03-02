@@ -170,7 +170,7 @@ export default function Home() {
             >
               <div className="aspect-[4/3] rounded-[3rem] overflow-hidden shadow-2xl border-8 border-white">
                 <img 
-                  src="https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&q=80&w=1200&h=900" 
+                  src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=1200&h=900" 
                   alt="Financial Growth" 
                   className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
@@ -189,6 +189,45 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Market Ticker */}
+      <div className="bg-slate-900 overflow-hidden py-4 border-y border-slate-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center gap-8 animate-marquee whitespace-nowrap">
+            <Link to="/market-analysis" className="flex items-center gap-2 hover:text-primary transition-colors group">
+              <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest group-hover:text-primary">Nifty 50</span>
+              <span className="text-sm font-bold text-white">24,320.45</span>
+              <span className="text-xs font-bold text-emerald-500">+1.24%</span>
+            </Link>
+            <Link to="/market-analysis" className="flex items-center gap-2 hover:text-primary transition-colors group">
+              <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest group-hover:text-primary">Sensex</span>
+              <span className="text-sm font-bold text-white">79,850.12</span>
+              <span className="text-xs font-bold text-emerald-500">+0.98%</span>
+            </Link>
+            <Link to="/market-analysis" className="flex items-center gap-2 hover:text-primary transition-colors group">
+              <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest group-hover:text-primary">Bank Nifty</span>
+              <span className="text-sm font-bold text-white">52,410.30</span>
+              <span className="text-xs font-bold text-rose-500">-0.15%</span>
+            </Link>
+            <Link to="/market-analysis" className="flex items-center gap-2 hover:text-primary transition-colors group">
+              <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest group-hover:text-primary">USD/INR</span>
+              <span className="text-sm font-bold text-white">83.45</span>
+              <span className="text-xs font-bold text-slate-400">0.00%</span>
+            </Link>
+            <Link to="/market-analysis" className="flex items-center gap-2 hover:text-primary transition-colors group">
+              <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest group-hover:text-primary">Gold</span>
+              <span className="text-sm font-bold text-white">72,140</span>
+              <span className="text-xs font-bold text-emerald-500">+0.45%</span>
+            </Link>
+            {/* Duplicate for seamless loop */}
+            <Link to="/market-analysis" className="flex items-center gap-2 hover:text-primary transition-colors group">
+              <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest group-hover:text-primary">Nifty 50</span>
+              <span className="text-sm font-bold text-white">24,320.45</span>
+              <span className="text-xs font-bold text-emerald-500">+1.24%</span>
+            </Link>
+          </div>
+        </div>
+      </div>
 
       {/* AI Smart Response */}
       <AnimatePresence>
@@ -264,7 +303,7 @@ export default function Home() {
             >
               <div className="aspect-[4/5] rounded-[2rem] overflow-hidden mb-6 shadow-xl border border-slate-100">
                 <img 
-                  src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&q=80&w=800&h=1000" 
+                  src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&q=80&w=800&h=1000" 
                   alt="Expert Advice" 
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   referrerPolicy="no-referrer"
@@ -282,7 +321,7 @@ export default function Home() {
             >
               <div className="aspect-[4/5] rounded-[2rem] overflow-hidden mb-6 shadow-xl border border-slate-100">
                 <img 
-                  src="https://images.unsplash.com/photo-1450101496193-8f48505ce424?auto=format&fit=crop&q=80&w=800&h=1000" 
+                  src="https://images.unsplash.com/photo-1536939459926-301728717817?auto=format&fit=crop&q=80&w=800&h=1000" 
                   alt="Secure Future" 
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   referrerPolicy="no-referrer"
@@ -300,7 +339,7 @@ export default function Home() {
             >
               <div className="aspect-[4/5] rounded-[2rem] overflow-hidden mb-6 shadow-xl border border-slate-100">
                 <img 
-                  src="https://images.unsplash.com/photo-1611974714024-4607a50d6c25?auto=format&fit=crop&q=80&w=800&h=1000" 
+                  src="https://images.unsplash.com/photo-1642543492481-44e81e3f9c52?auto=format&fit=crop&q=80&w=800&h=1000" 
                   alt="Market Growth" 
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   referrerPolicy="no-referrer"
@@ -378,6 +417,14 @@ export default function Home() {
                 url: '/guides/stocks',
                 borderColor: '#64748B',
                 gradient: 'linear-gradient(180deg, #64748B, #000)'
+              },
+              {
+                title: 'Market Analysis',
+                icon: TrendingUp,
+                description: 'Real-time data and AI-powered expert commentary on Indian markets.',
+                url: '/market-analysis',
+                borderColor: '#19d4e6',
+                gradient: 'linear-gradient(145deg, #19d4e6, #000)'
               }
             ]}
           />

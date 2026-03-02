@@ -122,7 +122,7 @@ export default function InsuranceCalculator() {
           >
             <div className="aspect-video rounded-3xl overflow-hidden shadow-2xl">
               <img 
-                src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&q=80&w=1200&h=675" 
+                src="https://images.unsplash.com/photo-1556742044-3c52d6e88c62?auto=format&fit=crop&q=80&w=1200&h=675" 
                 alt="Insurance Protection" 
                 className="w-full h-full object-cover"
                 referrerPolicy="no-referrer"

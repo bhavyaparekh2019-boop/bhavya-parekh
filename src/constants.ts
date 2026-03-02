@@ -35,7 +35,7 @@ export const ARTICLES: Article[] = [
     author: 'Sarah Jenkins, Senior Advisor',
     date: 'Feb 24, 2024',
     readTime: '12 min read',
-    image: 'https://images.unsplash.com/photo-1611974717483-5867ff2096c4?auto=format&fit=crop&q=80&w=1200&h=800',
+    image: 'https://images.unsplash.com/photo-1611974714024-4607a50d6c25?auto=format&fit=crop&q=80&w=1200&h=800',
     featured: true,
   },
   {
@@ -61,7 +61,7 @@ export const ARTICLES: Article[] = [
     author: 'Michael Chen',
     date: 'Feb 20, 2024',
     readTime: '15 min read',
-    image: 'https://images.unsplash.com/photo-1536940135352-b4b3875df888?auto=format&fit=crop&q=80&w=1200&h=800',
+    image: 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&q=80&w=1200&h=800',
   },
   {
     id: '4',
@@ -171,7 +171,7 @@ export const ARTICLES: Article[] = [
     author: 'Emma Wilson',
     date: 'Mar 15, 2024',
     readTime: '16 min read',
-    image: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&q=80&w=1200&h=800',
+    image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=1200&h=800',
   },
   {
     id: '9',
@@ -457,7 +457,7 @@ export const ARTICLES: Article[] = [
     author: 'Emma Wilson',
     date: 'Sep 18, 2024',
     readTime: '8 min read',
-    image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&q=80&w=800&h=600',
+    image: 'https://images.unsplash.com/photo-1554224154-26032ffc0d07?auto=format&fit=crop&q=80&w=800&h=600',
   },
   {
     id: '22',
@@ -589,7 +589,7 @@ export const ARTICLES: Article[] = [
     author: 'Emma Wilson',
     date: 'Nov 02, 2024',
     readTime: '8 min read',
-    image: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&q=80&w=800&h=600',
+    image: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80&w=800&h=600',
   },
   {
     id: '28',
@@ -721,7 +721,7 @@ export const ARTICLES: Article[] = [
     author: 'Emma Wilson',
     date: 'Jan 05, 2025',
     readTime: '10 min read',
-    image: 'https://images.unsplash.com/photo-1553729459-efe14ef6055d?auto=format&fit=crop&q=80&w=800&h=600',
+    image: 'https://images.unsplash.com/photo-1559136555-9303baea8ebd?auto=format&fit=crop&q=80&w=800&h=600',
   },
   {
     id: '34',

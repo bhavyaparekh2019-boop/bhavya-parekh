@@ -9,24 +9,52 @@ const taxSections = [
     title: 'Section 80C',
     limit: '₹1.5 Lakh',
     items: ['EPF/VPF', 'PPF', 'ELSS Mutual Funds', 'Life Insurance Premium', 'Home Loan Principal'],
+    details: [
+      'EPF/VPF: Employee Provident Fund. Pro Tip: Maximize VPF if you want safe, tax-free returns.',
+      'PPF: Public Provident Fund (15 yr lock-in). Best for long-term debt allocation.',
+      'ELSS: Tax-saving mutual funds (3 yr lock-in). Shortest lock-in with equity growth potential.',
+      'Life Insurance: Term or endowment premiums. Pro Tip: Stick to Term Insurance for higher cover.',
+      'Home Loan: Principal repayment portion. Includes stamp duty and registration fees (one-time).'
+    ],
     color: 'bg-blue-50 text-blue-600'
   },
   {
     title: 'Section 80D',
     limit: 'Up to ₹75k',
     items: ['Health Insurance (Self/Family)', 'Health Insurance (Parents)', 'Preventive Health Checkups'],
+    details: [
+      'Self/Family: Up to ₹25,000 deduction for premiums paid for self, spouse, and children.',
+      'Parents (<60): Additional ₹25,000 deduction. Pro Tip: Pay for parents to maximize savings.',
+      'Parents (>60): Additional ₹50,000 deduction if they are senior citizens.',
+      'Health Checkups: Up to ₹5,000 included within the overall limits of 80D.',
+      'Medical Expenditure: For senior citizens without insurance, actual medical bills are deductible.'
+    ],
     color: 'bg-emerald-50 text-emerald-600'
   },
   {
     title: 'Section 24(b)',
     limit: '₹2 Lakh',
     items: ['Home Loan Interest (Self-occupied)', 'No limit for let-out property'],
+    details: [
+      'Interest on home loan for self-occupied house. Maximum deduction of ₹2 Lakh.',
+      'Let-out Property: No upper limit on interest deduction (but loss set-off is capped at ₹2L).',
+      'Pre-construction Interest: Claimable in 5 equal installments after construction is complete.',
+      'Construction Timeline: Pro Tip: Construction must be completed within 5 years to get full ₹2L benefit.',
+      'Joint Loan: Both co-owners can claim ₹2L each if they are co-borrowers.'
+    ],
     color: 'bg-amber-50 text-amber-600'
   },
   {
     title: 'Section 80CCD(1B)',
     limit: '₹50,000',
     items: ['Additional NPS Contribution', 'Over and above 80C limit'],
+    details: [
+      'Additional NPS Deduction: Exclusively for Tier-1 NPS account contributions.',
+      'Over and Above 80C: This ₹50k is in addition to the ₹1.5L limit of Section 80C.',
+      'Retirement Corpus: Helps in building a market-linked pension fund with low costs.',
+      'Tax-Free Maturity: 60% of the corpus is tax-free at age 60. Pro Tip: Use for long-term goals.',
+      'Employer Contribution: Up to 10% of salary is also deductible under 80CCD(2).'
+    ],
     color: 'bg-indigo-50 text-indigo-600'
   }
 ];
@@ -95,6 +123,7 @@ export default function TaxGuide() {
                 title: section.title,
                 description: `Limit: ${section.limit}`,
                 icon: section.title.includes('80C') ? Landmark : section.title.includes('80D') ? Shield : section.title.includes('24') ? Calculator : FileText,
+                details: section.details,
                 borderColor: section.color.includes('blue') ? '#3B82F6' : section.color.includes('emerald') ? '#10B981' : section.color.includes('amber') ? '#F59E0B' : '#6366F1',
                 gradient: `linear-gradient(145deg, ${section.color.includes('blue') ? '#3B82F6' : section.color.includes('emerald') ? '#10B981' : section.color.includes('amber') ? '#F59E0B' : '#6366F1'}, #000)`
               }))}
@@ -111,12 +140,26 @@ export default function TaxGuide() {
                     {
                       title: 'Section 80G: Donations',
                       description: 'Donations to certain relief funds and charitable institutions can be claimed as a deduction.',
+                      details: [
+                        'Eligible Donations: To PM Relief Fund, NGOs with 80G registration, etc.',
+                        'Deduction Limit: Either 50% or 100% of the donation depending on the fund.',
+                        'Documentation: Pro Tip: Always collect a stamped 80G receipt and certificate.',
+                        'Cash Limit: Donations above ₹2,000 must be made via digital/cheque for tax benefit.',
+                        'PAN of Donee: Mandatory to mention the NGO\'s PAN in your ITR.'
+                      ],
                       borderColor: '#3B82F6',
                       gradient: 'linear-gradient(145deg, #3B82F6, #000)'
                     },
                     {
                       title: 'Standard Deduction',
                       description: 'A flat deduction of ₹50,000 (₹75,000 in New Regime) available to salaried individuals.',
+                      details: [
+                        'Salaried & Pensioners: Automatically applied to your taxable income.',
+                        'No Proof Required: You don\'t need to submit any bills or declarations.',
+                        'Both Regimes: Available in both Old and New tax regimes (increased in 2024).',
+                        'Reduces Taxable Salary: Directly lowers the base on which tax is calculated.',
+                        'Pro Tip: This is over and above all other 80C/80D deductions.'
+                      ],
                       borderColor: '#10B981',
                       gradient: 'linear-gradient(180deg, #10B981, #000)'
                     }

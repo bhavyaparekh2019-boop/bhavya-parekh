@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
+import { X, Info, ArrowRight } from 'lucide-react';
 import gsap from 'gsap';
 
 interface ChromaItem {
@@ -12,6 +13,7 @@ interface ChromaItem {
   url?: string;
   icon?: React.ElementType;
   description?: string;
+  details?: string[];
   category?: string;
   readTime?: string;
   author?: string;
@@ -39,6 +41,8 @@ export default function ChromaGrid({
 }: ChromaGridProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const animatedPos = useRef({ x: 0, y: 0 });
+  const [selectedItem, setSelectedItem] = useState<ChromaItem | null>(null);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -47,34 +51,121 @@ export default function ChromaGrid({
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
       
-      gsap.to(mousePos, {
+      gsap.to(animatedPos.current, {
         x,
         y,
         duration: damping,
         ease: ease,
-        onUpdate: () => setMousePos({ x: mousePos.x, y: mousePos.y }),
+        onUpdate: () => setMousePos({ x: animatedPos.current.x, y: animatedPos.current.y }),
+        overwrite: true
       });
     };
 
     window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      gsap.killTweensOf(animatedPos.current);
+    };
   }, [damping, ease]);
 
   return (
-    <div 
-      ref={containerRef}
-      className={`grid ${cols} gap-8 ${className}`}
-    >
-      {items.map((item, index) => (
-        <ChromaCard 
-          key={index} 
-          item={item} 
-          mousePos={mousePos} 
-          radius={radius}
-          fadeOut={fadeOut}
-        />
-      ))}
-    </div>
+    <>
+      <div 
+        ref={containerRef}
+        className={`grid ${cols} gap-8 ${className}`}
+      >
+        {items.map((item, index) => (
+          <ChromaCard 
+            key={index} 
+            item={item} 
+            mousePos={mousePos} 
+            radius={radius}
+            fadeOut={fadeOut}
+            onViewDetails={() => setSelectedItem(item)}
+          />
+        ))}
+      </div>
+
+      <AnimatePresence>
+        {selectedItem && (
+          <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 sm:p-6">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSelectedItem(null)}
+              className="absolute inset-0 bg-slate-900/60 backdrop-blur-md"
+            />
+            
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="relative w-full max-w-2xl bg-white rounded-[2.5rem] shadow-2xl overflow-hidden"
+            >
+              <div className="p-8 sm:p-12">
+                <button
+                  onClick={() => setSelectedItem(null)}
+                  className="absolute top-8 right-8 p-2 text-slate-400 hover:text-slate-900 transition-colors"
+                >
+                  <X className="w-6 h-6" />
+                </button>
+
+                <div className="flex items-center gap-6 mb-8">
+                  {selectedItem.icon && (
+                    <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center text-primary">
+                      <selectedItem.icon className="w-8 h-8" />
+                    </div>
+                  )}
+                  <div>
+                    <h2 className="text-3xl font-black text-slate-900 mb-1">{selectedItem.title}</h2>
+                    {selectedItem.subtitle && <p className="text-primary font-bold uppercase tracking-widest text-xs">{selectedItem.subtitle}</p>}
+                  </div>
+                </div>
+
+                <div className="space-y-8">
+                  <div>
+                    <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">Overview</h3>
+                    <p className="text-slate-600 leading-relaxed text-lg">{selectedItem.description}</p>
+                  </div>
+
+                  {selectedItem.details && selectedItem.details.length > 0 && (
+                    <div>
+                      <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">Key Details</h3>
+                      <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        {selectedItem.details.map((detail, idx) => (
+                          <li key={idx} className="flex items-start gap-3 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                            <div className="w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center text-primary text-[10px] font-bold shrink-0 mt-0.5">
+                              {idx + 1}
+                            </div>
+                            <span className="text-sm text-slate-700 font-medium">{detail}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {selectedItem.url && (
+                    <button 
+                      onClick={() => {
+                        if (selectedItem.url?.startsWith('http')) {
+                          window.open(selectedItem.url, '_blank');
+                        } else {
+                          window.location.href = selectedItem.url || '#';
+                        }
+                      }}
+                      className="w-full bg-slate-900 text-white font-black py-5 rounded-2xl text-sm uppercase tracking-widest hover:bg-primary hover:text-slate-900 transition-all flex items-center justify-center gap-2"
+                    >
+                      Explore More <ArrowRight className="w-4 h-4" />
+                    </button>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
 
@@ -82,12 +173,14 @@ function ChromaCard({
   item, 
   mousePos, 
   radius,
-  fadeOut 
+  fadeOut,
+  onViewDetails
 }: { 
   item: ChromaItem; 
   mousePos: { x: number; y: number }; 
   radius: number;
   fadeOut: number;
+  onViewDetails: () => void;
 }) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [opacity, setOpacity] = useState(0);
@@ -120,13 +213,15 @@ function ChromaCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
       className="relative group cursor-pointer h-full"
-      onClick={() => {
+      onClick={(e) => {
         if (item.url) {
           if (item.url.startsWith('http')) {
             window.open(item.url, '_blank');
           } else {
             window.location.href = item.url;
           }
+        } else if (!isArticle) {
+          onViewDetails();
         }
       }}
     >

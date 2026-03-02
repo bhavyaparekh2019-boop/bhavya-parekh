@@ -10,10 +10,11 @@ const insuranceTypes = [
     icon: Heart,
     description: 'Financial security for your family in your absence.',
     details: [
-      'Term Insurance: Pure protection at low cost.',
-      'Whole Life: Coverage for life with savings component.',
-      'Endowment: Fixed returns with life cover.',
-      'ULIPs: Market-linked returns with insurance.'
+      'Term Insurance: Pure protection at low cost. Pro Tip: Buy early to lock in low premiums.',
+      'Whole Life: Coverage for life with savings component. Ideal for legacy planning.',
+      'Endowment: Fixed returns with life cover. Disciplined savings for long-term goals.',
+      'ULIPs: Market-linked returns with insurance. Best for 10+ year horizons.',
+      'Child Plans: Specifically designed for education and marriage milestones.'
     ],
     color: 'bg-rose-50 text-rose-600'
   },
@@ -22,10 +23,11 @@ const insuranceTypes = [
     icon: Shield,
     description: 'Coverage for medical expenses and hospitalizations.',
     details: [
-      'Individual/Family Floater plans.',
-      'Critical Illness coverage.',
-      'Super Top-up plans for high coverage.',
-      'Cashless hospitalization benefits.'
+      'Individual/Family Floater plans. Pro Tip: Opt for restoration benefits.',
+      'Critical Illness coverage. Lump sum payment on life-threatening diagnosis.',
+      'Super Top-up plans. High coverage at a fraction of base policy cost.',
+      'Cashless hospitalization. Direct settlement with network hospitals.',
+      'OPD Cover: Reimburses doctor visits and pharmacy bills.'
     ],
     color: 'bg-emerald-50 text-emerald-600'
   },
@@ -34,10 +36,11 @@ const insuranceTypes = [
     icon: Car,
     description: 'Protection for your vehicles against damage and theft.',
     details: [
-      'Third-party Liability (Mandatory).',
-      'Comprehensive coverage.',
-      'Zero Depreciation add-ons.',
-      'Roadside assistance.'
+      'Third-party Liability (Mandatory). Covers damage to others.',
+      'Comprehensive coverage. Protects your own vehicle too.',
+      'Zero Depreciation add-ons. Pro Tip: Essential for cars under 5 years old.',
+      'Roadside assistance. 24/7 help for towing, flat tires, and fuel.',
+      'Engine Protection: Covers damage due to water ingression/oil leakage.'
     ],
     color: 'bg-blue-50 text-blue-600'
   },
@@ -46,10 +49,11 @@ const insuranceTypes = [
     icon: Home,
     description: 'Safeguarding your property and its contents.',
     details: [
-      'Fire and natural calamity protection.',
-      'Burglary and theft coverage.',
-      'Structure and content insurance.',
-      'Public liability coverage.'
+      'Fire and natural calamity protection. Earthquake, flood, and storm cover.',
+      'Burglary and theft coverage. Protects jewelry, electronics, and furniture.',
+      'Structure and content insurance. Comprehensive safety for your biggest asset.',
+      'Public liability coverage. Protection if someone is injured on your property.',
+      'Terrorism Cover: Protection against damage from extremist acts.'
     ],
     color: 'bg-amber-50 text-amber-600'
   },
@@ -58,10 +62,11 @@ const insuranceTypes = [
     icon: Lock,
     description: 'Protection against digital threats and data breaches.',
     details: [
-      'Identity theft protection.',
-      'Data restoration costs.',
-      'Cyber extortion coverage.',
-      'Legal and forensic support.'
+      'Identity theft protection. Covers legal costs to restore your identity.',
+      'Data restoration costs. Professional help to recover lost digital assets.',
+      'Cyber extortion coverage. Protection against ransomware attacks.',
+      'Legal and forensic support. Expert investigation of digital breaches.',
+      'Phishing Protection: Covers financial losses from fraudulent emails/sites.'
     ],
     color: 'bg-indigo-50 text-indigo-600'
   }
@@ -100,7 +105,7 @@ export default function InsuranceGuide() {
             >
               <div className="aspect-video rounded-[2.5rem] overflow-hidden shadow-2xl border-4 border-white">
                 <img 
-                  src="https://images.unsplash.com/photo-1450101496193-8f48505ce424?auto=format&fit=crop&q=80&w=1200&h=675" 
+                  src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&q=80&w=1200&h=675" 
                   alt="Insurance Protection" 
                   className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
@@ -131,6 +136,7 @@ export default function InsuranceGuide() {
                   title: type.title,
                   description: type.description,
                   icon: type.icon,
+                  details: type.details,
                   borderColor: type.color.includes('rose') ? '#F43F5E' : type.color.includes('emerald') ? '#10B981' : type.color.includes('blue') ? '#3B82F6' : '#F59E0B',
                   gradient: `linear-gradient(145deg, ${type.color.includes('rose') ? '#F43F5E' : type.color.includes('emerald') ? '#10B981' : type.color.includes('blue') ? '#3B82F6' : '#F59E0B'}, #000)`
                 }))}
@@ -216,24 +222,48 @@ export default function InsuranceGuide() {
                   {
                     title: 'Accidental Death Benefit',
                     description: 'Additional sum assured paid if death occurs due to an accident.',
+                    details: [
+                      'Double Indemnity: Often doubles the base sum assured.',
+                      'Low Cost: Very affordable compared to base life cover.',
+                      'Global Coverage: Usually valid worldwide.',
+                      'Pro Tip: Essential for frequent travelers and high-risk jobs.'
+                    ],
                     borderColor: '#3B82F6',
                     gradient: 'linear-gradient(145deg, #3B82F6, #000)'
                   },
                   {
                     title: 'Critical Illness Rider',
                     description: 'Lump sum payment on diagnosis of specified major illnesses.',
+                    details: [
+                      'Covers Cancer, Heart Attack, Stroke, and more.',
+                      'Survival Period: Usually requires 30 days survival post-diagnosis.',
+                      'No Bills Required: Payment is made on diagnosis, not expenses.',
+                      'Pro Tip: Use this to cover lifestyle changes and lost income.'
+                    ],
                     borderColor: '#10B981',
                     gradient: 'linear-gradient(180deg, #10B981, #000)'
                   },
                   {
                     title: 'Waiver of Premium',
                     description: 'Future premiums are waived if the policyholder becomes permanently disabled.',
+                    details: [
+                      'Policy Continuity: Ensures the policy stays active without payment.',
+                      'Total Disability: Usually triggered by loss of limbs or sight.',
+                      'Peace of Mind: Family remains protected even without income.',
+                      'Pro Tip: A must-have for all long-term life insurance policies.'
+                    ],
                     borderColor: '#F59E0B',
                     gradient: 'linear-gradient(145deg, #F59E0B, #000)'
                   },
                   {
                     title: 'Hospital Cash Rider',
                     description: 'Daily allowance for each day of hospitalization for non-medical expenses.',
+                    details: [
+                      'Fixed Daily Amount: Pre-defined sum regardless of actual bills.',
+                      'Covers Indirect Costs: Food, travel, and attendant expenses.',
+                      'ICU Double Benefit: Often pays double for ICU stays.',
+                      'Pro Tip: Good for covering "non-medical" items not paid by health insurance.'
+                    ],
                     borderColor: '#6366F1',
                     gradient: 'linear-gradient(145deg, #6366F1, #000)'
                   }
@@ -254,12 +284,24 @@ export default function InsuranceGuide() {
                   {
                     title: 'Health Insurance',
                     description: 'Cosmetic surgery, obesity treatment, injuries due to war, self-inflicted injuries, non-medical expenses.',
+                    details: [
+                      'Waiting Periods: Pre-existing diseases usually covered after 2-4 years.',
+                      'Cosmetic Surgery: Not covered unless due to an accident.',
+                      'Alternative Medicine: Limited coverage for AYUSH treatments.',
+                      'Pro Tip: Always disclose pre-existing conditions to avoid claim rejection.'
+                    ],
                     borderColor: '#F43F5E',
                     gradient: 'linear-gradient(145deg, #F43F5E, #000)'
                   },
                   {
                     title: 'Life Insurance',
                     description: 'Suicide within first year, death due to illegal acts, hazardous sports, misstatement of age.',
+                    details: [
+                      'Suicide Clause: Usually excluded for the first 12 months.',
+                      'Illegal Acts: Death while committing a crime is not covered.',
+                      'Hazardous Sports: Racing, skydiving, etc., often need special riders.',
+                      'Pro Tip: Ensure your nominee knows where the policy documents are kept.'
+                    ],
                     borderColor: '#F43F5E',
                     gradient: 'linear-gradient(145deg, #F43F5E, #000)'
                   }

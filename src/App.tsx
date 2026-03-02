@@ -18,6 +18,7 @@ import RetirementGuide from '@/src/pages/guides/RetirementGuide';
 import TaxGuide from '@/src/pages/guides/TaxGuide';
 import MutualFundsGuide from '@/src/pages/guides/MutualFundsGuide';
 import StockMarketGuide from '@/src/pages/guides/StockMarketGuide';
+import MarketAnalysis from '@/src/pages/MarketAnalysis';
 import Insights from '@/src/pages/Insights';
 import About from '@/src/pages/About';
 
@@ -42,6 +43,7 @@ export default function App() {
               <Route path="/guides/tax" element={<TaxGuide />} />
               <Route path="/guides/mutual-funds" element={<MutualFundsGuide />} />
               <Route path="/guides/stocks" element={<StockMarketGuide />} />
+              <Route path="/market-analysis" element={<MarketAnalysis />} />
               <Route path="/insights" element={<Insights />} />
               <Route path="/about" element={<About />} />
               <Route path="*" element={<Home />} />

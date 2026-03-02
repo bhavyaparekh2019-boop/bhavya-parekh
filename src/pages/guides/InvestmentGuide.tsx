@@ -11,6 +11,13 @@ const assetClasses = [
     description: 'Ownership in companies. High growth potential over long term.',
     risk: 'High',
     returns: '12-15% (Historical)',
+    details: [
+      'Direct Stocks: Buying individual company shares. Pro Tip: Focus on quality management.',
+      'Equity Mutual Funds: Diversified stock portfolios. Ideal for small, regular investments.',
+      'Index Funds: Tracking Nifty 50 or Sensex. Low-cost way to match market returns.',
+      'ELSS: Tax-saving equity funds (Section 80C). 3-year lock-in with potential for high growth.',
+      'International Equity: Exposure to global giants like Apple, Google, and Amazon.'
+    ],
     color: 'bg-blue-50 text-blue-600'
   },
   {
@@ -19,6 +26,13 @@ const assetClasses = [
     description: 'Lending to govt or corps. Stability and regular income.',
     risk: 'Low to Medium',
     returns: '6-8% (Historical)',
+    details: [
+      'Fixed Deposits (FD): Guaranteed bank returns. Pro Tip: Use for short-term goals (<3 years).',
+      'Public Provident Fund (PPF): Tax-free govt savings. 15-year lock-in for long-term safety.',
+      'Debt Mutual Funds: Investing in bonds and T-bills. More tax-efficient than FDs for long term.',
+      'Corporate Bonds: Higher interest than FDs but with credit risk. Stick to AAA-rated bonds.',
+      'Liquid Funds: Ideal for parking emergency funds with easy withdrawal.'
+    ],
     color: 'bg-emerald-50 text-emerald-600'
   },
   {
@@ -27,6 +41,13 @@ const assetClasses = [
     description: 'A hedge against inflation and currency devaluation.',
     risk: 'Medium',
     returns: '8-10% (Historical)',
+    details: [
+      'Physical Gold: Jewelry, coins, and bars. High making charges and storage risks.',
+      'Sovereign Gold Bonds (SGB): Govt-backed with 2.5% interest. Pro Tip: Best way to own gold.',
+      'Gold ETFs: Digital gold tracking market prices. Highly liquid and easy to trade.',
+      'Digital Gold: Buying gold through apps in small amounts. Convenient but check for storage fees.',
+      'Gold Mutual Funds: Investing in gold mining companies or ETFs.'
+    ],
     color: 'bg-amber-50 text-amber-600'
   },
   {
@@ -35,6 +56,13 @@ const assetClasses = [
     description: 'Physical property or REITs. Rental income and appreciation.',
     risk: 'Medium to High',
     returns: '8-12% (Historical)',
+    details: [
+      'Residential Property: Apartments and villas. High maintenance and low rental yield (2-3%).',
+      'Commercial Property: Offices and retail spaces. Higher rental yields (7-9%) but higher entry cost.',
+      'REITs: Real Estate Investment Trusts. Pro Tip: Best for liquid exposure to commercial real estate.',
+      'Fractional Ownership: Co-investing in high-value assets. Access to Grade-A properties.',
+      'Land/Plots: High appreciation potential but high risk of encroachment and litigation.'
+    ],
     color: 'bg-indigo-50 text-indigo-600'
   }
 ];
@@ -105,6 +133,7 @@ export default function InvestmentGuide() {
                   icon: asset.icon,
                   subtitle: `Returns: ${asset.returns}`,
                   handle: `Risk: ${asset.risk}`,
+                  details: asset.details,
                   borderColor: asset.color.includes('blue') ? '#3B82F6' : asset.color.includes('emerald') ? '#10B981' : asset.color.includes('amber') ? '#F59E0B' : '#6366F1',
                   gradient: `linear-gradient(145deg, ${asset.color.includes('blue') ? '#3B82F6' : asset.color.includes('emerald') ? '#10B981' : asset.color.includes('amber') ? '#F59E0B' : '#6366F1'}, #000)`
                 }))}
@@ -203,12 +232,24 @@ export default function InvestmentGuide() {
                   {
                     title: 'Aggressive (Age 20-35)',
                     description: '70-80% Equity for long-term growth. 20-30% Debt for stability. High risk tolerance, long horizon.',
+                    details: [
+                      'High Equity Exposure: Capitalizing on the power of time.',
+                      'Small & Mid Cap Focus: Capturing high-growth potential.',
+                      'Regular SIPs: Averaging out market volatility.',
+                      'Pro Tip: Don\'t panic during market corrections; they are buying opportunities.'
+                    ],
                     borderColor: '#3B82F6',
                     gradient: 'linear-gradient(145deg, #3B82F6, #000)'
                   },
                   {
                     title: 'Conservative (Age 50+)',
                     description: '30-40% Equity to beat inflation. 60-70% Debt for capital protection. Low risk tolerance, focus on income.',
+                    details: [
+                      'Capital Protection: Ensuring the corpus is safe for retirement.',
+                      'Debt Dominance: Steady income through FDs and Debt Funds.',
+                      'Equity for Inflation: Small exposure to prevent wealth erosion.',
+                      'Pro Tip: Shift to SWP (Systematic Withdrawal Plan) for regular monthly income.'
+                    ],
                     borderColor: '#10B981',
                     gradient: 'linear-gradient(180deg, #10B981, #000)'
                   }
@@ -240,12 +281,24 @@ export default function InvestmentGuide() {
                   {
                     title: 'Active Investing',
                     description: 'Aims to "beat the market" through research, timing, and individual stock picking. Higher potential returns but higher costs.',
+                    details: [
+                      'Stock Selection: Picking individual winners.',
+                      'Market Timing: Entering and exiting based on trends.',
+                      'Higher Fees: Professional management costs more.',
+                      'Pro Tip: Best for those with time to research or access to top advisors.'
+                    ],
                     borderColor: '#3B82F6',
                     gradient: 'linear-gradient(145deg, #3B82F6, #000)'
                   },
                   {
                     title: 'Passive Investing',
                     description: 'Aims to "match the market" by tracking an index like Nifty 50. Lower costs and consistent market returns.',
+                    details: [
+                      'Index Tracking: Mimicking market performance.',
+                      'Low Expense Ratio: Minimal management fees.',
+                      'No Human Bias: Rules-based investment approach.',
+                      'Pro Tip: Ideal for long-term wealth creation with minimal effort.'
+                    ],
                     borderColor: '#10B981',
                     gradient: 'linear-gradient(180deg, #10B981, #000)'
                   }
@@ -271,18 +324,36 @@ export default function InvestmentGuide() {
                   {
                     title: 'Loss Aversion',
                     description: 'The pain of losing ₹10,000 is twice as powerful as the joy of gaining ₹10,000.',
+                    details: [
+                      'Emotional Pain: Losses hurt more than gains feel good.',
+                      'Holding Losers: Investors often hold bad stocks hoping they recover.',
+                      'Fear of Regret: Avoiding decisions to prevent potential mistakes.',
+                      'Pro Tip: Set stop-losses to remove emotion from selling decisions.'
+                    ],
                     borderColor: '#F43F5E',
                     gradient: 'linear-gradient(145deg, #F43F5E, #000)'
                   },
                   {
                     title: 'Herd Mentality',
                     description: 'Buying just because everyone else is buying (FOMO) often leads to buying at peaks.',
+                    details: [
+                      'Social Proof: Following the crowd feels safer.',
+                      'FOMO: Fear of missing out on the "next big thing".',
+                      'Market Bubbles: Driven by collective irrationality.',
+                      'Pro Tip: Be greedy when others are fearful, and fearful when others are greedy.'
+                    ],
                     borderColor: '#F59E0B',
                     gradient: 'linear-gradient(145deg, #F59E0B, #000)'
                   },
                   {
                     title: 'Confirmation Bias',
                     description: 'Seeking information that only supports your existing beliefs about a stock.',
+                    details: [
+                      'Selective Attention: Ignoring negative news about your stocks.',
+                      'Echo Chambers: Following only bullish analysts.',
+                      'Overconfidence: Believing you know more than the market.',
+                      'Pro Tip: Actively look for reasons why your investment thesis might be wrong.'
+                    ],
                     borderColor: '#3B82F6',
                     gradient: 'linear-gradient(145deg, #3B82F6, #000)'
                   }
@@ -308,24 +379,48 @@ export default function InvestmentGuide() {
                   {
                     title: 'REITs & InvITs',
                     description: 'Real Estate Investment Trusts and Infrastructure Investment Trusts allow you to invest in large-scale projects with small amounts.',
+                    details: [
+                      'Liquid Real Estate: Trade like stocks on the exchange.',
+                      'Regular Income: Mandated to pay 90% of cash flows as dividends.',
+                      'Diversification: Access to Grade-A office and retail spaces.',
+                      'Pro Tip: Ideal for those who want rental income without property management.'
+                    ],
                     borderColor: '#3B82F6',
                     gradient: 'linear-gradient(145deg, #3B82F6, #000)'
                   },
                   {
                     title: 'Private Equity & VC',
                     description: 'Investing in unlisted companies or startups. High risk but potential for exponential returns over a 7-10 year horizon.',
+                    details: [
+                      'Early Stage Growth: Investing in the next big thing.',
+                      'Illiquidity: Money is locked for several years.',
+                      'High Minimums: Usually requires significant capital.',
+                      'Pro Tip: Only for high-net-worth individuals with high risk tolerance.'
+                    ],
                     borderColor: '#10B981',
                     gradient: 'linear-gradient(180deg, #10B981, #000)'
                   },
                   {
                     title: 'Hedge Funds / AIFs',
                     description: 'Alternative Investment Funds use complex strategies like long-short, arbitrage, and leverage to generate alpha.',
+                    details: [
+                      'Sophisticated Strategies: Using derivatives and leverage.',
+                      'Non-Correlated Returns: Performance independent of market trends.',
+                      'Higher Fees: Performance-based fee structures.',
+                      'Pro Tip: Best for diversifying a large portfolio beyond traditional assets.'
+                    ],
                     borderColor: '#F59E0B',
                     gradient: 'linear-gradient(145deg, #F59E0B, #000)'
                   },
                   {
                     title: 'Structured Products',
                     description: 'Customized investment products linked to an underlying asset with built-in downside protection or enhanced upside.',
+                    details: [
+                      'Capital Protection: Built-in safety nets for principal.',
+                      'Customized Payoffs: Tailored to specific market views.',
+                      'Complex Risks: Requires deep understanding of derivatives.',
+                      'Pro Tip: Use these to express a specific tactical view on the market.'
+                    ],
                     borderColor: '#6366F1',
                     gradient: 'linear-gradient(145deg, #6366F1, #000)'
                   }
@@ -352,12 +447,24 @@ export default function InvestmentGuide() {
                     {
                       title: 'The Core (70-80%)',
                       description: 'Stable, long-term investments like Large-cap Index funds, PPF, and High-grade Bonds.',
+                      details: [
+                        'Foundation: Providing stability and consistent growth.',
+                        'Low Volatility: Resilient during market downturns.',
+                        'Tax Efficiency: Long-term compounding focus.',
+                        'Pro Tip: Never compromise the core for speculative gains.'
+                      ],
                       borderColor: '#3B82F6',
                       gradient: 'linear-gradient(145deg, #3B82F6, #000)'
                     },
                     {
                       title: 'The Satellite (20-30%)',
                       description: 'Tactical bets in Mid-cap, Small-cap, Sectoral funds, or Alternatives.',
+                      details: [
+                        'Alpha Generation: Aiming for market-beating returns.',
+                        'Higher Risk: Subject to higher volatility.',
+                        'Tactical Entry: Capitalizing on specific market themes.',
+                        'Pro Tip: Review satellite positions more frequently than the core.'
+                      ],
                       borderColor: '#10B981',
                       gradient: 'linear-gradient(180deg, #10B981, #000)'
                     }
@@ -401,14 +508,15 @@ export default function InvestmentGuide() {
                 fadeOut={0.6}
                 ease="power3.out"
                 items={[
-                  { name: 'Mutual Funds', desc: 'Professionally managed pools of money investing in stocks or bonds. Ideal for SIPs.' },
-                  { name: 'Public Provident Fund (PPF)', desc: 'Safe, long-term debt instrument with tax-free returns (Section 80C).' },
-                  { name: 'National Pension System (NPS)', desc: 'Market-linked retirement product with additional tax benefits.' },
-                  { name: 'Direct Equities', desc: 'Buying shares of companies directly. Requires research and active monitoring.' },
-                  { name: 'Fixed Deposits (FD)', desc: 'Guaranteed returns from banks. Low risk but often barely beats inflation.' }
+                  { name: 'Mutual Funds', desc: 'Professionally managed pools of money investing in stocks or bonds. Ideal for SIPs.', details: ['Equity, Debt, and Hybrid options.', 'Professional fund management.', 'Highly regulated and transparent.', 'Pro Tip: Use SIPs for long-term wealth creation.'] },
+                  { name: 'Public Provident Fund (PPF)', desc: 'Safe, long-term debt instrument with tax-free returns (Section 80C).', details: ['Govt-backed safety.', 'Tax-free interest and maturity.', '15-year lock-in period.', 'Pro Tip: Best for risk-averse long-term goals.'] },
+                  { name: 'National Pension System (NPS)', desc: 'Market-linked retirement product with additional tax benefits.', details: ['Retirement-focused savings.', 'Additional ₹50k tax deduction.', 'Low-cost fund management.', 'Pro Tip: Opt for Active Choice for higher equity exposure.'] },
+                  { name: 'Direct Equities', desc: 'Buying shares of companies directly. Requires research and active monitoring.', details: ['Direct ownership in companies.', 'Potential for multi-bagger returns.', 'Requires deep research and time.', 'Pro Tip: Start with blue-chip companies.'] },
+                  { name: 'Fixed Deposits (FD)', desc: 'Guaranteed returns from banks. Low risk but often barely beats inflation.', details: ['Guaranteed principal and interest.', 'Highly liquid with premature withdrawal.', 'Taxable interest income.', 'Pro Tip: Use for short-term emergency funds.'] }
                 ].map(item => ({
                   title: item.name,
                   description: item.desc,
+                  details: item.details,
                   borderColor: '#3B82F6',
                   gradient: 'linear-gradient(145deg, #3B82F6, #000)'
                 }))}

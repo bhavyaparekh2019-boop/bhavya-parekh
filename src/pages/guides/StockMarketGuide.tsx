@@ -10,24 +10,52 @@ const marketConcepts = [
     title: 'What is a Stock?',
     icon: BookOpen,
     description: 'A share in the ownership of a company. When you buy a stock, you become a shareholder.',
+    details: [
+      'Ownership Stake: You own a piece of the company\'s future.',
+      'Voting Rights: Participate in major corporate decisions. Pro Tip: Use your vote!',
+      'Capital Appreciation: Profit from the rise in stock price over time.',
+      'Dividends: A share of the company\'s profits paid out to you.',
+      'Limited Liability: You are not personally responsible for the company\'s debts.'
+    ],
     color: 'bg-blue-50 text-blue-600'
   },
   {
     title: 'Stock Exchanges',
     icon: Globe,
     description: 'Platforms where stocks are traded. In India, the main ones are NSE and BSE.',
+    details: [
+      'NSE (National Stock Exchange): Known for high-tech trading and Nifty 50.',
+      'BSE (Bombay Stock Exchange): Asia\'s oldest exchange, home to Sensex.',
+      'SEBI Regulation: Ensuring transparency and protecting retail investors.',
+      'Price Discovery: Where buyers and sellers meet to determine fair value.',
+      'Listing Requirements: Companies must meet strict criteria to be traded here.'
+    ],
     color: 'bg-emerald-50 text-emerald-600'
   },
   {
     title: 'Market Indices',
     icon: Activity,
     description: 'Indicators of market performance. Nifty 50 and Sensex are the primary indices in India.',
+    details: [
+      'Nifty 50: Top 50 companies by market cap on the NSE. Pro Tip: Best for index investing.',
+      'Sensex: Top 30 companies on the BSE. A barometer of the Indian economy.',
+      'Sectoral Indices: Tracking specific industries like Bank Nifty or IT Index.',
+      'Benchmark: Used to compare the performance of your mutual funds.',
+      'Rebalancing: Indices are updated semi-annually to reflect market changes.'
+    ],
     color: 'bg-amber-50 text-amber-600'
   },
   {
     title: 'Bull vs. Bear Market',
     icon: TrendingUp,
     description: 'Bull markets are characterized by rising prices, while bear markets see falling prices.',
+    details: [
+      'Bull Market: Optimism, high confidence, and rising stock prices. Pro Tip: Don\'t get over-leveraged.',
+      'Bear Market: Pessimism, fear, and falling prices (usually 20% drop from peak).',
+      'Market Cycles: Natural phases of growth and correction in every economy.',
+      'Investor Sentiment: Driven by greed in bull markets and fear in bear markets.',
+      'Correction: A short-term drop (10%) that is often a healthy part of a bull market.'
+    ],
     color: 'bg-rose-50 text-rose-600'
   }
 ];
@@ -66,7 +94,7 @@ export default function StockMarketGuide() {
             >
               <div className="aspect-video rounded-[2.5rem] overflow-hidden shadow-2xl border-4 border-white">
                 <img 
-                  src="https://images.unsplash.com/photo-1611974717483-5867ff2096c4?auto=format&fit=crop&q=80&w=1200&h=675" 
+                  src="https://images.unsplash.com/photo-1535320903710-d993d3d77d29?auto=format&fit=crop&q=80&w=1200&h=675" 
                   alt="Stock Market Trading" 
                   className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
@@ -97,6 +125,7 @@ export default function StockMarketGuide() {
                   title: concept.title,
                   description: concept.description,
                   icon: concept.icon,
+                  details: concept.details,
                   borderColor: concept.color.includes('blue') ? '#3B82F6' : concept.color.includes('emerald') ? '#10B981' : concept.color.includes('amber') ? '#F59E0B' : '#6366F1',
                   gradient: `linear-gradient(145deg, ${concept.color.includes('blue') ? '#3B82F6' : concept.color.includes('emerald') ? '#10B981' : concept.color.includes('amber') ? '#F59E0B' : '#6366F1'}, #000)`
                 }))}
@@ -216,24 +245,48 @@ export default function StockMarketGuide() {
                   {
                     title: 'Accumulation Phase',
                     description: 'Occurs after the market has bottomed. Institutional investors start buying quietly. Sentiment is still negative.',
+                    details: [
+                      'Smart Money Entry: Experienced investors buy when others are fearful.',
+                      'Low Valuations: Stocks are often undervalued and "cheap".',
+                      'Boring Markets: Prices move sideways for long periods.',
+                      'Pro Tip: This is the best time for long-term wealth creation.'
+                    ],
                     borderColor: '#3B82F6',
                     gradient: 'linear-gradient(145deg, #3B82F6, #000)'
                   },
                   {
                     title: 'Markup Phase (Bull)',
                     description: 'Prices start rising steadily. Media coverage increases, and retail investors join in. Sentiment becomes euphoric.',
+                    details: [
+                      'Trend Confirmation: Higher highs and higher lows in stock prices.',
+                      'Mainstream Media: Stock market becomes a dinner table conversation.',
+                      'IPO Boom: Many companies go public to capitalize on the euphoria.',
+                      'Pro Tip: Stay disciplined; don\'t chase stocks at all-time highs.'
+                    ],
                     borderColor: '#10B981',
                     gradient: 'linear-gradient(180deg, #10B981, #000)'
                   },
                   {
                     title: 'Distribution Phase',
                     description: 'Prices flatten out as "smart money" starts selling to retail investors. Volatility increases.',
+                    details: [
+                      'Profit Booking: Large investors start exiting their positions.',
+                      'Churning: High trading volume but no significant price gain.',
+                      'Over-optimism: Retail investors are most bullish at the very top.',
+                      'Pro Tip: Review your portfolio and consider taking some profits.'
+                    ],
                     borderColor: '#F59E0B',
                     gradient: 'linear-gradient(145deg, #F59E0B, #000)'
                   },
                   {
                     title: 'Markdown Phase (Bear)',
                     description: 'Prices fall rapidly. Panic selling ensues. The cycle eventually returns to accumulation.',
+                    details: [
+                      'Fear & Panic: Investors sell at any price to "save" what\'s left.',
+                      'Negative News: Economic data and earnings start looking bad.',
+                      'Capitulation: The final stage of selling where even long-term holders give up.',
+                      'Pro Tip: Keep your SIPs running; this is where you buy units at a discount.'
+                    ],
                     borderColor: '#F43F5E',
                     gradient: 'linear-gradient(145deg, #F43F5E, #000)'
                   }
@@ -259,12 +312,24 @@ export default function StockMarketGuide() {
                   {
                     title: 'Futures',
                     description: 'Agreement to buy or sell an asset at a predetermined price on a specified future date.',
+                    details: [
+                      'Leverage: Control a large position with a small amount of margin.',
+                      'Hedging: Pro Tip: Use futures to protect your stock portfolio from a market drop.',
+                      'Expiry: Contracts have a fixed end date (usually the last Thursday of the month).',
+                      'Mark-to-Market: Profits/losses are settled daily in your trading account.'
+                    ],
                     borderColor: '#3B82F6',
                     gradient: 'linear-gradient(145deg, #3B82F6, #000)'
                   },
                   {
                     title: 'Options',
                     description: 'Right (but not obligation) to buy (Call) or sell (Put) an asset. Sellers take on significant risk.',
+                    details: [
+                      'Call Options: Profit when you expect the market to go up.',
+                      'Put Options: Profit when you expect the market to go down.',
+                      'Option Premium: The price you pay to buy an option (your maximum loss).',
+                      'Time Decay: Options lose value as they get closer to expiry. Pro Tip: Don\'t hold OTM options till expiry.'
+                    ],
                     borderColor: '#10B981',
                     gradient: 'linear-gradient(180deg, #10B981, #000)'
                   }

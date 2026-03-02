@@ -5,6 +5,12 @@
   --color-primary: #19d4e6;
   --color-background-light: #f6f8f8;
   --color-background-dark: #112021;
+  --animate-marquee: marquee 30s linear infinite;
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
 }
 
 @layer base {

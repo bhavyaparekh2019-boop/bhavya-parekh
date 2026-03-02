@@ -10,24 +10,48 @@ const features = [
     title: 'Client-Centered Approach',
     description: 'We prioritize your needs and offer customized solutions that align with your goals.',
     icon: Users,
+    details: [
+      'Personalized financial roadmaps.',
+      'Regular portfolio reviews.',
+      'Goal-based investment strategies.',
+      'Dedicated relationship management.'
+    ],
     color: 'bg-blue-50 text-blue-600'
   },
   {
     title: 'Transparency & Trust',
     description: 'We maintain complete clarity in every process, ensuring you are informed and confident in your decisions.',
     icon: Shield,
+    details: [
+      'Clear fee structures with no hidden costs.',
+      'Unbiased product recommendations.',
+      'Regular performance reporting.',
+      'Ethical advisory practices.'
+    ],
     color: 'bg-emerald-50 text-emerald-600'
   },
   {
     title: 'Professional Expertise',
     description: 'Our experienced team brings industry knowledge and financial insight to help you make smart choices.',
     icon: Briefcase,
+    details: [
+      'Certified financial planners.',
+      'Deep market research capabilities.',
+      'Decades of cumulative experience.',
+      'Continuous professional development.'
+    ],
     color: 'bg-amber-50 text-amber-600'
   },
   {
     title: 'Long-Term Relationships',
     description: "We don't just offer services — we build lasting partnerships based on reliability and performance.",
     icon: HeartHandshake,
+    details: [
+      'Generational wealth planning.',
+      'Consistent support through market cycles.',
+      'Proactive financial adjustments.',
+      'Trust-based advisory model.'
+    ],
     color: 'bg-indigo-50 text-indigo-600'
   }
 ];
@@ -41,10 +65,46 @@ const offerings = [
 ];
 
 const commitments = [
-  'Upholding the highest ethical standards',
-  'Providing accurate and honest financial guidance',
-  'Ensuring smooth and efficient service delivery',
-  'Supporting clients at every step of their financial journey'
+  {
+    title: 'Ethical Standards',
+    description: 'Upholding the highest ethical standards in every transaction.',
+    details: [
+      'Full compliance with regulatory norms.',
+      'Integrity in all client interactions.',
+      'Confidentiality of client data.',
+      'Honest disclosure of risks.'
+    ]
+  },
+  {
+    title: 'Honest Guidance',
+    description: 'Providing accurate and honest financial guidance tailored to you.',
+    details: [
+      'Evidence-based recommendations.',
+      'Realistic return expectations.',
+      'Clear communication of terms.',
+      'Focus on long-term value.'
+    ]
+  },
+  {
+    title: 'Efficient Service',
+    description: 'Ensuring smooth and efficient service delivery for all clients.',
+    details: [
+      'Streamlined documentation processes.',
+      'Quick response to queries.',
+      'Digital-first service approach.',
+      'Seamless transaction execution.'
+    ]
+  },
+  {
+    title: 'Continuous Support',
+    description: 'Supporting clients at every step of their financial journey.',
+    details: [
+      'Ongoing market updates.',
+      'Periodic strategy re-evaluations.',
+      'Assistance during life transitions.',
+      'Always accessible advisory team.'
+    ]
+  }
 ];
 
 export default function About() {
@@ -180,6 +240,7 @@ export default function About() {
               title: feature.title,
               description: feature.description,
               icon: feature.icon,
+              details: feature.details,
               borderColor: feature.color.includes('blue') ? '#3B82F6' : feature.color.includes('emerald') ? '#10B981' : feature.color.includes('amber') ? '#F59E0B' : '#6366F1',
               gradient: `linear-gradient(145deg, ${feature.color.includes('blue') ? '#3B82F6' : feature.color.includes('emerald') ? '#10B981' : feature.color.includes('amber') ? '#F59E0B' : '#6366F1'}, #000)`
             }))}
@@ -201,8 +262,9 @@ export default function About() {
                 fadeOut={0.6}
                 ease="power3.out"
                 items={commitments.map(item => ({
-                  title: item,
-                  description: '',
+                  title: item.title,
+                  description: item.description,
+                  details: item.details,
                   borderColor: '#3B82F6',
                   gradient: 'linear-gradient(145deg, #3B82F6, #000)'
                 }))}

@@ -8,25 +8,49 @@ const fundTypes = [
   {
     title: 'Equity Funds',
     description: 'Invest primarily in stocks. High risk, high return potential.',
-    subtypes: ['Large Cap', 'Mid Cap', 'Small Cap', 'Multi Cap', 'ELSS (Tax Saving)'],
+    details: [
+      'Large Cap: Investing in top 100 companies. Pro Tip: Best for stable long-term growth.',
+      'Mid Cap: High growth potential in mid-sized firms. Higher volatility than large caps.',
+      'Small Cap: High risk, exponential growth potential. Ideal for 10+ year horizons.',
+      'ELSS: Tax-saving funds with 3-year lock-in. Best for combining tax saving with equity growth.',
+      'Sectoral: Focused on specific industries like IT/Banking. High risk due to lack of diversification.'
+    ],
     color: 'bg-blue-50 text-blue-600'
   },
   {
     title: 'Debt Funds',
     description: 'Invest in fixed-income securities like govt bonds and corporate debentures.',
-    subtypes: ['Liquid Funds', 'Short Term', 'Corporate Bond', 'Gilt Funds'],
+    details: [
+      'Liquid Funds: For surplus cash, very low risk. Pro Tip: Better alternative to savings accounts.',
+      'Gilt Funds: Investing in government securities. No credit risk but high interest rate risk.',
+      'Corporate Bond Funds: High-quality corporate debt. Aim for higher yields than govt bonds.',
+      'Dynamic Bond Funds: Managing interest rate volatility by changing portfolio duration.',
+      'Short Duration Funds: Ideal for 1-3 year investment horizons.'
+    ],
     color: 'bg-emerald-50 text-emerald-600'
   },
   {
     title: 'Hybrid Funds',
     description: 'A mix of equity and debt to balance risk and reward.',
-    subtypes: ['Aggressive Hybrid', 'Balanced Advantage', 'Multi Asset Allocation'],
+    details: [
+      'Aggressive Hybrid: 65-80% equity exposure. Pro Tip: Great for first-time equity investors.',
+      'Balanced Advantage: Dynamic asset allocation based on market valuations.',
+      'Multi Asset: Equity, debt, and gold in one fund. True diversification in a single product.',
+      'Arbitrage: Low-risk equity-taxed returns. Ideal for parking money for 3-6 months.',
+      'Equity Savings: Mix of equity, debt, and arbitrage for conservative growth.'
+    ],
     color: 'bg-amber-50 text-amber-600'
   },
   {
     title: 'Index / Passive Funds',
     description: 'Mimic a market index like Nifty 50. Low cost and transparent.',
-    subtypes: ['Nifty 50 Index', 'Nifty Next 50', 'Sectoral Indices'],
+    details: [
+      'Nifty 50 Index: Top 50 Indian companies. Pro Tip: The simplest way to invest in India.',
+      'Nifty Next 50: The next 50 potential blue-chips. Higher growth potential than Nifty 50.',
+      'Target Maturity Funds: Debt index funds with fixed dates. Predictable returns if held to maturity.',
+      'ETFs: Traded on stock exchanges like shares. Requires a demat account.',
+      'Factor Funds: Rules-based indexing like Value, Momentum, or Low Volatility.'
+    ],
     color: 'bg-indigo-50 text-indigo-600'
   }
 ];
@@ -64,7 +88,7 @@ export default function MutualFundsGuide() {
             >
               <div className="aspect-video rounded-[2.5rem] overflow-hidden shadow-2xl border-4 border-white">
                 <img 
-                  src="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&q=80&w=1200&h=675" 
+                  src="https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&q=80&w=1200&h=675" 
                   alt="Mutual Funds Investing" 
                   className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
@@ -97,12 +121,26 @@ export default function MutualFundsGuide() {
                   {
                     title: 'SIP (Systematic Investment Plan)',
                     description: 'Invest a fixed amount regularly. It averages out the cost of purchase and instills financial discipline.',
+                    details: [
+                      'Rupee Cost Averaging: Buying more units when prices are low.',
+                      'Disciplined Savings: Automated monthly investments.',
+                      'Power of Compounding: Small amounts growing large over time.',
+                      'Flexibility: Start, stop, or increase SIPs anytime.',
+                      'Pro Tip: Use "Step-up SIP" to increase your investment as your income grows.'
+                    ],
                     borderColor: '#3B82F6',
                     gradient: 'linear-gradient(145deg, #3B82F6, #000)'
                   },
                   {
                     title: 'Lumpsum Investment',
                     description: 'Invest a large amount at once. Best suited when the market is undervalued or when you have a windfall.',
+                    details: [
+                      'Immediate Market Exposure: Full capital starts working from day one.',
+                      'Market Timing: High potential if invested during market crashes.',
+                      'No Recurring Commitment: One-time process.',
+                      'Ideal for Windfalls: Bonuses, property sales, or inheritance.',
+                      'Pro Tip: If unsure of market levels, use STP to move lumpsum into equity.'
+                    ],
                     borderColor: '#10B981',
                     gradient: 'linear-gradient(180deg, #10B981, #000)'
                   }
@@ -120,12 +158,24 @@ export default function MutualFundsGuide() {
                     {
                       title: 'STP (Systematic Transfer Plan)',
                       description: 'Transfer a fixed amount from one fund to another. Ideal for investing a large lumpsum gradually.',
+                      details: [
+                        'Risk Mitigation: Avoids the risk of investing all at once at a peak.',
+                        'Dual Returns: Earn debt returns on the balance while moving to equity.',
+                        'Automated Rebalancing: Maintains your desired asset allocation.',
+                        'Pro Tip: Park lumpsum in a Liquid Fund and STP into an Equity Fund.'
+                      ],
                       borderColor: '#3B82F6',
                       gradient: 'linear-gradient(145deg, #3B82F6, #000)'
                     },
                     {
                       title: 'SWP (Systematic Withdrawal Plan)',
                       description: 'Withdraw a fixed amount regularly from your fund. Ideal for generating a steady monthly income.',
+                      details: [
+                        'Tax Efficiency: Only the gain portion is taxed, not the principal.',
+                        'Steady Cash Flow: Perfect for retirement or regular expenses.',
+                        'Market Participation: Remaining corpus continues to grow.',
+                        'Pro Tip: Use SWP from a Debt or Hybrid fund for lower volatility in income.'
+                      ],
                       borderColor: '#10B981',
                       gradient: 'linear-gradient(180deg, #10B981, #000)'
                     }
@@ -150,6 +200,7 @@ export default function MutualFundsGuide() {
                 title: fund.title,
                 description: fund.description,
                 icon: BarChart3,
+                details: fund.details,
                 borderColor: fund.color.includes('blue') ? '#3B82F6' : fund.color.includes('emerald') ? '#10B981' : fund.color.includes('amber') ? '#F59E0B' : '#6366F1',
                 gradient: `linear-gradient(145deg, ${fund.color.includes('blue') ? '#3B82F6' : fund.color.includes('emerald') ? '#10B981' : fund.color.includes('amber') ? '#F59E0B' : '#6366F1'}, #000)`
               }))}
@@ -212,24 +263,48 @@ export default function MutualFundsGuide() {
                   {
                     title: 'Arbitrage Funds',
                     description: 'Exploit price difference between cash and derivatives market. Low-risk and taxed as equity funds.',
+                    details: [
+                      'Market Neutral: Returns are independent of market direction.',
+                      'Tax Advantage: Equity taxation makes it better than FDs for high-bracket investors.',
+                      'Low Volatility: Similar to debt funds but with equity tax treatment.',
+                      'Pro Tip: Best for parking money for 3-12 months.'
+                    ],
                     borderColor: '#3B82F6',
                     gradient: 'linear-gradient(145deg, #3B82F6, #000)'
                   },
                   {
                     title: 'Quant Funds',
                     description: 'Investment decisions are made by mathematical models and algorithms. Removes emotional bias.',
+                    details: [
+                      'Algorithm Driven: Rules-based stock selection and weighting.',
+                      'No Human Emotion: Eliminates fear and greed from the process.',
+                      'Back-tested Strategies: Based on historical data and patterns.',
+                      'Pro Tip: Good for diversifying away from traditional "star" fund managers.'
+                    ],
                     borderColor: '#10B981',
                     gradient: 'linear-gradient(180deg, #10B981, #000)'
                   },
                   {
                     title: 'ESG Funds',
                     description: 'Focus on companies with high Environmental, Social, and Governance standards.',
+                    details: [
+                      'Responsible Investing: Supporting ethical and sustainable businesses.',
+                      'Risk Management: Companies with high ESG scores often have lower legal/reputational risk.',
+                      'Future Ready: Aligning with global shifts towards sustainability.',
+                      'Pro Tip: Ideal for investors who want their money to do good while earning returns.'
+                    ],
                     borderColor: '#F59E0B',
                     gradient: 'linear-gradient(145deg, #F59E0B, #000)'
                   },
                   {
                     title: 'International Funds',
                     description: 'Invest in global markets like US or Europe. Provides geographical diversification.',
+                    details: [
+                      'Global Diversification: Reduces dependence on the Indian economy.',
+                      'Currency Hedge: Benefit from Rupee depreciation against the Dollar.',
+                      'Access to Tech Giants: Invest in companies not listed in India (e.g., Tesla, Meta).',
+                      'Pro Tip: Limit exposure to 10-15% of your total portfolio.'
+                    ],
                     borderColor: '#6366F1',
                     gradient: 'linear-gradient(145deg, #6366F1, #000)'
                   }
@@ -297,12 +372,24 @@ export default function MutualFundsGuide() {
                   {
                     title: 'Equity-Oriented Funds',
                     description: 'STCG (< 1 yr): 15% flat tax. LTCG (> 1 yr): 10% tax on gains above ₹1 Lakh.',
+                    details: [
+                      'Short-Term Capital Gains (STCG): 15% if held for less than 12 months.',
+                      'Long-Term Capital Gains (LTCG): 10% on gains exceeding ₹1 Lakh per year.',
+                      'Exemption Limit: No tax on the first ₹1 Lakh of LTCG in a financial year.',
+                      'Pro Tip: Plan your redemptions to stay within the ₹1 Lakh exemption limit.'
+                    ],
                     borderColor: '#3B82F6',
                     gradient: 'linear-gradient(145deg, #3B82F6, #000)'
                   },
                   {
                     title: 'Debt-Oriented Funds',
                     description: 'All Gains: Taxed as per your income tax slab rate. Indexation is no longer available.',
+                    details: [
+                      'Slab Rate Taxation: Gains are added to your total income and taxed accordingly.',
+                      'No Indexation: Benefit of adjusting for inflation is no longer available for new investments.',
+                      'TDS: Tax is not deducted at source for residents, but mandatory for NRIs.',
+                      'Pro Tip: Debt funds are still better than FDs for those who want liquidity and professional management.'
+                    ],
                     borderColor: '#10B981',
                     gradient: 'linear-gradient(180deg, #10B981, #000)'
                   }

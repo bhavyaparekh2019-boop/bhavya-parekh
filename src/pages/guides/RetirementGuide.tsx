@@ -9,24 +9,52 @@ const retirementSteps = [
     title: 'Define Your Vision',
     icon: Target,
     description: 'What does retirement look like for you? Travel, hobbies, or a second career?',
+    details: [
+      'Identify post-retirement lifestyle goals. Pro Tip: Be specific about travel and hobbies.',
+      'Estimate monthly living expenses in today\'s value.',
+      'Plan for healthcare and medical costs. These usually rise with age.',
+      'Consider legacy and inheritance goals for your children or charity.',
+      'Decide on your retirement age. Earlier retirement requires a larger corpus.'
+    ],
     color: 'bg-blue-50 text-blue-600'
   },
   {
     title: 'Calculate the Corpus',
     icon: Wallet,
     description: 'Estimate your monthly expenses and factor in 6-7% annual inflation.',
+    details: [
+      'Use retirement calculators for accuracy. Factor in all income sources.',
+      'Factor in life expectancy (85-90 years). Pro Tip: It\'s better to over-estimate than under-estimate.',
+      'Account for rising healthcare inflation (usually 14-15% in India).',
+      'Include a buffer for emergencies and one-time large expenses.',
+      'Understand the "Real Rate of Return" after inflation and taxes.'
+    ],
     color: 'bg-emerald-50 text-emerald-600'
   },
   {
     title: 'Choose the Right Tools',
     icon: PiggyBank,
     description: 'Leverage EPF, NPS, PPF, and Equity Mutual Funds for long-term growth.',
+    details: [
+      'NPS for market-linked pension. Pro Tip: Use the 50k extra deduction under 80CCD(1B).',
+      'PPF for tax-free guaranteed returns. Best for the debt portion of your portfolio.',
+      'Equity MFs for beating inflation over the long term (10+ years).',
+      'EPF/VPF for safe debt accumulation through your employer.',
+      'Annuities: For guaranteed monthly income, though returns are usually lower.'
+    ],
     color: 'bg-amber-50 text-amber-600'
   },
   {
     title: 'Protect Your Health',
     icon: ShieldCheck,
     description: 'Ensure adequate health insurance to prevent medical bills from eating your savings.',
+    details: [
+      'Buy a dedicated senior citizen cover. Pro Tip: Buy while you are healthy to avoid exclusions.',
+      'Consider a super top-up plan for high coverage at low cost.',
+      'Build a separate medical emergency fund for non-covered expenses.',
+      'Review coverage every 3-5 years to adjust for rising medical costs.',
+      'Critical Illness Cover: For lump sum payment on major diagnosis.'
+    ],
     color: 'bg-rose-50 text-rose-600'
   }
 ];
@@ -64,7 +92,7 @@ export default function RetirementGuide() {
             >
               <div className="aspect-video rounded-[2.5rem] overflow-hidden shadow-2xl border-4 border-white">
                 <img 
-                  src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&q=80&w=1200&h=675" 
+                  src="https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&q=80&w=1200&h=675" 
                   alt="Retirement Planning" 
                   className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
@@ -95,6 +123,7 @@ export default function RetirementGuide() {
                   title: step.title,
                   description: step.description,
                   icon: step.icon,
+                  details: step.details,
                   borderColor: step.color.includes('blue') ? '#3B82F6' : step.color.includes('emerald') ? '#10B981' : step.color.includes('amber') ? '#F59E0B' : '#6366F1',
                   gradient: `linear-gradient(145deg, ${step.color.includes('blue') ? '#3B82F6' : step.color.includes('emerald') ? '#10B981' : step.color.includes('amber') ? '#F59E0B' : '#6366F1'}, #000)`
                 }))}
@@ -121,12 +150,24 @@ export default function RetirementGuide() {
                     {
                       title: 'Tax Efficiency',
                       description: 'Only the capital gains portion of the withdrawal is taxed, not the entire amount.',
+                      details: [
+                        'LTCG on equity is 10% above ₹1L. Pro Tip: Withdraw up to ₹1L gain tax-free annually.',
+                        'Debt SWP is taxed as per slab. Better than FDs for high-bracket investors.',
+                        'No TDS on SWP for resident Indians.',
+                        'Principal portion is never taxed twice.'
+                      ],
                       borderColor: '#3B82F6',
                       gradient: 'linear-gradient(145deg, #3B82F6, #000)'
                     },
                     {
                       title: 'Flexibility',
                       description: 'You can increase, decrease, or stop the withdrawal amount at any time.',
+                      details: [
+                        'No lock-in periods for SWP. You control your money.',
+                        'Change frequency (monthly/quarterly) to suit your needs.',
+                        'Stop SWP during market crashes to avoid "Sequence of Returns Risk".',
+                        'Withdraw lump sums for unplanned expenses like weddings or travel.'
+                      ],
                       borderColor: '#10B981',
                       gradient: 'linear-gradient(180deg, #10B981, #000)'
                     }
@@ -230,12 +271,24 @@ export default function RetirementGuide() {
                   {
                     title: 'Wills & Nominations',
                     description: 'A nominee is only a "custodian." A Will is the legal document that determines who actually inherits your assets.',
+                    details: [
+                      'Registered Will: Ensures legal validity and reduces chances of dispute.',
+                      'Updating Nominees: Pro Tip: Ensure nominees are updated in all bank accounts and insurance.',
+                      'Joint Holding: Simplifies the transfer of assets to the surviving spouse.',
+                      'Specific Bequests: Clearly mention who gets what to avoid family conflicts.'
+                    ],
                     borderColor: '#3B82F6',
                     gradient: 'linear-gradient(145deg, #3B82F6, #000)'
                   },
                   {
                     title: 'Succession Planning',
                     description: 'For business owners, planning the transition of leadership and ownership is critical for continuity.',
+                    details: [
+                      'Identifying Future Leaders: Training the next generation early.',
+                      'Buy-Sell Agreements: Legal framework for transfer of business interest.',
+                      'Tax-Efficient Transfer: Using trusts or gifts to transfer shares.',
+                      'Ensuring Business Stability: Protecting the livelihood of employees and partners.'
+                    ],
                     borderColor: '#10B981',
                     gradient: 'linear-gradient(180deg, #10B981, #000)'
                   }
@@ -255,12 +308,24 @@ export default function RetirementGuide() {
                   {
                     title: 'Private Family Trusts',
                     description: 'A trust allows you to pass on assets without probate. It provides protection against creditors and disputes.',
+                    details: [
+                      'Asset Protection: Safeguarding wealth from lawsuits and creditors.',
+                      'Avoiding Probate: Faster transfer of assets compared to a Will.',
+                      'Conditional Distribution: Pro Tip: Set age or milestone-based distribution for heirs.',
+                      'Confidentiality: Unlike a Will, a Trust deed is not a public document.'
+                    ],
                     borderColor: '#3B82F6',
                     gradient: 'linear-gradient(145deg, #3B82F6, #000)'
                   },
                   {
                     title: 'Digital Asset Planning',
                     description: 'Your legacy includes digital assets like social media, crypto-wallets, and online subscriptions.',
+                    details: [
+                      'Digital Inventory: List of all online accounts and subscriptions.',
+                      'Password Management: Using a secure vault with an "emergency kit".',
+                      'Social Media Legacy: Instructions for memorializing or deleting accounts.',
+                      'Crypto Keys: Pro Tip: Ensure private keys are securely stored and accessible to heirs.'
+                    ],
                     borderColor: '#10B981',
                     gradient: 'linear-gradient(180deg, #10B981, #000)'
                   }

@@ -27,6 +27,7 @@ export default function Navbar() {
     { name: 'Tax', href: '/guides/tax' },
     { name: 'Mutual Funds', href: '/guides/mutual-funds' },
     { name: 'Stocks', href: '/guides/stocks' },
+    { name: 'Market Analysis', href: '/market-analysis' },
     { name: 'Blogs', href: '/insights' },
   ];
 

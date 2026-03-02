@@ -14,8 +14,9 @@ async function startServer() {
   // Helper function to get email transporter
   const getTransporter = () => {
     // Using provided credentials as fallbacks if environment variables are not set
-    let user = process.env.EMAIL_USER || "BHADRESH.PAREKH13";
-    let pass = process.env.EMAIL_PASS || "ffmr fmwl tqvp gmbq";
+    let user = process.env.EMAIL_USER || "bhadresh.parekh13@gmail.com";
+    let pass = process.env.EMAIL_PASS || "hkwcnartoqcivwcd";
+    const adminEmail = process.env.ADMIN_EMAIL || "bhadresh.parekh13@gmail.com";
 
     // Robustness: Append @gmail.com if missing
     if (user && !user.includes("@")) {
@@ -32,6 +33,7 @@ async function startServer() {
       }),
       user,
       pass,
+      adminEmail,
     };
   };
 
@@ -45,11 +47,12 @@ async function startServer() {
 
     console.log(`New subscription request: ${email}`);
 
-    const { transporter, user, pass } = getTransporter();
+    const { transporter, user, pass, adminEmail } = getTransporter();
 
-    const mailOptions = {
+    // 1. Admin Notification
+    const adminMailOptions = {
       from: user,
-      to: "bhadresh.parekh13@gmail.com",
+      to: adminEmail,
       subject: "New BHP Weekly Subscription",
       text: `You have a new subscriber for BHP Weekly: ${email}`,
       html: `
@@ -65,10 +68,30 @@ async function startServer() {
       `,
     };
 
+    // 2. Client Confirmation
+    const clientMailOptions = {
+      from: user,
+      to: email,
+      subject: "Welcome to The BHP Weekly!",
+      html: `
+        <div style="font-family: sans-serif; padding: 20px; border: 1px solid #eee; border-radius: 10px; max-width: 600px;">
+          <h2 style="color: #1e293b; border-bottom: 2px solid #fbbf24; padding-bottom: 10px;">Welcome Aboard!</h2>
+          <p style="font-size: 16px; color: #475569;">Hello,</p>
+          <p style="font-size: 16px; color: #475569;">Thank you for subscribing to <strong>The BHP Weekly</strong>. You'll now receive expert market insights and financial tips in your inbox every Monday.</p>
+          <p style="font-size: 16px; color: #475569;">We're excited to have you with us on your journey to financial wisdom.</p>
+          <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
+            <p style="margin: 0; font-size: 14px; color: #0f172a; font-weight: bold;">BHP Finance Team</p>
+            <p style="margin: 5px 0 0 0; font-size: 12px; color: #94a3b8;">Expert Market Analysis & Professional Guidance</p>
+          </div>
+        </div>
+      `,
+    };
+
     try {
       if (user && pass) {
-        await transporter.sendMail(mailOptions);
-        console.log(`Notification email sent to bhadresh.parekh13@gmail.com for ${email}`);
+        await transporter.sendMail(adminMailOptions);
+        await transporter.sendMail(clientMailOptions);
+        console.log(`Notification emails sent to ${adminEmail} and ${email} for subscription`);
         res.json({ success: true, message: "Subscribed successfully" });
       } else {
         console.warn("Email credentials not provided. Skipping email delivery.");
@@ -89,11 +112,12 @@ async function startServer() {
 
     console.log(`New consultation request from ${name} (${email}) for ${service}`);
 
-    const { transporter, user, pass } = getTransporter();
+    const { transporter, user, pass, adminEmail } = getTransporter();
 
-    const mailOptions = {
+    // 1. Admin Notification
+    const adminMailOptions = {
       from: user,
-      to: "bhadresh.parekh13@gmail.com",
+      to: adminEmail,
       subject: `New Consultation Request: ${service}`,
       text: `You have a new consultation request.\n\nName: ${name}\nEmail: ${email}\nPhone: ${phone}\nService: ${service}`,
       html: `
@@ -125,10 +149,30 @@ async function startServer() {
       `,
     };
 
+    // 2. Client Confirmation
+    const clientMailOptions = {
+      from: user,
+      to: email,
+      subject: "We've Received Your Consultation Request - BHP Finance",
+      html: `
+        <div style="font-family: sans-serif; padding: 20px; border: 1px solid #eee; border-radius: 10px; max-width: 600px;">
+          <h2 style="color: #1e293b; border-bottom: 2px solid #fbbf24; padding-bottom: 10px;">Request Received</h2>
+          <p style="font-size: 16px; color: #475569;">Hello ${name},</p>
+          <p style="font-size: 16px; color: #475569;">Thank you for reaching out to BHP Finance. We have received your request for a consultation regarding <strong>${service}</strong>.</p>
+          <p style="font-size: 16px; color: #475569;">One of our expert advisors will review your details and get back to you at <strong>${phone}</strong> or via email shortly.</p>
+          <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
+            <p style="margin: 0; font-size: 14px; color: #0f172a; font-weight: bold;">BHP Finance Team</p>
+            <p style="margin: 5px 0 0 0; font-size: 12px; color: #94a3b8;">Expert Market Analysis & Professional Guidance</p>
+          </div>
+        </div>
+      `,
+    };
+
     try {
       if (user && pass) {
-        await transporter.sendMail(mailOptions);
-        console.log(`Consultation email sent to bhadresh.parekh13@gmail.com for ${email}`);
+        await transporter.sendMail(adminMailOptions);
+        await transporter.sendMail(clientMailOptions);
+        console.log(`Consultation emails sent to ${adminEmail} and ${email}`);
         res.json({ success: true, message: "Request submitted successfully" });
       } else {
         console.warn("Email credentials not provided. Skipping email delivery.");
