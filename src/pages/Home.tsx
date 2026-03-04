@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, ChevronLeft, ChevronRight, Info, Loader2, TrendingUp, Shield, Sparkles, BarChart2 } from 'lucide-react';
+import { Search, ChevronLeft, ChevronRight, Info, Loader2, TrendingUp, Shield, Sparkles, BarChart2, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ARTICLES, CATEGORIES } from '@/src/constants';
 import ArticleCard from '@/src/components/ArticleCard';
@@ -16,7 +16,7 @@ export default function Home() {
   };
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState(CATEGORIES[0]);
-  const [aiResponse, setAiResponse] = useState<{ concise: string; full: string } | null>(null);
+  const [aiResponse, setAiResponse] = useState<{ concise: string; full: string; sources?: { uri: string; title: string }[] } | null>(null);
   const [showFullAiResponse, setShowFullAiResponse] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -65,10 +65,15 @@ export default function Home() {
     setShowFullAiResponse(false);
 
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+      const apiKey = process.env.GEMINI_API_KEY;
+      if (!apiKey || apiKey === 'MY_GEMINI_API_KEY' || apiKey === 'undefined' || apiKey === '') {
+        throw new Error('Gemini API key is missing. Please ensure GEMINI_API_KEY is set in your environment variables.');
+      }
+
+      const ai = new GoogleGenAI({ apiKey });
       const response = await ai.models.generateContent({
         model: "gemini-3-flash-preview",
-        contents: `The user is searching for "${searchQuery}" on an Indian financial insights blog. Provide a concise, expert financial summary or answer related to this query, specifically tailored to the Indian context (Rupees, Indian tax laws, market conditions).`,
+        contents: `The user is searching for "${searchQuery}" on an Indian financial insights blog. Provide a concise, expert financial summary or answer related to this query, specifically tailored to the Indian context (Rupees, Indian tax laws, market conditions). Use Google Search to ensure the information is current as of March 2026.`,
         config: {
           tools: [{ googleSearch: {} }],
           responseMimeType: "application/json",
@@ -76,27 +81,39 @@ export default function Home() {
             type: "OBJECT",
             properties: {
               concise: { type: "STRING", description: "A one-sentence, direct, and perfect answer to the query." },
-              full: { type: "STRING", description: "A detailed explanation with context, data, and trends for 2024." }
+              full: { type: "STRING", description: "A detailed explanation with context, data, and trends for 2026." }
             },
             required: ["concise", "full"]
           }
         },
       });
       
-      const data = JSON.parse(response.text || '{}');
+      if (!response.text) {
+        throw new Error('Empty response from AI model.');
+      }
+
+      const data = JSON.parse(response.text);
+
+      // Extract sources
+      const chunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks;
+      const sources = chunks?.map((chunk: any) => ({
+        uri: chunk.web?.uri,
+        title: chunk.web?.title
+      })).filter((s: any) => s.uri && s.title);
+
       if (data.concise && data.full) {
-        setAiResponse(data);
+        setAiResponse({ ...data, sources });
       } else {
         setAiResponse({ 
           concise: "I couldn't find a direct answer for that.", 
           full: "Please try a more specific financial query or check our latest articles." 
         });
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Smart Search Error:', error);
       setAiResponse({ 
         concise: "Search error occurred.", 
-        full: "Sorry, I encountered an error while processing your request. Please try again." 
+        full: error.message || "Sorry, I encountered an error while processing your request. Please try again." 
       });
     } finally {
       setIsSearching(false);
@@ -263,9 +280,30 @@ export default function Home() {
                         className="mt-6 pt-6 border-t border-slate-800"
                       >
                         <p className="text-slate-300">{aiResponse.full}</p>
+                        
+                        {aiResponse.sources && aiResponse.sources.length > 0 && (
+                          <div className="mt-8 pt-8 border-t border-slate-800">
+                            <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4">Verified Sources</p>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                              {aiResponse.sources.map((source, idx) => (
+                                <a 
+                                  key={idx}
+                                  href={source.uri}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="flex items-center justify-between p-3 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-all group"
+                                >
+                                  <span className="text-xs font-bold text-slate-400 truncate pr-4">{source.title}</span>
+                                  <ArrowRight className="w-3 h-3 text-slate-600 group-hover:text-primary transition-colors shrink-0" />
+                                </a>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
                         <button 
                           onClick={() => setShowFullAiResponse(false)}
-                          className="mt-4 text-primary text-sm font-bold hover:underline uppercase tracking-widest"
+                          className="mt-6 text-primary text-sm font-bold hover:underline uppercase tracking-widest"
                         >
                           Show Less
                         </button>
@@ -339,7 +377,7 @@ export default function Home() {
             >
               <div className="aspect-[4/5] rounded-[2rem] overflow-hidden mb-6 shadow-xl border border-slate-100">
                 <img 
-                  src="https://images.unsplash.com/photo-1642543492481-44e81e3f9c52?auto=format&fit=crop&q=80&w=800&h=1000" 
+                  src="https://images.unsplash.com/photo-1611974717483-3600997e5b47?auto=format&fit=crop&q=80&w=800&h=1000" 
                   alt="Market Growth" 
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   referrerPolicy="no-referrer"

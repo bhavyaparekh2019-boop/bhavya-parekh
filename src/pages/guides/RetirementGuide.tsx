@@ -3,6 +3,7 @@ import { motion } from 'motion/react';
 import { PiggyBank, Target, Clock, ShieldCheck, Wallet, ArrowRight, CheckCircle2, AlertCircle } from 'lucide-react';
 import BlurText from '@/src/components/BlurText';
 import ChromaGrid from '@/src/components/ChromaGrid';
+import { useModal } from '@/src/context/ModalContext';
 
 const retirementSteps = [
   {
@@ -60,6 +61,7 @@ const retirementSteps = [
 ];
 
 export default function RetirementGuide() {
+  const { openConsultationModal } = useModal();
   return (
     <div className="bg-slate-50 min-h-screen pb-20">
       {/* Hero Section */}
@@ -92,7 +94,7 @@ export default function RetirementGuide() {
             >
               <div className="aspect-video rounded-[2.5rem] overflow-hidden shadow-2xl border-4 border-white">
                 <img 
-                  src="https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&q=80&w=1200&h=675" 
+                  src="https://images.unsplash.com/photo-1516733725897-1aa73b87c8e8?auto=format&fit=crop&q=80&w=1200&h=675" 
                   alt="Retirement Planning" 
                   className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
@@ -420,7 +422,10 @@ export default function RetirementGuide() {
               <p className="text-sm text-slate-600 mb-6">
                 Our retirement specialists can help you calculate your exact "FIRE" number and build a personalized investment strategy.
               </p>
-              <button className="w-full bg-primary text-slate-900 font-bold py-4 rounded-2xl text-sm hover:brightness-105 transition-all flex items-center justify-center gap-2">
+              <button 
+                onClick={() => openConsultationModal('Retirement Planning')}
+                className="w-full bg-primary text-slate-900 font-bold py-4 rounded-2xl text-sm hover:brightness-105 transition-all flex items-center justify-center gap-2"
+              >
                 Talk to an Expert <ArrowRight className="w-4 h-4" />
               </button>
             </div>

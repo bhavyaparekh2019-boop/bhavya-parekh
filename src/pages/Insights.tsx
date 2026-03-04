@@ -45,7 +45,7 @@ export default function Blogs() {
             >
               <div className="aspect-video rounded-[2.5rem] overflow-hidden shadow-2xl border-4 border-white">
                 <img 
-                  src="https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&q=80&w=1200&h=675" 
+                  src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1200&h=675" 
                   alt="Financial Insights" 
                   className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"

@@ -419,7 +419,7 @@ export default function StockMarketGuide() {
                 Our advisors can help you pick the right stocks or funds based on your risk profile and goals.
               </p>
               <button 
-                onClick={openConsultationModal}
+                onClick={() => openConsultationModal('Stock Market Guidance')}
                 className="w-full bg-primary text-slate-900 font-bold py-4 rounded-2xl text-sm hover:brightness-105 transition-all flex items-center justify-center gap-2"
               >
                 Consult an Advisor <ArrowRight className="w-4 h-4" />

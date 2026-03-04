@@ -3,6 +3,7 @@ import { motion } from 'motion/react';
 import { Layers, Zap, BarChart3, ShieldCheck, Info, ArrowRight, CheckCircle2, HelpCircle, Sparkles, Target } from 'lucide-react';
 import BlurText from '@/src/components/BlurText';
 import ChromaGrid from '@/src/components/ChromaGrid';
+import { useModal } from '@/src/context/ModalContext';
 
 const fundTypes = [
   {
@@ -56,6 +57,7 @@ const fundTypes = [
 ];
 
 export default function MutualFundsGuide() {
+  const { openConsultationModal } = useModal();
   return (
     <div className="bg-slate-50 min-h-screen pb-20">
       {/* Hero Section */}
@@ -88,7 +90,7 @@ export default function MutualFundsGuide() {
             >
               <div className="aspect-video rounded-[2.5rem] overflow-hidden shadow-2xl border-4 border-white">
                 <img 
-                  src="https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&q=80&w=1200&h=675" 
+                  src="https://images.unsplash.com/photo-1611974717483-3600997e5b47?auto=format&fit=crop&q=80&w=1200&h=675" 
                   alt="Mutual Funds Investing" 
                   className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
@@ -473,7 +475,10 @@ export default function MutualFundsGuide() {
               <p className="text-sm text-slate-400 mb-6 leading-relaxed">
                 Selecting a fund based on past returns alone is a mistake. Look at the fund manager's track record, risk ratios (Alpha/Beta), and consistency across market cycles.
               </p>
-              <button className="w-full bg-primary text-slate-900 font-bold py-4 rounded-2xl text-sm hover:brightness-110 transition-all flex items-center justify-center gap-2">
+              <button 
+                onClick={() => openConsultationModal('Mutual Funds')}
+                className="w-full bg-primary text-slate-900 font-bold py-4 rounded-2xl text-sm hover:brightness-110 transition-all flex items-center justify-center gap-2"
+              >
                 Get Personalized Advice <ArrowRight className="w-4 h-4" />
               </button>
             </div>

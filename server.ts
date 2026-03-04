@@ -18,6 +18,8 @@ async function startServer() {
     let pass = process.env.EMAIL_PASS || "hkwcnartoqcivwcd";
     const adminEmail = process.env.ADMIN_EMAIL || "bhadresh.parekh13@gmail.com";
 
+    console.log(`Email Service Config: User=${user ? 'SET' : 'MISSING'}, Pass=${pass ? 'SET' : 'MISSING'}, Admin=${adminEmail}`);
+
     // Robustness: Append @gmail.com if missing
     if (user && !user.includes("@")) {
       user = `${user}@gmail.com`;
@@ -36,6 +38,16 @@ async function startServer() {
       adminEmail,
     };
   };
+
+  // Verify transporter on startup
+  const { transporter: testTransporter, user: testUser } = getTransporter();
+  testTransporter.verify((error, success) => {
+    if (error) {
+      console.error("Email Transporter Error:", error);
+    } else {
+      console.log("Email Transporter is ready to send messages from:", testUser);
+    }
+  });
 
   // API Routes
   app.post("/api/subscribe", async (req, res) => {
@@ -95,11 +107,14 @@ async function startServer() {
         res.json({ success: true, message: "Subscribed successfully" });
       } else {
         console.warn("Email credentials not provided. Skipping email delivery.");
-        res.status(500).json({ error: "Email service not configured." });
+        res.status(500).json({ error: "Email service not configured. Please set EMAIL_USER and EMAIL_PASS in Secrets." });
       }
-    } catch (error) {
-      console.error("Error sending email:", error);
-      res.status(500).json({ error: "Failed to process subscription" });
+    } catch (error: any) {
+      console.error("Error sending subscription email:", error);
+      res.status(500).json({ 
+        error: "Failed to process subscription", 
+        details: error.message || "Unknown error" 
+      });
     }
   });
 
@@ -178,9 +193,12 @@ async function startServer() {
         console.warn("Email credentials not provided. Skipping email delivery.");
         res.status(500).json({ error: "Email service not configured. Please set EMAIL_USER and EMAIL_PASS in Secrets." });
       }
-    } catch (error) {
-      console.error("Error sending email:", error);
-      res.status(500).json({ error: "Failed to send email. Please check your App Password." });
+    } catch (error: any) {
+      console.error("Error sending consultation email:", error);
+      res.status(500).json({ 
+        error: "Failed to send email. Please check your App Password.",
+        details: error.message || "Unknown error"
+      });
     }
   });
 

@@ -39,7 +39,12 @@ export default function ChatBot() {
     setIsLoading(true);
 
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+      const apiKey = process.env.GEMINI_API_KEY;
+      if (!apiKey || apiKey === 'MY_GEMINI_API_KEY' || apiKey === '') {
+        throw new Error('Gemini API key is missing. Please set GEMINI_API_KEY in your environment variables.');
+      }
+
+      const ai = new GoogleGenAI({ apiKey });
       
       // Initialize chat if not already done
       if (!chatRef.current) {
@@ -60,9 +65,9 @@ export default function ChatBot() {
       const modelText = response.text || "I'm sorry, I couldn't process that request.";
       
       setMessages(prev => [...prev, { role: 'model', text: modelText }]);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Chat Error:', error);
-      setMessages(prev => [...prev, { role: 'model', text: "Sorry, I'm having trouble connecting right now. Please try again later." }]);
+      setMessages(prev => [...prev, { role: 'model', text: `Sorry, I'm having trouble connecting right now. ${error.message || 'Please try again later.'}` }]);
     } finally {
       setIsLoading(false);
     }

@@ -1,8 +1,9 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { Shield, Heart, Car, Home, Lock, CheckCircle2, Info, Briefcase } from 'lucide-react';
+import { Shield, Heart, Car, Home, Lock, CheckCircle2, Info, Briefcase, ArrowRight } from 'lucide-react';
 import BlurText from '@/src/components/BlurText';
 import ChromaGrid from '@/src/components/ChromaGrid';
+import { useModal } from '@/src/context/ModalContext';
 
 const insuranceTypes = [
   {
@@ -73,6 +74,7 @@ const insuranceTypes = [
 ];
 
 export default function InsuranceGuide() {
+  const { openConsultationModal } = useModal();
   return (
     <div className="bg-slate-50 min-h-screen pb-20">
       {/* Hero Section */}
@@ -105,7 +107,7 @@ export default function InsuranceGuide() {
             >
               <div className="aspect-video rounded-[2.5rem] overflow-hidden shadow-2xl border-4 border-white">
                 <img 
-                  src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&q=80&w=1200&h=675" 
+                  src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&q=80&w=1200&h=675" 
                   alt="Insurance Protection" 
                   className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
@@ -475,6 +477,19 @@ export default function InsuranceGuide() {
                   <p className="text-xs text-slate-500">Maturity proceeds of life insurance are tax-free (subject to conditions).</p>
                 </div>
               </div>
+            </div>
+
+            <div className="bg-white p-8 rounded-3xl border border-slate-200">
+              <h3 className="text-lg font-bold text-slate-900 mb-4">Need Expert Advice?</h3>
+              <p className="text-sm text-slate-600 mb-6">
+                Insurance can be complex. Our specialists can help you compare plans and find the best coverage for your family.
+              </p>
+              <button 
+                onClick={() => openConsultationModal('Insurance Advisory')}
+                className="w-full bg-primary text-slate-900 font-bold py-4 rounded-2xl text-sm hover:brightness-105 transition-all flex items-center justify-center gap-2"
+              >
+                Consult an Advisor <ArrowRight className="w-4 h-4" />
+              </button>
             </div>
           </div>
         </div>

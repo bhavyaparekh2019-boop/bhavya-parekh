@@ -2,7 +2,8 @@ import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 interface ModalContextType {
   isConsultationModalOpen: boolean;
-  openConsultationModal: () => void;
+  initialService: string | undefined;
+  openConsultationModal: (service?: string) => void;
   closeConsultationModal: () => void;
 }
 
@@ -10,12 +11,19 @@ const ModalContext = createContext<ModalContextType | undefined>(undefined);
 
 export function ModalProvider({ children }: { children: ReactNode }) {
   const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
+  const [initialService, setInitialService] = useState<string | undefined>(undefined);
 
-  const openConsultationModal = () => setIsConsultationModalOpen(true);
-  const closeConsultationModal = () => setIsConsultationModalOpen(false);
+  const openConsultationModal = (service?: string) => {
+    setInitialService(service);
+    setIsConsultationModalOpen(true);
+  };
+  const closeConsultationModal = () => {
+    setIsConsultationModalOpen(false);
+    setInitialService(undefined);
+  };
 
   return (
-    <ModalContext.Provider value={{ isConsultationModalOpen, openConsultationModal, closeConsultationModal }}>
+    <ModalContext.Provider value={{ isConsultationModalOpen, initialService, openConsultationModal, closeConsultationModal }}>
       {children}
     </ModalContext.Provider>
   );

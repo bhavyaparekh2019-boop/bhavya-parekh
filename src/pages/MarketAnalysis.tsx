@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { TrendingUp, BarChart2, Info, Loader2, RefreshCw, ArrowUpRight, ArrowDownRight, Globe, Zap } from 'lucide-react';
+import { TrendingUp, BarChart2, Info, Loader2, RefreshCw, ArrowUpRight, ArrowDownRight, Globe, Zap, ArrowRight } from 'lucide-react';
 import { GoogleGenAI } from "@google/genai";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
 import BlurText from '@/src/components/BlurText';
 import { cn } from '@/src/lib/utils';
+import { useModal } from '@/src/context/ModalContext';
 
 interface MarketData {
   indices: {
@@ -20,6 +21,7 @@ interface MarketData {
 }
 
 export default function MarketAnalysis() {
+  const { openConsultationModal } = useModal();
   const [loading, setLoading] = useState(true);
   const [marketData, setMarketData] = useState<MarketData | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -28,7 +30,12 @@ export default function MarketAnalysis() {
     setLoading(true);
     setError(null);
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+      const apiKey = process.env.GEMINI_API_KEY;
+      if (!apiKey || apiKey === 'MY_GEMINI_API_KEY' || apiKey === 'undefined' || apiKey === '') {
+        throw new Error('Gemini API key is missing. Please ensure GEMINI_API_KEY is set in your environment variables. If you are on Vercel, add it to Project Settings > Environment Variables and redeploy.');
+      }
+
+      const ai = new GoogleGenAI({ apiKey });
       const response = await ai.models.generateContent({
         model: "gemini-3-flash-preview",
         contents: "Provide a real-time market analysis for the Indian stock market (Nifty 50, Sensex) as of March 2026. Include current index values (approximate based on recent trends), a brief expert commentary on market sentiment, and some mock historical data points for a chart visualization. Also list 3 top gainers and 3 top losers.",
@@ -93,11 +100,22 @@ export default function MarketAnalysis() {
         },
       });
 
-      const data = JSON.parse(response.text || '{}');
+      if (!response.text) {
+        throw new Error('Empty response from AI model.');
+      }
+
+      let data;
+      try {
+        data = JSON.parse(response.text);
+      } catch (parseErr) {
+        console.error('JSON Parse Error:', parseErr, 'Raw Text:', response.text);
+        throw new Error('Failed to parse market data. The AI returned an invalid format.');
+      }
+      
       setMarketData(data);
-    } catch (err) {
+    } catch (err: any) {
       console.error('Market Analysis Error:', err);
-      setError('Failed to fetch real-time market data. Please try again later.');
+      setError(err.message || 'Failed to fetch real-time market data. Please try again later.');
     } finally {
       setLoading(false);
     }
@@ -329,6 +347,33 @@ export default function MarketAnalysis() {
               </div>
             </div>
           </div>
+        )}
+
+        {/* Expert Advice CTA */}
+        {!loading && marketData && (
+          <motion.section
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mt-20 bg-slate-900 rounded-[3rem] p-12 text-center relative overflow-hidden"
+          >
+            <div className="absolute inset-0 opacity-10 pointer-events-none">
+              <div className="absolute top-0 left-0 w-64 h-64 bg-primary rounded-full blur-3xl" />
+              <div className="absolute bottom-0 right-0 w-64 h-64 bg-primary rounded-full blur-3xl" />
+            </div>
+            <div className="relative z-10 max-w-3xl mx-auto">
+              <h2 className="text-3xl md:text-5xl font-black text-white mb-6 tracking-tight">Need Help Navigating the Market?</h2>
+              <p className="text-xl text-slate-400 mb-10 leading-relaxed">
+                Our expert advisors are ready to help you build a personalized strategy based on current market conditions.
+              </p>
+              <button 
+                onClick={() => openConsultationModal('Investment Planning')}
+                className="bg-primary text-slate-900 px-12 py-4 rounded-full font-black text-sm uppercase tracking-widest hover:brightness-110 transition-all shadow-2xl shadow-primary/20 flex items-center gap-2 mx-auto"
+              >
+                Talk to an Expert <ArrowRight className="w-4 h-4" />
+              </button>
+            </div>
+          </motion.section>
         )}
       </div>
     </div>

@@ -3,6 +3,7 @@ import { motion } from 'motion/react';
 import { FileText, Calculator, Landmark, Shield, Briefcase, ArrowRight, CheckCircle2, Info, Home } from 'lucide-react';
 import BlurText from '@/src/components/BlurText';
 import ChromaGrid from '@/src/components/ChromaGrid';
+import { useModal } from '@/src/context/ModalContext';
 
 const taxSections = [
   {
@@ -60,6 +61,7 @@ const taxSections = [
 ];
 
 export default function TaxGuide() {
+  const { openConsultationModal } = useModal();
   return (
     <div className="bg-slate-50 min-h-screen pb-20">
       {/* Hero Section */}
@@ -454,6 +456,19 @@ export default function TaxGuide() {
               </p>
               <button className="w-full bg-emerald-600 text-white font-bold py-4 rounded-2xl text-sm hover:bg-emerald-700 transition-all flex items-center justify-center gap-2">
                 View ELSS Funds <ArrowRight className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="bg-white p-8 rounded-[2rem] border border-slate-200">
+              <h3 className="text-lg font-bold text-slate-900 mb-4">Need Tax Help?</h3>
+              <p className="text-sm text-slate-600 mb-6">
+                Our tax experts can help you optimize your investments and file your returns accurately.
+              </p>
+              <button 
+                onClick={() => openConsultationModal('Tax Saving')}
+                className="w-full bg-primary text-slate-900 font-bold py-4 rounded-2xl text-sm hover:brightness-105 transition-all flex items-center justify-center gap-2"
+              >
+                Consult an Advisor <ArrowRight className="w-4 h-4" />
               </button>
             </div>
           </div>

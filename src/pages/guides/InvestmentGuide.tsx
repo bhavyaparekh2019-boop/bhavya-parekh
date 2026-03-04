@@ -1,8 +1,9 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { TrendingUp, PieChart, Landmark, Coins, Building2, ArrowUpRight, Target, Zap } from 'lucide-react';
+import { TrendingUp, PieChart, Landmark, Coins, Building2, ArrowUpRight, Target, Zap, ArrowRight } from 'lucide-react';
 import BlurText from '@/src/components/BlurText';
 import ChromaGrid from '@/src/components/ChromaGrid';
+import { useModal } from '@/src/context/ModalContext';
 
 const assetClasses = [
   {
@@ -68,6 +69,7 @@ const assetClasses = [
 ];
 
 export default function InvestmentGuide() {
+  const { openConsultationModal } = useModal();
   return (
     <div className="bg-slate-50 min-h-screen pb-20">
       {/* Hero Section */}
@@ -538,6 +540,19 @@ export default function InvestmentGuide() {
                   <p className="text-xs text-slate-700">Wealth Management Team</p>
                 </div>
               </div>
+            </div>
+
+            <div className="bg-white p-8 rounded-3xl border border-slate-200">
+              <h3 className="text-lg font-bold text-slate-900 mb-4">Ready to Invest?</h3>
+              <p className="text-sm text-slate-600 mb-6">
+                Our advisors can help you pick the right stocks or funds based on your risk profile and goals.
+              </p>
+              <button 
+                onClick={() => openConsultationModal('Investment Planning')}
+                className="w-full bg-primary text-slate-900 font-bold py-4 rounded-2xl text-sm hover:brightness-105 transition-all flex items-center justify-center gap-2"
+              >
+                Consult an Advisor <ArrowRight className="w-4 h-4" />
+              </button>
             </div>
 
             <div className="bg-white p-8 rounded-3xl border border-slate-200">

@@ -14,7 +14,7 @@ const services = [
 ];
 
 export default function ConsultationModal() {
-  const { isConsultationModalOpen, closeConsultationModal } = useModal();
+  const { isConsultationModalOpen, closeConsultationModal, initialService } = useModal();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -22,8 +22,15 @@ export default function ConsultationModal() {
     name: '',
     email: '',
     phone: '',
-    service: services[0]
+    service: initialService || services[0]
   });
+
+  // Update service if initialService changes
+  React.useEffect(() => {
+    if (initialService) {
+      setFormData(prev => ({ ...prev, service: initialService }));
+    }
+  }, [initialService]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,7 +54,8 @@ export default function ConsultationModal() {
           setFormData({ name: '', email: '', phone: '', service: services[0] });
         }, 3000);
       } else {
-        setError(data.error || 'Failed to submit request. Please check your connection.');
+        const errorMsg = data.details ? `${data.error} (${data.details})` : (data.error || 'Failed to submit request. Please check your connection.');
+        setError(errorMsg);
       }
     } catch (err) {
       console.error('Error submitting form:', err);

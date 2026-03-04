@@ -297,7 +297,7 @@ export default function About() {
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={openConsultationModal}
+            onClick={() => openConsultationModal('Investment Planning')}
             className="bg-primary text-slate-900 px-12 py-4 rounded-full font-black text-sm uppercase tracking-widest shadow-2xl shadow-primary/30"
           >
             Get Started Now

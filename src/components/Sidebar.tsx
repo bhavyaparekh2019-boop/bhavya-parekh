@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Calculator, Download, Mail, Home, PiggyBank, TrendingUp, ChevronRight, Sparkles, Loader2, RefreshCcw, Shield } from 'lucide-react';
+import { Calculator, Download, Mail, Home, PiggyBank, TrendingUp, ChevronRight, Sparkles, Loader2, RefreshCcw, Shield, ArrowRight } from 'lucide-react';
 import { GoogleGenAI } from "@google/genai";
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '@/src/lib/utils';
+import { useModal } from '@/src/context/ModalContext';
 
 export default function Sidebar() {
+  const { openConsultationModal } = useModal();
   const [marketPulse, setMarketPulse] = useState<string | null>(null);
   const [isLoadingPulse, setIsLoadingPulse] = useState(false);
 
@@ -131,6 +133,20 @@ export default function Sidebar() {
             <span className="text-primary">Live</span>
           </div>
         </div>
+      </div>
+
+      {/* Consultation CTA */}
+      <div className="bg-primary rounded-2xl p-6 text-slate-900 shadow-xl shadow-primary/20">
+        <h3 className="text-lg font-black uppercase tracking-tight mb-2">Talk to an Expert</h3>
+        <p className="text-sm font-bold text-slate-800 mb-6 leading-tight">
+          Get personalized financial advice tailored to your goals.
+        </p>
+        <button 
+          onClick={() => openConsultationModal('Investment Planning')}
+          className="w-full bg-slate-900 text-white font-black py-4 rounded-xl text-xs uppercase tracking-widest hover:brightness-110 transition-all flex items-center justify-center gap-2"
+        >
+          Consult Now <ArrowRight className="w-4 h-4" />
+        </button>
       </div>
 
       {/* Knowledge Base */}
