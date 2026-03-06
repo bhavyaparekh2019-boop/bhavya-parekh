@@ -34,12 +34,12 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="bg-white border-t border-slate-200 pt-20 pb-10">
+    <footer className="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 pt-20 pb-10 transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-16">
           <div className="lg:col-span-2">
             <Logo size="sm" className="mb-6" />
-            <p className="text-slate-500 text-sm leading-relaxed mb-8 max-w-xs">
+            <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-8 max-w-xs">
               Empowering individuals and institutions with strategic financial guidance and innovative market insights since 2002.
             </p>
             <div className="flex gap-4">
@@ -47,7 +47,7 @@ export default function Footer() {
                 <a
                   key={i}
                   href="#"
-                  className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-primary/10 hover:text-primary transition-all"
+                  className="w-10 h-10 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-400 dark:text-slate-500 hover:bg-primary/10 hover:text-primary transition-all"
                 >
                   <Icon className="w-5 h-5" />
                 </a>
@@ -57,8 +57,8 @@ export default function Footer() {
 
           {sections.map((section) => (
             <div key={section.title}>
-              <h4 className="font-bold text-slate-900 mb-6">{section.title}</h4>
-              <ul className="space-y-4 text-sm text-slate-500">
+              <h4 className="font-bold text-slate-900 dark:text-white mb-6">{section.title}</h4>
+              <ul className="space-y-4 text-sm text-slate-500 dark:text-slate-400">
                 {section.links.map((link) => (
                   <li key={link.name}>
                     <Link to={link.href} className="hover:text-primary transition-colors">
@@ -71,11 +71,11 @@ export default function Footer() {
           ))}
         </div>
 
-        <div className="pt-8 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-xs text-slate-400">
+        <div className="pt-8 border-t border-slate-100 dark:border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-xs text-slate-400 dark:text-slate-500">
             © {new Date().getFullYear()} BHP Finance. All rights reserved. Registered Investment Advisor.
           </p>
-          <div className="flex items-center gap-2 text-xs font-bold text-slate-500">
+          <div className="flex items-center gap-2 text-xs font-bold text-slate-500 dark:text-slate-400">
             <MapPin className="w-3 h-3 text-primary" />
             Global Financial District
           </div>

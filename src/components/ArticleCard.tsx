@@ -15,15 +15,21 @@ const Tooltip = ({ isHovered, article }: { isHovered: boolean; article: Article 
   <AnimatePresence>
     {isHovered && (
       <motion.div
-        initial={{ opacity: 0, y: 10, scale: 0.95 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        exit={{ opacity: 0, y: 10, scale: 0.95 }}
-        className="absolute z-50 bottom-full left-0 right-0 mb-4 p-6 bg-slate-900 text-white rounded-2xl shadow-2xl border border-slate-800 pointer-events-none"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: 10 }}
+        transition={{ type: 'spring', damping: 20, stiffness: 300 }}
+        className="absolute z-50 bottom-full left-4 right-4 mb-[10px] p-6 bg-slate-900 text-white rounded-2xl shadow-2xl border border-slate-800 pointer-events-none"
       >
-        <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-slate-900 rotate-45 border-r border-b border-slate-800" />
-        <h4 className="text-primary font-black uppercase tracking-widest text-[10px] mb-2">Full Preview</h4>
-        <h3 className="text-lg font-bold mb-2 leading-tight">{article.title}</h3>
-        <p className="text-sm text-slate-400 leading-relaxed">{article.excerpt}</p>
+        <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-slate-900 rotate-45 border-r border-b border-slate-800" />
+        <div className="relative z-10">
+          <h4 className="text-primary font-black uppercase tracking-widest text-[10px] mb-2 flex items-center gap-2">
+            <div className="w-1 h-1 rounded-full bg-primary animate-pulse" />
+            Quick Preview
+          </h4>
+          <h3 className="text-lg font-bold mb-2 leading-tight text-white">{article.title}</h3>
+          <p className="text-sm text-slate-400 leading-relaxed line-clamp-3">{article.excerpt}</p>
+        </div>
       </motion.div>
     )}
   </AnimatePresence>

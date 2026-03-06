@@ -150,60 +150,60 @@ export default function Sidebar() {
       </div>
 
       {/* Knowledge Base */}
-      <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
-        <h3 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
+      <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm transition-colors">
+        <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
           <Sparkles className="w-5 h-5 text-primary" />
           Knowledge Base
         </h3>
         <div className="space-y-4">
           <Link 
             to="/guides/investment"
-            className="block p-4 bg-slate-50 rounded-xl border border-transparent hover:border-primary transition-all group"
+            className="block p-4 bg-slate-50 dark:bg-slate-800 rounded-xl border border-transparent hover:border-primary transition-all group"
           >
-            <h4 className="text-sm font-bold text-slate-900 group-hover:text-primary transition-colors">Investment Masterclass</h4>
-            <p className="text-xs text-slate-500 mt-1">Fundamentals of wealth creation.</p>
+            <h4 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">Investment Masterclass</h4>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Fundamentals of wealth creation.</p>
           </Link>
           <Link 
             to="/guides/insurance"
-            className="block p-4 bg-slate-50 rounded-xl border border-transparent hover:border-primary transition-all group"
+            className="block p-4 bg-slate-50 dark:bg-slate-800 rounded-xl border border-transparent hover:border-primary transition-all group"
           >
-            <h4 className="text-sm font-bold text-slate-900 group-hover:text-primary transition-colors">Insurance Essentials</h4>
-            <p className="text-xs text-slate-500 mt-1">Protecting your financial future.</p>
+            <h4 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">Insurance Essentials</h4>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Protecting your financial future.</p>
           </Link>
           <Link 
             to="/guides/retirement"
-            className="block p-4 bg-slate-50 rounded-xl border border-transparent hover:border-primary transition-all group"
+            className="block p-4 bg-slate-50 dark:bg-slate-800 rounded-xl border border-transparent hover:border-primary transition-all group"
           >
-            <h4 className="text-sm font-bold text-slate-900 group-hover:text-primary transition-colors">Retirement Roadmap</h4>
-            <p className="text-xs text-slate-500 mt-1">Planning for a golden future.</p>
+            <h4 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">Retirement Roadmap</h4>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Planning for a golden future.</p>
           </Link>
           <Link 
             to="/guides/tax"
-            className="block p-4 bg-slate-50 rounded-xl border border-transparent hover:border-primary transition-all group"
+            className="block p-4 bg-slate-50 dark:bg-slate-800 rounded-xl border border-transparent hover:border-primary transition-all group"
           >
-            <h4 className="text-sm font-bold text-slate-900 group-hover:text-primary transition-colors">Tax Strategy 2024</h4>
-            <p className="text-xs text-slate-500 mt-1">Smart ways to save more.</p>
+            <h4 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">Tax Strategy 2024</h4>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Smart ways to save more.</p>
           </Link>
           <Link 
             to="/guides/mutual-funds"
-            className="block p-4 bg-slate-50 rounded-xl border border-transparent hover:border-primary transition-all group"
+            className="block p-4 bg-slate-50 dark:bg-slate-800 rounded-xl border border-transparent hover:border-primary transition-all group"
           >
-            <h4 className="text-sm font-bold text-slate-900 group-hover:text-primary transition-colors">Mutual Funds Pro</h4>
-            <p className="text-xs text-slate-500 mt-1">Mastering SIPs and ELSS.</p>
+            <h4 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">Mutual Funds Pro</h4>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Mastering SIPs and ELSS.</p>
           </Link>
           <Link 
             to="/guides/stocks"
-            className="block p-4 bg-slate-50 rounded-xl border border-transparent hover:border-primary transition-all group"
+            className="block p-4 bg-slate-50 dark:bg-slate-800 rounded-xl border border-transparent hover:border-primary transition-all group"
           >
-            <h4 className="text-sm font-bold text-slate-900 group-hover:text-primary transition-colors">Stock Market Basics</h4>
-            <p className="text-xs text-slate-500 mt-1">Fundamentals for beginners.</p>
+            <h4 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">Stock Market Basics</h4>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Fundamentals for beginners.</p>
           </Link>
         </div>
       </div>
 
       {/* Financial Tools */}
-      <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
-        <h3 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
+      <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm transition-colors">
+        <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
           <Calculator className="w-5 h-5 text-primary" />
           Financial Tools
         </h3>
@@ -212,16 +212,16 @@ export default function Sidebar() {
             <Link
               key={tool.name}
               to={tool.path}
-              className="flex items-center gap-4 p-3 rounded-xl hover:bg-slate-50 border border-transparent hover:border-slate-200 transition-all group"
+              className="flex items-center gap-4 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 border border-transparent hover:border-slate-200 dark:hover:border-slate-700 transition-all group"
             >
               <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors">
                 <tool.icon className="w-5 h-5" />
               </div>
               <div className="flex-1">
-                <p className="text-sm font-bold text-slate-900">{tool.name}</p>
-                <p className="text-xs text-slate-500">{tool.desc}</p>
+                <p className="text-sm font-bold text-slate-900 dark:text-white">{tool.name}</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">{tool.desc}</p>
               </div>
-              <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-primary transition-colors" />
+              <ChevronRight className="w-4 h-4 text-slate-300 dark:text-slate-600 group-hover:text-primary transition-colors" />
             </Link>
           ))}
         </div>
@@ -247,12 +247,12 @@ export default function Sidebar() {
       </div>
 
       {/* Newsletter */}
-      <div className="bg-primary/5 rounded-2xl p-8 border border-primary/20 text-center">
+      <div className="bg-primary/5 dark:bg-primary/10 rounded-2xl p-8 border border-primary/20 text-center transition-colors">
         <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
           <Mail className="w-6 h-6 text-primary" />
         </div>
-        <h3 className="text-xl font-bold text-slate-900 mb-2">The BHP Weekly</h3>
-        <p className="text-sm text-slate-600 mb-6">
+        <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">The BHP Weekly</h3>
+        <p className="text-sm text-slate-600 dark:text-slate-400 mb-6">
           Get market insights and financial tips delivered to your inbox every Monday.
         </p>
         <form className="space-y-3" onSubmit={handleSubscribe}>
@@ -262,7 +262,7 @@ export default function Sidebar() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-sm focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
+            className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
           />
           <button 
             type="submit"

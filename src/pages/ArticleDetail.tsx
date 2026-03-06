@@ -16,6 +16,25 @@ export default function ArticleDetail() {
   const [aiSummary, setAiSummary] = useState<string | null>(null);
   const [isSummarizing, setIsSummarizing] = useState(false);
 
+  const relatedArticles = React.useMemo(() => {
+    if (!article) return [];
+    
+    return ARTICLES
+      .filter(a => a.id !== article.id)
+      .map(a => {
+        let score = 0;
+        if (a.category === article.category) score += 5;
+        
+        // Calculate keyword overlap
+        const commonKeywords = a.keywords.filter(k => article.keywords.includes(k));
+        score += commonKeywords.length * 2;
+        
+        return { ...a, score };
+      })
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 3);
+  }, [article]);
+
   useEffect(() => {
     window.scrollTo(0, 0);
     setAiSummary(null); // Reset summary when article changes
@@ -187,19 +206,19 @@ export default function ArticleDetail() {
           {/* Related Articles Suggestion */}
           <div className="mt-20">
             <h3 className="text-2xl font-black text-slate-900 mb-8">Related Insights</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {ARTICLES.filter(a => a.id !== article.id).slice(0, 2).map((related) => (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {relatedArticles.map((related) => (
                 <Link 
                   key={related.id} 
                   to={`/article/${related.id}`}
                   className="group block bg-white border border-slate-100 rounded-2xl overflow-hidden hover:shadow-xl transition-all"
                 >
                   <div className="aspect-video overflow-hidden">
-                    <img src={related.image} alt={related.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    <img src={related.image} alt={related.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" referrerPolicy="no-referrer" />
                   </div>
-                  <div className="p-6">
+                  <div className="p-4">
                     <span className="text-primary text-[10px] font-black uppercase tracking-widest">{related.category}</span>
-                    <h4 className="text-lg font-bold mt-2 text-slate-900 group-hover:text-primary transition-colors line-clamp-2">{related.title}</h4>
+                    <h4 className="text-base font-bold mt-2 text-slate-900 group-hover:text-primary transition-colors line-clamp-2 leading-tight">{related.title}</h4>
                   </div>
                 </Link>
               ))}

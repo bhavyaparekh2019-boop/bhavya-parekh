@@ -44,7 +44,15 @@ export default function ConsultationModal() {
         body: JSON.stringify(formData)
       });
 
-      const data = await response.json();
+      let data;
+      const contentType = response.headers.get("content-type");
+      if (contentType && contentType.indexOf("application/json") !== -1) {
+        data = await response.json();
+      } else {
+        const text = await response.text();
+        console.error('Non-JSON response:', text);
+        throw new Error('Server returned an unexpected response format.');
+      }
 
       if (response.ok) {
         setIsSuccess(true);
@@ -54,12 +62,14 @@ export default function ConsultationModal() {
           setFormData({ name: '', email: '', phone: '', service: services[0] });
         }, 3000);
       } else {
-        const errorMsg = data.details ? `${data.error} (${data.details})` : (data.error || 'Failed to submit request. Please check your connection.');
+        const errorMsg = data.details ? `${data.error}: ${data.details}` : (data.error || 'Failed to submit request. Please check your connection.');
         setError(errorMsg);
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error submitting form:', err);
-      setError('A network error occurred. Please try again later.');
+      setError(err.message === 'Server returned an unexpected response format.' 
+        ? 'The server encountered an internal error. Please try again later.' 
+        : 'A network error occurred. Please check your internet connection and try again.');
     } finally {
       setIsSubmitting(false);
     }

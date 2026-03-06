@@ -10,13 +10,78 @@ import { cn } from '@/src/lib/utils';
 import { GoogleGenAI } from "@google/genai";
 import BlurText from '@/src/components/BlurText';
 
+const KNOWLEDGE_CENTER_ITEMS = [
+  {
+    title: 'Investment',
+    icon: TrendingUp,
+    description: 'Build a resilient portfolio and leverage compounding in India.',
+    url: '/guides/investment',
+    borderColor: '#3B82F6',
+    gradient: 'linear-gradient(145deg, #3B82F6, #000)'
+  },
+  {
+    title: 'Insurance',
+    icon: Shield,
+    description: 'Complete walkthrough of life and health insurance for Indian families.',
+    url: '/guides/insurance',
+    borderColor: '#10B981',
+    gradient: 'linear-gradient(180deg, #10B981, #000)'
+  },
+  {
+    title: 'Retirement',
+    icon: Loader2,
+    description: 'Build a bulletproof corpus for a worry-free post-work life.',
+    url: '/guides/retirement',
+    borderColor: '#F59E0B',
+    gradient: 'linear-gradient(135deg, #F59E0B, #000)'
+  },
+  {
+    title: 'Tax Planning',
+    icon: Info,
+    description: 'Minimize liability and maximize take-home pay legally.',
+    url: '/guides/tax',
+    borderColor: '#6366F1',
+    gradient: 'linear-gradient(145deg, #6366F1, #000)'
+  },
+  {
+    title: 'Mutual Funds',
+    icon: Sparkles,
+    description: 'Master SIPs, ELSS, and professional wealth management.',
+    url: '/guides/mutual-funds',
+    borderColor: '#F43F5E',
+    gradient: 'linear-gradient(160deg, #F43F5E, #000)'
+  },
+  {
+    title: 'Stock Market',
+    icon: BarChart2,
+    description: 'Demystifying the stock market for beginners in India.',
+    url: '/guides/stocks',
+    borderColor: '#64748B',
+    gradient: 'linear-gradient(180deg, #64748B, #000)'
+  },
+  {
+    title: 'Market Analysis',
+    icon: TrendingUp,
+    description: 'Real-time data and AI-powered expert commentary on Indian markets.',
+    url: '/market-analysis',
+    borderColor: '#19d4e6',
+    gradient: 'linear-gradient(145deg, #19d4e6, #000)'
+  }
+];
+
 export default function Home() {
   const handleAnimationComplete = () => {
     console.log('Animation completed!');
   };
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState(CATEGORIES[0]);
-  const [aiResponse, setAiResponse] = useState<{ concise: string; full: string; sources?: { uri: string; title: string }[] } | null>(null);
+  const [aiResponse, setAiResponse] = useState<{ 
+    concise: string; 
+    full: string; 
+    sources?: { uri: string; title: string }[];
+    relatedGuides?: typeof KNOWLEDGE_CENTER_ITEMS;
+    relatedArticles?: typeof ARTICLES;
+  } | null>(null);
   const [showFullAiResponse, setShowFullAiResponse] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -65,6 +130,19 @@ export default function Home() {
     setShowFullAiResponse(false);
 
     try {
+      // Find related guides from Knowledge Center
+      const relatedGuides = KNOWLEDGE_CENTER_ITEMS.filter(item => 
+        item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.description.toLowerCase().includes(searchQuery.toLowerCase())
+      ).slice(0, 3);
+
+      // Find related articles from Knowledge Center (ARTICLES)
+      const relatedArticles = ARTICLES.filter(article => 
+        article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        article.excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        article.keywords.some(k => k.toLowerCase().includes(searchQuery.toLowerCase()))
+      ).slice(0, 3);
+
       const apiKey = process.env.GEMINI_API_KEY;
       
       // Fallback to mock data if API key is missing
@@ -77,7 +155,9 @@ export default function Home() {
             sources: [
               { title: "BHP Finance Guides", uri: "/guides/investment" },
               { title: "Market Analysis", uri: "/market-analysis" }
-            ]
+            ],
+            relatedGuides,
+            relatedArticles
           });
           setIsSearching(false);
         }, 1500);
@@ -87,7 +167,7 @@ export default function Home() {
       const ai = new GoogleGenAI({ apiKey });
       const response = await ai.models.generateContent({
         model: "gemini-3-flash-preview",
-        contents: `The user is searching for "${searchQuery}" on an Indian financial insights blog. Provide a concise, expert financial summary or answer related to this query, specifically tailored to the Indian context (Rupees, Indian tax laws, market conditions). Use Google Search to ensure the information is current as of March 2026.`,
+        contents: [{ role: 'user', parts: [{ text: `The user is searching for "${searchQuery}" on an Indian financial insights blog. Provide a concise, expert financial summary or answer related to this query, specifically tailored to the Indian context (Rupees, Indian tax laws, market conditions). Use Google Search to ensure the information is current as of March 2026.` }] }],
         config: {
           tools: [{ googleSearch: {} }],
           responseMimeType: "application/json",
@@ -116,18 +196,33 @@ export default function Home() {
       })).filter((s: any) => s.uri && s.title);
 
       if (data.concise && data.full) {
-        setAiResponse({ ...data, sources });
+        setAiResponse({ 
+          ...data, 
+          sources,
+          relatedGuides,
+          relatedArticles
+        });
       } else {
         setAiResponse({ 
           concise: "I couldn't find a direct answer for that.", 
-          full: "Please try a more specific financial query or check our latest articles." 
+          full: "Please try a more specific financial query or check our latest articles.",
+          relatedGuides,
+          relatedArticles
         });
       }
     } catch (error: any) {
       console.error('Smart Search Error:', error);
       setAiResponse({ 
         concise: "Search error occurred.", 
-        full: error.message || "Sorry, I encountered an error while processing your request. Please try again." 
+        full: error.message || "Sorry, I encountered an error while processing your request. Please try again.",
+        relatedGuides: KNOWLEDGE_CENTER_ITEMS.filter(item => 
+          item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          item.description.toLowerCase().includes(searchQuery.toLowerCase())
+        ).slice(0, 3),
+        relatedArticles: ARTICLES.filter(article => 
+          article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          article.excerpt.toLowerCase().includes(searchQuery.toLowerCase())
+        ).slice(0, 3)
       });
     } finally {
       setIsSearching(false);
@@ -295,21 +390,79 @@ export default function Home() {
                       >
                         <p className="text-slate-300">{aiResponse.full}</p>
                         
-                        {aiResponse.sources && aiResponse.sources.length > 0 && (
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
+                          {/* Sources */}
+                          {aiResponse.sources && aiResponse.sources.length > 0 && (
+                            <div>
+                              <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4">Verified Sources</p>
+                              <div className="space-y-2">
+                                {aiResponse.sources.map((source, idx) => (
+                                  <a 
+                                    key={idx}
+                                    href={source.uri}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-center justify-between p-3 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-all group"
+                                  >
+                                    <span className="text-xs font-bold text-slate-400 truncate pr-4">{source.title}</span>
+                                    <ArrowRight className="w-3 h-3 text-slate-600 group-hover:text-primary transition-colors shrink-0" />
+                                  </a>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Related Guides */}
+                          {aiResponse.relatedGuides && aiResponse.relatedGuides.length > 0 && (
+                            <div>
+                              <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4">Related Guides</p>
+                              <div className="space-y-2">
+                                {aiResponse.relatedGuides.map((guide, idx) => (
+                                  <Link 
+                                    key={idx}
+                                    to={guide.url}
+                                    className="flex items-center gap-3 p-3 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-all group"
+                                  >
+                                    <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                                      <guide.icon className="w-4 h-4" />
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                      <p className="text-xs font-bold text-white truncate">{guide.title}</p>
+                                      <p className="text-[10px] text-slate-500 truncate">{guide.description}</p>
+                                    </div>
+                                    <ArrowRight className="w-3 h-3 text-slate-600 group-hover:text-primary transition-colors shrink-0" />
+                                  </Link>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Related Articles */}
+                        {aiResponse.relatedArticles && aiResponse.relatedArticles.length > 0 && (
                           <div className="mt-8 pt-8 border-t border-slate-800">
-                            <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4">Verified Sources</p>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                              {aiResponse.sources.map((source, idx) => (
-                                <a 
-                                  key={idx}
-                                  href={source.uri}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="flex items-center justify-between p-3 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-all group"
+                            <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4">Related Articles from Knowledge Center</p>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                              {aiResponse.relatedArticles.map((article) => (
+                                <Link 
+                                  key={article.id}
+                                  to={`/article/${article.id}`}
+                                  className="group block p-4 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-all"
                                 >
-                                  <span className="text-xs font-bold text-slate-400 truncate pr-4">{source.title}</span>
-                                  <ArrowRight className="w-3 h-3 text-slate-600 group-hover:text-primary transition-colors shrink-0" />
-                                </a>
+                                  <div className="aspect-video rounded-xl overflow-hidden mb-3">
+                                    <img 
+                                      src={article.image} 
+                                      alt={article.title}
+                                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                      referrerPolicy="no-referrer"
+                                    />
+                                  </div>
+                                  <h4 className="text-sm font-bold text-white line-clamp-2 group-hover:text-primary transition-colors mb-2">{article.title}</h4>
+                                  <div className="flex items-center justify-between text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                                    <span>{article.category}</span>
+                                    <span>{article.readTime}</span>
+                                  </div>
+                                </Link>
                               ))}
                             </div>
                           </div>
@@ -317,7 +470,7 @@ export default function Home() {
 
                         <button 
                           onClick={() => setShowFullAiResponse(false)}
-                          className="mt-6 text-primary text-sm font-bold hover:underline uppercase tracking-widest"
+                          className="mt-8 text-primary text-sm font-bold hover:underline uppercase tracking-widest"
                         >
                           Show Less
                         </button>
@@ -406,6 +559,100 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Market Analysis Preview Section */}
+      <section className="bg-slate-50 py-24 border-b border-slate-200">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+            >
+              <span className="inline-block px-3 py-1 bg-primary/10 text-primary text-[10px] font-black rounded-full mb-4 uppercase tracking-[0.2em]">
+                Live Intelligence
+              </span>
+              <h2 className="text-3xl md:text-5xl font-black text-slate-900 mb-6 tracking-tight">AI-Powered Market Analysis</h2>
+              <p className="text-lg text-slate-600 mb-8 leading-relaxed">
+                Stay ahead of the curve with real-time insights into the Indian stock market. Our AI engine analyzes thousands of data points to provide you with actionable intelligence.
+              </p>
+              <div className="space-y-4 mb-10">
+                {[
+                  "Real-time Nifty 50 & Sensex tracking",
+                  "Expert AI commentary on market sentiment",
+                  "Daily top gainers and losers analysis",
+                  "Global macro-economic impact reports"
+                ].map((item, idx) => (
+                  <div key={idx} className="flex items-center gap-3">
+                    <div className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600">
+                      <TrendingUp className="w-3 h-3" />
+                    </div>
+                    <span className="text-slate-700 font-bold">{item}</span>
+                  </div>
+                ))}
+              </div>
+              <Link 
+                to="/market-analysis"
+                className="inline-flex items-center gap-2 bg-slate-900 text-white px-10 py-4 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-slate-800 transition-all shadow-xl"
+              >
+                View Full Analysis <ArrowRight className="w-4 h-4" />
+              </Link>
+            </motion.div>
+            
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              className="relative"
+            >
+              <div className="bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-2xl relative z-10">
+                <div className="flex items-center justify-between mb-8">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
+                      <BarChart2 className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest">Nifty 50</h3>
+                      <p className="text-[10px] font-bold text-slate-400">Live Snapshot</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-xl font-black text-slate-900">24,320.45</p>
+                    <p className="text-xs font-bold text-emerald-500">+1.24%</p>
+                  </div>
+                </div>
+                
+                {/* Mock Chart Visualization */}
+                <div className="h-48 w-full bg-slate-50 rounded-2xl flex items-end gap-1 p-4 overflow-hidden">
+                  {[40, 60, 45, 70, 55, 80, 65, 90, 75, 100, 85, 95].map((h, i) => (
+                    <motion.div 
+                      key={i}
+                      initial={{ height: 0 }}
+                      whileInView={{ height: `${h}%` }}
+                      transition={{ delay: i * 0.05, duration: 0.5 }}
+                      className="flex-1 bg-primary/30 rounded-t-sm"
+                    />
+                  ))}
+                </div>
+                
+                <div className="mt-8 p-4 bg-slate-900 rounded-2xl text-white">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Sparkles className="w-3 h-3 text-primary" />
+                    <span className="text-[8px] font-black text-primary uppercase tracking-widest">AI Pulse</span>
+                  </div>
+                  <p className="text-xs text-slate-300 leading-relaxed italic">
+                    "Market sentiment remains cautiously bullish as domestic institutional buying offsets global volatility. Key resistance at 24,500."
+                  </p>
+                </div>
+              </div>
+              
+              {/* Decorative elements */}
+              <div className="absolute -top-10 -right-10 w-40 h-40 bg-primary/20 rounded-full blur-3xl" />
+              <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-emerald-400/20 rounded-full blur-3xl" />
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
       {/* Knowledge Center Section */}
       <section className="bg-slate-50 py-16 border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4">
@@ -421,64 +668,7 @@ export default function Home() {
             damping={0.45}
             fadeOut={0.6}
             ease="power3.out"
-            items={[
-              {
-                title: 'Investment',
-                icon: TrendingUp,
-                description: 'Build a resilient portfolio and leverage compounding in India.',
-                url: '/guides/investment',
-                borderColor: '#3B82F6',
-                gradient: 'linear-gradient(145deg, #3B82F6, #000)'
-              },
-              {
-                title: 'Insurance',
-                icon: Shield,
-                description: 'Complete walkthrough of life and health insurance for Indian families.',
-                url: '/guides/insurance',
-                borderColor: '#10B981',
-                gradient: 'linear-gradient(180deg, #10B981, #000)'
-              },
-              {
-                title: 'Retirement',
-                icon: Loader2,
-                description: 'Build a bulletproof corpus for a worry-free post-work life.',
-                url: '/guides/retirement',
-                borderColor: '#F59E0B',
-                gradient: 'linear-gradient(135deg, #F59E0B, #000)'
-              },
-              {
-                title: 'Tax Planning',
-                icon: Info,
-                description: 'Minimize liability and maximize take-home pay legally.',
-                url: '/guides/tax',
-                borderColor: '#6366F1',
-                gradient: 'linear-gradient(145deg, #6366F1, #000)'
-              },
-              {
-                title: 'Mutual Funds',
-                icon: Sparkles,
-                description: 'Master SIPs, ELSS, and professional wealth management.',
-                url: '/guides/mutual-funds',
-                borderColor: '#F43F5E',
-                gradient: 'linear-gradient(160deg, #F43F5E, #000)'
-              },
-              {
-                title: 'Stock Market',
-                icon: BarChart2,
-                description: 'Demystifying the stock market for beginners in India.',
-                url: '/guides/stocks',
-                borderColor: '#64748B',
-                gradient: 'linear-gradient(180deg, #64748B, #000)'
-              },
-              {
-                title: 'Market Analysis',
-                icon: TrendingUp,
-                description: 'Real-time data and AI-powered expert commentary on Indian markets.',
-                url: '/market-analysis',
-                borderColor: '#19d4e6',
-                gradient: 'linear-gradient(145deg, #19d4e6, #000)'
-              }
-            ]}
+            items={KNOWLEDGE_CENTER_ITEMS}
           />
         </div>
       </section>

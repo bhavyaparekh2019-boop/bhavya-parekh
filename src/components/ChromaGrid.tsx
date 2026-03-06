@@ -40,33 +40,76 @@ export default function ChromaGrid({
   cols = 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3',
 }: ChromaGridProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const animatedPos = useRef({ x: 0, y: 0 });
   const [selectedItem, setSelectedItem] = useState<ChromaItem | null>(null);
 
   useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const cards = container.querySelectorAll('.chroma-card-inner');
+    const glowEffects = container.querySelectorAll('.chroma-glow');
+    
+    // Pre-create setters for better performance
+    const opacitySetters = Array.from(glowEffects).map(glow => gsap.quickSetter(glow, "opacity"));
+    const backgroundSetters = Array.from(glowEffects).map(glow => gsap.quickSetter(glow, "background"));
+
+    // Cache card positions to avoid layout thrashing
+    let cardRects: DOMRect[] = [];
+    let containerRect: DOMRect;
+
+    const updateRects = () => {
+      containerRect = container.getBoundingClientRect();
+      cardRects = Array.from(cards).map(card => card.getBoundingClientRect());
+    };
+
+    // Initial update
+    updateRects();
+
     const handleMouseMove = (e: MouseEvent) => {
-      if (!containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
+      if (!containerRect) return;
       
-      gsap.to(animatedPos.current, {
-        x,
-        y,
-        duration: damping,
-        ease: ease,
-        onUpdate: () => setMousePos({ x: animatedPos.current.x, y: animatedPos.current.y }),
-        overwrite: true
+      const mouseX = e.clientX - containerRect.left;
+      const mouseY = e.clientY - containerRect.top;
+
+      glowEffects.forEach((glow, index) => {
+        const cardRect = cardRects[index];
+        if (!cardRect) return;
+
+        const cardCenterX = cardRect.left + cardRect.width / 2 - containerRect.left;
+        const cardCenterY = cardRect.top + cardRect.height / 2 - containerRect.top;
+
+        const dist = Math.sqrt(
+          Math.pow(mouseX - cardCenterX, 2) + 
+          Math.pow(mouseY - cardCenterY, 2)
+        );
+
+        const opacity = Math.max(0, 1 - dist / radius) * fadeOut;
+        opacitySetters[index](opacity);
+        
+        if (opacity > 0) {
+          const localX = mouseX - (cardRect.left - containerRect.left);
+          const localY = mouseY - (cardRect.top - containerRect.top);
+          backgroundSetters[index](`radial-gradient(circle at ${localX}px ${localY}px, ${items[index].borderColor || '#3B82F6'} 0%, transparent 70%)`);
+        }
       });
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      gsap.killTweensOf(animatedPos.current);
+    const handleMouseLeave = () => {
+      opacitySetters.forEach(setter => setter(0));
     };
-  }, [damping, ease]);
+
+    container.addEventListener('mousemove', handleMouseMove, { passive: true });
+    container.addEventListener('mouseleave', handleMouseLeave);
+    window.addEventListener('resize', updateRects);
+    window.addEventListener('scroll', updateRects, { passive: true });
+    
+    return () => {
+      container.removeEventListener('mousemove', handleMouseMove);
+      container.removeEventListener('mouseleave', handleMouseLeave);
+      window.removeEventListener('resize', updateRects);
+      window.removeEventListener('scroll', updateRects);
+    };
+  }, [items, radius, fadeOut]);
 
   return (
     <>
@@ -78,9 +121,6 @@ export default function ChromaGrid({
           <ChromaCard 
             key={index} 
             item={item} 
-            mousePos={mousePos} 
-            radius={radius}
-            fadeOut={fadeOut}
             onViewDetails={() => setSelectedItem(item)}
           />
         ))}
@@ -171,38 +211,12 @@ export default function ChromaGrid({
 
 function ChromaCard({ 
   item, 
-  mousePos, 
-  radius,
-  fadeOut,
   onViewDetails
 }: { 
   item: ChromaItem; 
-  mousePos: { x: number; y: number }; 
-  radius: number;
-  fadeOut: number;
   onViewDetails: () => void;
 }) {
   const cardRef = useRef<HTMLDivElement>(null);
-  const [opacity, setOpacity] = useState(0);
-
-  useEffect(() => {
-    if (!cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    const containerRect = cardRef.current.parentElement?.getBoundingClientRect();
-    if (!containerRect) return;
-
-    const cardCenterX = rect.left + rect.width / 2 - containerRect.left;
-    const cardCenterY = rect.top + rect.height / 2 - containerRect.top;
-
-    const dist = Math.sqrt(
-      Math.pow(mousePos.x - cardCenterX, 2) + 
-      Math.pow(mousePos.y - cardCenterY, 2)
-    );
-
-    const newOpacity = Math.max(0, 1 - dist / radius) * fadeOut;
-    setOpacity(newOpacity);
-  }, [mousePos, radius, fadeOut]);
-
   const Icon = item.icon;
   const isArticle = !!item.category;
 
@@ -210,9 +224,10 @@ function ChromaCard({
     <motion.div
       ref={cardRef}
       initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
       transition={{ duration: 0.5 }}
-      className="relative group cursor-pointer h-full"
+      className="relative group cursor-pointer h-full chroma-card-inner"
       onClick={(e) => {
         if (item.url) {
           if (item.url.startsWith('http')) {
@@ -227,11 +242,7 @@ function ChromaCard({
     >
       {/* Glow Effect */}
       <div 
-        className="absolute -inset-px rounded-[2.5rem] transition-opacity duration-300 pointer-events-none z-0"
-        style={{ 
-          background: item.gradient || `radial-gradient(circle at ${mousePos.x}px ${mousePos.y}px, ${item.borderColor || '#3B82F6'} 0%, transparent 70%)`,
-          opacity: opacity,
-        }}
+        className="chroma-glow absolute -inset-px rounded-[2.5rem] opacity-0 pointer-events-none z-0"
       />
 
       <div className="relative bg-white rounded-[2.5rem] p-8 border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-500 h-full flex flex-col z-10 overflow-hidden">

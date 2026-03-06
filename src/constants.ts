@@ -9,6 +9,7 @@ export interface Article {
   readTime: string;
   image: string;
   featured?: boolean;
+  keywords: string[];
 }
 
 export const ARTICLES: Article[] = [
@@ -37,6 +38,7 @@ export const ARTICLES: Article[] = [
     readTime: '12 min read',
     image: 'https://images.unsplash.com/photo-1611974714024-4607a50d6c25?auto=format&fit=crop&q=80&w=1200&h=800',
     featured: true,
+    keywords: ['Nifty 50', 'Indian Market', 'Manufacturing', 'Economy', 'Investment'],
   },
   {
     id: '2',
@@ -62,6 +64,7 @@ export const ARTICLES: Article[] = [
     date: 'Feb 20, 2024',
     readTime: '15 min read',
     image: 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&q=80&w=1200&h=800',
+    keywords: ['Retirement', 'NPS', 'EPF', 'PPF', 'Tax Savings', 'Financial Planning'],
   },
   {
     id: '4',
@@ -84,6 +87,7 @@ export const ARTICLES: Article[] = [
     date: 'Feb 15, 2024',
     readTime: '14 min read',
     image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=1200&h=800',
+    keywords: ['AI', 'Generative AI', 'Technology', 'ROI', 'IT Services', 'Startups'],
   },
   {
     id: '5',
@@ -106,6 +110,7 @@ export const ARTICLES: Article[] = [
     date: 'Feb 10, 2024',
     readTime: '13 min read',
     image: 'https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&q=80&w=1200&h=800',
+    keywords: ['Succession Planning', 'Family Business', 'Wealth Transfer', 'Governance'],
   },
   {
     id: '6',
@@ -128,6 +133,7 @@ export const ARTICLES: Article[] = [
     date: 'Jan 28, 2024',
     readTime: '11 min read',
     image: 'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&q=80&w=1200&h=800',
+    keywords: ['ESG', 'Sustainability', 'Greenwashing', 'India', 'SEBI', 'BRSR'],
   },
   {
     id: '7',
@@ -150,6 +156,7 @@ export const ARTICLES: Article[] = [
     date: 'Feb 05, 2024',
     readTime: '13 min read',
     image: 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&q=80&w=1200&h=800',
+    keywords: ['UPI', 'Credit', 'ONDC', 'Fintech', 'Digital India', 'Banking'],
   },
   {
     id: '8',
@@ -172,6 +179,7 @@ export const ARTICLES: Article[] = [
     date: 'Mar 15, 2024',
     readTime: '16 min read',
     image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=1200&h=800',
+    keywords: ['Corporate Finance', 'SME', 'Working Capital', 'TReDS', 'IPO'],
   },
   {
     id: '9',
@@ -194,6 +202,7 @@ export const ARTICLES: Article[] = [
     date: 'Apr 12, 2024',
     readTime: '14 min read',
     image: 'https://images.unsplash.com/photo-1509059852496-f3822ae057bf?auto=format&fit=crop&q=80&w=1200&h=800',
+    keywords: ['Insurance', 'Life Insurance', 'Term Insurance', 'ULIP', 'HLV'],
   },
   {
     id: '10',
@@ -216,6 +225,7 @@ export const ARTICLES: Article[] = [
     date: 'May 12, 2024',
     readTime: '8 min read',
     image: 'https://images.unsplash.com/photo-1512428559087-560fa5ceab42?auto=format&fit=crop&q=80&w=800&h=600',
+    keywords: ['Business Protection', 'Key Person Insurance', 'Risk Management'],
   },
   {
     id: '11',
@@ -238,6 +248,7 @@ export const ARTICLES: Article[] = [
     date: 'Jun 25, 2024',
     readTime: '13 min read',
     image: 'https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&q=80&w=1200&h=800',
+    keywords: ['Health Insurance', 'Medical Inflation', 'Super Top-up', 'India'],
   },
   {
     id: '12',
@@ -260,6 +271,7 @@ export const ARTICLES: Article[] = [
     date: 'Jul 15, 2024',
     readTime: '15 min read',
     image: 'https://images.unsplash.com/photo-1613243555988-441166d4d6fd?auto=format&fit=crop&q=80&w=1200&h=800',
+    keywords: ['Alternative Assets', 'REITs', 'InvITs', 'Digital Gold', 'SGBs'],
   },
   {
     id: '13',
@@ -282,6 +294,7 @@ export const ARTICLES: Article[] = [
     date: 'Jul 20, 2024',
     readTime: '14 min read',
     image: 'https://images.unsplash.com/photo-1466611653911-954554097482?auto=format&fit=crop&q=80&w=1200&h=800',
+    keywords: ['Renewable Energy', 'Solar', 'Wind', 'Green Hydrogen', 'India'],
   },
   {
     id: '14',
@@ -304,6 +317,7 @@ export const ARTICLES: Article[] = [
     date: 'Aug 05, 2024',
     readTime: '16 min read',
     image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&q=80&w=1200&h=800',
+    keywords: ['FIRE', 'Financial Independence', 'Retire Early', 'India', 'Savings'],
   },
   {
     id: '15',
@@ -326,6 +340,7 @@ export const ARTICLES: Article[] = [
     date: 'Aug 10, 2024',
     readTime: '15 min read',
     image: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&q=80&w=1200&h=800',
+    keywords: ['Real Estate', 'Property Market', 'Tier-2 Cities', 'RERA', 'India'],
   },
   {
     id: '16',
@@ -348,6 +363,7 @@ export const ARTICLES: Article[] = [
     date: 'Aug 20, 2024',
     readTime: '15 min read',
     image: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&q=80&w=1200&h=800',
+    keywords: ['Cyber Insurance', 'Data Breach', 'Cybersecurity', 'DPDP Act', 'India'],
   },
   {
     id: '17',
@@ -370,6 +386,7 @@ export const ARTICLES: Article[] = [
     date: 'Aug 25, 2024',
     readTime: '14 min read',
     image: 'https://images.unsplash.com/photo-1526772662000-3f88f10405ff?auto=format&fit=crop&q=80&w=1200&h=800',
+    keywords: ['Geopolitics', 'Global Markets', 'Supply Chain', 'Crude Oil', 'India'],
   },
   {
     id: '18',
@@ -392,6 +409,7 @@ export const ARTICLES: Article[] = [
     date: 'Aug 30, 2024',
     readTime: '15 min read',
     image: 'https://images.unsplash.com/photo-1503220317375-aaad61436b1b?auto=format&fit=crop&q=80&w=1200&h=800',
+    keywords: ['NRI', 'Tax Planning', 'NRE', 'NRO', 'DTAA', 'India'],
   },
   {
     id: '19',
@@ -414,6 +432,7 @@ export const ARTICLES: Article[] = [
     date: 'Sep 01, 2024',
     readTime: '10 min read',
     image: 'https://images.unsplash.com/photo-1516733725897-1aa73b87c8e8?auto=format&fit=crop&q=80&w=800&h=600',
+    keywords: ['Silver Economy', 'Aging Population', 'Healthcare', 'Longevity'],
   },
   {
     id: '20',
@@ -436,6 +455,7 @@ export const ARTICLES: Article[] = [
     date: 'Sep 10, 2024',
     readTime: '12 min read',
     image: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&q=80&w=800&h=600',
+    keywords: ['Healthcare', 'Retirement', 'Medical Costs', 'India', 'Insurance'],
   },
   {
     id: '21',
@@ -458,6 +478,7 @@ export const ARTICLES: Article[] = [
     date: 'Sep 18, 2024',
     readTime: '8 min read',
     image: 'https://images.unsplash.com/photo-1554224154-26032ffc0d07?auto=format&fit=crop&q=80&w=800&h=600',
+    keywords: ['Working Capital', 'Mid-Sized Firms', 'Cash Flow', 'Inventory'],
   },
   {
     id: '22',
@@ -480,6 +501,7 @@ export const ARTICLES: Article[] = [
     date: 'Sep 25, 2024',
     readTime: '7 min read',
     image: 'https://images.unsplash.com/photo-1530629013299-6cb10d168419?auto=format&fit=crop&q=80&w=800&h=600',
+    keywords: ['Umbrella Insurance', 'Liability Protection', 'HNW', 'Wealth Protection'],
   },
   {
     id: '23',
@@ -502,6 +524,7 @@ export const ARTICLES: Article[] = [
     date: 'Oct 02, 2024',
     readTime: '11 min read',
     image: 'https://images.unsplash.com/photo-1444723121867-7a241cacace9?auto=format&fit=crop&q=80&w=800&h=600',
+    keywords: ['Asian Markets', 'Growth', 'India', 'Southeast Asia', 'Japan'],
   },
   {
     id: '24',
@@ -524,6 +547,7 @@ export const ARTICLES: Article[] = [
     date: 'Oct 10, 2024',
     readTime: '10 min read',
     image: 'https://images.unsplash.com/photo-1507413245164-6160d8298b31?auto=format&fit=crop&q=80&w=800&h=600',
+    keywords: ['Behavioral Finance', 'Investing Biases', 'Psychology', 'Decision Making'],
   },
   {
     id: '25',
@@ -546,6 +570,7 @@ export const ARTICLES: Article[] = [
     date: 'Oct 18, 2024',
     readTime: '9 min read',
     image: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&q=80&w=800&h=600',
+    keywords: ['Supply Chain', 'Near-shoring', 'Friend-shoring', 'Trade'],
   },
   {
     id: '26',
@@ -568,6 +593,7 @@ export const ARTICLES: Article[] = [
     date: 'Oct 25, 2024',
     readTime: '11 min read',
     image: 'https://images.unsplash.com/photo-1554224155-1697b34ee7f5?auto=format&fit=crop&q=80&w=800&h=600',
+    keywords: ['NPS', 'APY', 'Retirement', 'Tax Benefits', 'India'],
   },
   {
     id: '27',
@@ -590,6 +616,7 @@ export const ARTICLES: Article[] = [
     date: 'Nov 02, 2024',
     readTime: '8 min read',
     image: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80&w=800&h=600',
+    keywords: ['ESG Reporting', 'Sustainability', 'Mid-Sized Enterprises', 'Compliance'],
   },
   {
     id: '28',
@@ -612,6 +639,7 @@ export const ARTICLES: Article[] = [
     date: 'Nov 10, 2024',
     readTime: '7 min read',
     image: 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&q=80&w=800&h=600',
+    keywords: ['Homeowners Insurance', 'Coverage Gaps', 'Property Protection'],
   },
   {
     id: '29',
@@ -634,6 +662,7 @@ export const ARTICLES: Article[] = [
     date: 'Nov 18, 2024',
     readTime: '10 min read',
     image: 'https://images.unsplash.com/photo-1610375461246-83df859d849d?auto=format&fit=crop&q=80&w=800&h=600',
+    keywords: ['Commodities', 'Gold', 'Oil', 'Market Trends', 'Inflation'],
   },
   {
     id: '30',
@@ -656,6 +685,7 @@ export const ARTICLES: Article[] = [
     date: 'Dec 01, 2024',
     readTime: '12 min read',
     image: 'https://images.unsplash.com/photo-1560520653-9e0e4c89eb11?auto=format&fit=crop&q=80&w=800&h=600',
+    keywords: ['Family Office', 'HNW', 'Wealth Management', 'Governance'],
   },
   {
     id: '31',
@@ -678,6 +708,7 @@ export const ARTICLES: Article[] = [
     date: 'Dec 10, 2024',
     readTime: '9 min read',
     image: 'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&q=80&w=800&h=600',
+    keywords: ['Tokenization', 'Real Estate', 'Blockchain', 'Liquidity'],
   },
   {
     id: '32',
@@ -700,6 +731,7 @@ export const ARTICLES: Article[] = [
     date: 'Dec 18, 2024',
     readTime: '8 min read',
     image: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&q=80&w=800&h=600',
+    keywords: ['Estate Planning', 'Will', 'Power of Attorney', 'Healthcare Directives'],
   },
   {
     id: '33',
@@ -722,6 +754,7 @@ export const ARTICLES: Article[] = [
     date: 'Jan 05, 2025',
     readTime: '10 min read',
     image: 'https://images.unsplash.com/photo-1559136555-9303baea8ebd?auto=format&fit=crop&q=80&w=800&h=600',
+    keywords: ['Venture Capital', 'Startups', 'Investment Trends', 'Liquidity'],
   },
   {
     id: '34',
@@ -744,6 +777,7 @@ export const ARTICLES: Article[] = [
     date: 'Jan 12, 2025',
     readTime: '9 min read',
     image: 'https://images.unsplash.com/photo-1508847154043-be5407fcaa5a?auto=format&fit=crop&q=80&w=800&h=600',
+    keywords: ['Disability Insurance', 'Income Protection', 'Risk Management'],
   },
   {
     id: '35',
@@ -766,6 +800,7 @@ export const ARTICLES: Article[] = [
     date: 'Jan 20, 2025',
     readTime: '11 min read',
     image: 'https://images.unsplash.com/photo-1543286386-713bdd548da4?auto=format&fit=crop&q=80&w=800&h=600',
+    keywords: ['Inflation', 'Global Trends', 'Economy', 'Central Banks'],
   },
   {
     id: '36',
@@ -788,6 +823,7 @@ export const ARTICLES: Article[] = [
     date: 'Jan 28, 2025',
     readTime: '12 min read',
     image: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&q=80&w=800&h=600',
+    keywords: ['Private Equity', 'Wealth Management', 'Investment Risks'],
   },
   {
     id: '37',
@@ -816,6 +852,7 @@ export const ARTICLES: Article[] = [
     date: 'Feb 15, 2025',
     readTime: '14 min read',
     image: 'https://picsum.photos/seed/businessliability/800/600',
+    keywords: ['Business Liability', 'Insurance', 'Risk Mitigation', 'GLI'],
   },
 ];
 
