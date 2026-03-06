@@ -66,8 +66,22 @@ export default function Home() {
 
     try {
       const apiKey = process.env.GEMINI_API_KEY;
+      
+      // Fallback to mock data if API key is missing
       if (!apiKey || apiKey === 'MY_GEMINI_API_KEY' || apiKey === 'undefined' || apiKey === '') {
-        throw new Error('Gemini API key is missing. Please ensure GEMINI_API_KEY is set in your environment variables.');
+        console.warn('Gemini API key is missing. Falling back to mock response.');
+        setTimeout(() => {
+          setAiResponse({
+            concise: `For "${searchQuery}", the general financial consensus suggests careful planning and diversification.`,
+            full: `Regarding your query about "${searchQuery}", it's important to consider your risk appetite and long-term goals. In the Indian context, this often involves looking at tax-saving instruments under Section 80C, balanced mutual funds, and maintaining an emergency fund. (Note: This is a demo response as no API key is configured).`,
+            sources: [
+              { title: "BHP Finance Guides", uri: "/guides/investment" },
+              { title: "Market Analysis", uri: "/market-analysis" }
+            ]
+          });
+          setIsSearching(false);
+        }, 1500);
+        return;
       }
 
       const ai = new GoogleGenAI({ apiKey });

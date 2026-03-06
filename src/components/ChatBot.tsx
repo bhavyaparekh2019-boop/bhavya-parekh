@@ -40,8 +40,31 @@ export default function ChatBot() {
 
     try {
       const apiKey = process.env.GEMINI_API_KEY;
-      if (!apiKey || apiKey === 'MY_GEMINI_API_KEY' || apiKey === '') {
-        throw new Error('Gemini API key is missing. Please set GEMINI_API_KEY in your environment variables.');
+      
+      // Fallback to mock response if API key is missing
+      if (!apiKey || apiKey === 'MY_GEMINI_API_KEY' || apiKey === 'undefined' || apiKey === '') {
+        console.warn('Gemini API key is missing. Falling back to mock chat response.');
+        setTimeout(() => {
+          const mockResponses: { [key: string]: string } = {
+            "default": "I'm here to help with your financial queries! Since I'm currently in demo mode (no API key configured), I can provide general information about investments, insurance, and tax planning in India.",
+            "hello": "Hello! How can I assist you with your financial planning today?",
+            "investment": "Investment planning is key to wealth creation. We recommend looking at a mix of Equity Mutual Funds, PPF, and potentially direct stocks depending on your risk appetite.",
+            "tax": "For tax saving in India, Section 80C is the most popular, allowing deductions up to ₹1.5 Lakhs through instruments like ELSS, PPF, and LIC.",
+            "insurance": "Insurance is a vital part of financial security. We suggest having a Term Life Insurance and a comprehensive Health Insurance policy for you and your family."
+          };
+
+          const lowerMsg = userMessage.toLowerCase();
+          let responseText = mockResponses["default"];
+          
+          if (lowerMsg.includes("hello") || lowerMsg.includes("hi")) responseText = mockResponses["hello"];
+          else if (lowerMsg.includes("invest")) responseText = mockResponses["investment"];
+          else if (lowerMsg.includes("tax")) responseText = mockResponses["tax"];
+          else if (lowerMsg.includes("insur")) responseText = mockResponses["insurance"];
+
+          setMessages(prev => [...prev, { role: 'model', text: responseText }]);
+          setIsLoading(false);
+        }, 1000);
+        return;
       }
 
       const ai = new GoogleGenAI({ apiKey });
