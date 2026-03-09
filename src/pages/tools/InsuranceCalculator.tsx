@@ -227,16 +227,16 @@ export default function InsuranceCalculator() {
 
           {/* Results */}
           <div className="space-y-6">
-            <div className="bg-slate-900 rounded-3xl p-8 text-white shadow-xl border border-slate-800 relative overflow-hidden">
+            <div className="bg-primary rounded-3xl p-8 text-slate-900 shadow-xl border border-primary/20 relative overflow-hidden">
               <div className="absolute top-0 right-0 p-8 opacity-10">
-                <Shield className="w-32 h-32 text-primary" />
+                <Shield className="w-32 h-32 text-slate-900" />
               </div>
               <div className="relative z-10">
-                <h3 className="text-xs font-black text-primary uppercase tracking-[0.2em] mb-4">Recommended Coverage</h3>
+                <h3 className="text-xs font-black text-slate-800 uppercase tracking-[0.2em] mb-4">Recommended Coverage</h3>
                 <div className="text-5xl font-black mb-2 tracking-tighter">
                   ₹{recommendedCoverage.toLocaleString('en-IN')}
                 </div>
-                <p className="text-slate-400 text-sm leading-relaxed">
+                <p className="text-slate-800 text-sm leading-relaxed">
                   This is the estimated total amount of life insurance coverage needed to protect your dependents and clear all major liabilities.
                 </p>
               </div>
@@ -486,39 +486,39 @@ export default function InsuranceCalculator() {
                 </div>
               </div>
 
-              <div className="bg-slate-900 rounded-2xl p-8 text-white border border-slate-800 shadow-xl">
+              <div className="bg-primary rounded-2xl p-8 text-slate-900 border border-primary/20 shadow-xl">
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center text-primary">
+                  <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-slate-900">
                     <Sparkles className="w-5 h-5" />
                   </div>
                   <h3 className="text-xl font-bold">Whole Life Insurance</h3>
                 </div>
                 <ul className="space-y-4">
                   <li className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 shrink-0" />
+                    <CheckCircle2 className="w-5 h-5 text-slate-900 mt-0.5 shrink-0" />
                     <div>
                       <p className="font-bold text-sm">Lifetime Coverage</p>
-                      <p className="text-xs text-slate-400">Guaranteed to last your entire life as long as premiums are paid.</p>
+                      <p className="text-xs text-slate-800">Guaranteed to last your entire life as long as premiums are paid.</p>
                     </div>
                   </li>
                   <li className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 shrink-0" />
+                    <CheckCircle2 className="w-5 h-5 text-slate-900 mt-0.5 shrink-0" />
                     <div>
                       <p className="font-bold text-sm">Cash Value Accumulation</p>
-                      <p className="text-xs text-slate-400">A portion of your premium builds tax-deferred cash value.</p>
+                      <p className="text-xs text-slate-800">A portion of your premium builds tax-deferred cash value.</p>
                     </div>
                   </li>
                   <li className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 shrink-0" />
+                    <CheckCircle2 className="w-5 h-5 text-slate-900 mt-0.5 shrink-0" />
                     <div>
                       <p className="font-bold text-sm">Fixed Premiums</p>
-                      <p className="text-xs text-slate-400">Your monthly cost will never increase, regardless of age or health.</p>
+                      <p className="text-xs text-slate-800">Your monthly cost will never increase, regardless of age or health.</p>
                     </div>
                   </li>
                 </ul>
-                <div className="mt-8 p-4 bg-white/5 rounded-xl border border-white/10">
-                  <p className="text-xs font-bold text-primary uppercase tracking-wider mb-1">Best For</p>
-                  <p className="text-sm text-slate-200 font-medium">Estate planning, final expenses, and high-net-worth wealth transfer.</p>
+                <div className="mt-8 p-4 bg-white/10 rounded-xl border border-white/20">
+                  <p className="text-xs font-bold text-slate-900 uppercase tracking-wider mb-1">Best For</p>
+                  <p className="text-sm text-slate-800 font-medium">Estate planning, final expenses, and high-net-worth wealth transfer.</p>
                 </div>
               </div>
             </div>
@@ -583,27 +583,27 @@ export default function InsuranceCalculator() {
         </div>
 
         {/* AI Market Context */}
-        <div className="mt-16 bg-slate-900 rounded-3xl p-10 text-white border border-slate-800 shadow-2xl relative overflow-hidden">
+        <div className="mt-16 bg-primary rounded-3xl p-10 text-slate-900 border border-primary/20 shadow-2xl relative overflow-hidden">
           <div className="absolute top-0 right-0 p-8 opacity-10">
-            <Sparkles className="w-32 h-32 text-primary" />
+            <Sparkles className="w-32 h-32 text-slate-900" />
           </div>
           <div className="relative z-10">
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center text-slate-900 shadow-lg shadow-primary/20">
+                <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-primary shadow-lg shadow-primary/20">
                   <TrendingUp className="w-6 h-6" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-black text-primary uppercase tracking-widest">Live Market Context</h3>
-                  <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">India Insurance Outlook 2024</p>
+                  <h3 className="text-xl font-black text-slate-900 uppercase tracking-widest">Live Market Context</h3>
+                  <p className="text-slate-900 text-xs font-bold uppercase tracking-widest">India Insurance Outlook 2024</p>
                 </div>
               </div>
               <button 
                 onClick={fetchMarketContext}
                 disabled={isLoadingContext}
-                className="p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-colors disabled:opacity-50"
+                className="p-3 rounded-xl bg-white/20 hover:bg-white/30 transition-colors disabled:opacity-50"
               >
-                <RefreshCcw className={cn("w-5 h-5 text-primary", isLoadingContext && "animate-spin")} />
+                <RefreshCcw className={cn("w-5 h-5 text-slate-900", isLoadingContext && "animate-spin")} />
               </button>
             </div>
 
@@ -617,28 +617,28 @@ export default function InsuranceCalculator() {
                   className="py-12 flex flex-col items-center justify-center gap-4"
                 >
                   <Loader2 className="w-8 h-8 text-primary animate-spin" />
-                  <p className="text-slate-400 text-sm font-bold uppercase tracking-[0.2em]">Analyzing Market Data...</p>
+                  <p className="text-slate-900 text-sm font-bold uppercase tracking-[0.2em]">Analyzing Market Data...</p>
                 </motion.div>
               ) : (
                 <motion.div
                   key="content"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="prose prose-invert max-w-none prose-p:text-slate-300 prose-p:leading-relaxed"
+                  className="prose max-w-none prose-p:text-slate-800 prose-p:leading-relaxed"
                 >
-                  <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
+                  <div className="bg-white/20 rounded-2xl p-6 border border-white/20">
                     <p className="text-sm md:text-base whitespace-pre-wrap">{marketContext}</p>
                   </div>
                 </motion.div>
               )}
             </AnimatePresence>
 
-            <div className="mt-8 pt-8 border-t border-slate-800 flex items-center justify-between">
-              <div className="flex items-center gap-2 text-[10px] font-black text-slate-500 uppercase tracking-widest">
+            <div className="mt-8 pt-8 border-t border-slate-900/10 flex items-center justify-between">
+              <div className="flex items-center gap-2 text-[10px] font-black text-slate-800 uppercase tracking-widest">
                 <Info className="w-3 h-3" />
                 Data sourced via Google Search Grounding
               </div>
-              <div className="text-[10px] font-black text-primary uppercase tracking-widest">
+              <div className="text-[10px] font-black text-slate-900 uppercase tracking-widest">
                 Updated Real-time
               </div>
             </div>

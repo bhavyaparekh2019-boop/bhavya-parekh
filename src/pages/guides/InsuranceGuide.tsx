@@ -341,31 +341,31 @@ export default function InsuranceGuide() {
               </div>
             </section>
 
-            <section className="bg-slate-900 text-white p-8 rounded-3xl">
-              <h2 className="text-2xl font-bold mb-8 flex items-center gap-3">
+            <section className="bg-primary/10 p-8 rounded-3xl border border-primary/20">
+              <h2 className="text-2xl font-bold text-slate-900 mb-8 flex items-center gap-3">
                 <CheckCircle2 className="w-6 h-6 text-primary" />
                 The Claim Settlement Process
               </h2>
               <div className="space-y-8">
-                <div className="relative pl-8 border-l border-white/20">
-                  <div className="absolute -left-3 top-0 w-6 h-6 bg-primary rounded-full flex items-center justify-center text-slate-900 text-xs font-bold">1</div>
-                  <h4 className="font-bold mb-1">Intimation</h4>
-                  <p className="text-sm text-slate-400">Notify the insurer immediately (within 24-48 hours) about the event (hospitalization or death).</p>
+                <div className="relative pl-8 border-l border-primary/20">
+                  <div className="absolute -left-3 top-0 w-6 h-6 bg-primary rounded-full flex items-center justify-center text-white text-xs font-bold">1</div>
+                  <h4 className="font-bold text-slate-900 mb-1">Intimation</h4>
+                  <p className="text-sm text-slate-600">Notify the insurer immediately (within 24-48 hours) about the event (hospitalization or death).</p>
                 </div>
-                <div className="relative pl-8 border-l border-white/20">
-                  <div className="absolute -left-3 top-0 w-6 h-6 bg-primary rounded-full flex items-center justify-center text-slate-900 text-xs font-bold">2</div>
-                  <h4 className="font-bold mb-1">Documentation</h4>
-                  <p className="text-sm text-slate-400">Submit all required documents (medical reports, bills, death certificate, etc.) to the TPA or insurer.</p>
+                <div className="relative pl-8 border-l border-primary/20">
+                  <div className="absolute -left-3 top-0 w-6 h-6 bg-primary rounded-full flex items-center justify-center text-white text-xs font-bold">2</div>
+                  <h4 className="font-bold text-slate-900 mb-1">Documentation</h4>
+                  <p className="text-sm text-slate-600">Submit all required documents (medical reports, bills, death certificate, etc.) to the TPA or insurer.</p>
                 </div>
-                <div className="relative pl-8 border-l border-white/20">
-                  <div className="absolute -left-3 top-0 w-6 h-6 bg-primary rounded-full flex items-center justify-center text-slate-900 text-xs font-bold">3</div>
-                  <h4 className="font-bold mb-1">Verification</h4>
-                  <p className="text-sm text-slate-400">The insurer verifies the documents and may conduct an investigation if necessary.</p>
+                <div className="relative pl-8 border-l border-primary/20">
+                  <div className="absolute -left-3 top-0 w-6 h-6 bg-primary rounded-full flex items-center justify-center text-white text-xs font-bold">3</div>
+                  <h4 className="font-bold text-slate-900 mb-1">Verification</h4>
+                  <p className="text-sm text-slate-600">The insurer verifies the documents and may conduct an investigation if necessary.</p>
                 </div>
                 <div className="relative pl-8">
-                  <div className="absolute -left-3 top-0 w-6 h-6 bg-primary rounded-full flex items-center justify-center text-slate-900 text-xs font-bold">4</div>
-                  <h4 className="font-bold mb-1">Settlement</h4>
-                  <p className="text-sm text-slate-400">Once approved, the claim amount is paid directly to the hospital (cashless) or reimbursed to the policyholder.</p>
+                  <div className="absolute -left-3 top-0 w-6 h-6 bg-primary rounded-full flex items-center justify-center text-white text-xs font-bold">4</div>
+                  <h4 className="font-bold text-slate-900 mb-1">Settlement</h4>
+                  <p className="text-sm text-slate-600">Once approved, the claim amount is paid directly to the hospital (cashless) or reimbursed to the policyholder.</p>
                 </div>
               </div>
             </section>
@@ -444,16 +444,16 @@ export default function InsuranceGuide() {
 
           {/* Right Column: Tips & Sidebar */}
           <div className="space-y-8">
-            <div className="bg-slate-900 text-white p-8 rounded-3xl shadow-xl">
+            <div className="bg-primary text-slate-900 p-8 rounded-3xl shadow-xl">
               <h3 className="text-xl font-bold mb-4">Expert Tip</h3>
-              <p className="text-slate-300 text-sm leading-relaxed mb-6">
+              <p className="text-slate-800 text-sm leading-relaxed mb-6 font-medium">
                 "Always keep your insurance and investments separate. Pure term insurance and low-cost mutual funds usually offer better value than combined products like endowment plans."
               </p>
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">B</div>
+                <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-slate-900 font-bold">B</div>
                 <div>
                   <p className="text-sm font-bold">BHP Finance Advisory</p>
-                  <p className="text-xs text-slate-400">Strategic Planning Team</p>
+                  <p className="text-xs text-slate-700">Strategic Planning Team</p>
                 </div>
               </div>
             </div>

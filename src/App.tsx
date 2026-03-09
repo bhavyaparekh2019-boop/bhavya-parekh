@@ -5,7 +5,6 @@ import Footer from '@/src/components/Footer';
 import ChatBot from '@/src/components/ChatBot';
 import ConsultationModal from '@/src/components/ConsultationModal';
 import { ModalProvider } from '@/src/context/ModalContext';
-import { ThemeProvider } from '@/src/context/ThemeContext';
 import Home from '@/src/pages/Home';
 import ArticleDetail from '@/src/pages/ArticleDetail';
 import MortgageCalculator from '@/src/pages/tools/MortgageCalculator';
@@ -28,9 +27,8 @@ import ErrorBoundary from '@/src/components/ErrorBoundary';
 export default function App() {
   return (
     <ErrorBoundary>
-      <ThemeProvider>
-        <ModalProvider>
-          <Router>
+      <ModalProvider>
+        <Router>
           <div className="flex flex-col min-h-screen">
             <Navbar />
             <div className="flex-grow">
@@ -60,7 +58,6 @@ export default function App() {
           </div>
         </Router>
       </ModalProvider>
-    </ThemeProvider>
-  </ErrorBoundary>
+    </ErrorBoundary>
   );
 }

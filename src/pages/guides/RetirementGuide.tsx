@@ -197,32 +197,32 @@ export default function RetirementGuide() {
             </section>
 
             {/* Age-based Allocation */}
-            <section className="bg-slate-900 text-white p-10 rounded-[2.5rem]">
-              <h2 className="text-2xl font-bold mb-8">Asset Allocation by Life Stage</h2>
+            <section className="bg-primary/10 p-10 rounded-[2.5rem] border border-primary/20">
+              <h2 className="text-2xl font-bold text-slate-900 mb-8">Asset Allocation by Life Stage</h2>
               <div className="space-y-8">
                 <div className="flex gap-6 items-center">
                   <div className="w-24 text-primary font-bold text-xl">Age 25</div>
-                  <div className="flex-1 h-4 bg-white/10 rounded-full overflow-hidden flex">
+                  <div className="flex-1 h-4 bg-primary/20 rounded-full overflow-hidden flex">
                     <div className="w-[80%] bg-primary h-full" title="Equity" />
-                    <div className="w-[20%] bg-slate-500 h-full" title="Debt" />
+                    <div className="w-[20%] bg-slate-400 h-full" title="Debt" />
                   </div>
-                  <div className="text-xs text-slate-400">80% Equity / 20% Debt</div>
+                  <div className="text-xs text-slate-500">80% Equity / 20% Debt</div>
                 </div>
                 <div className="flex gap-6 items-center">
                   <div className="w-24 text-primary font-bold text-xl">Age 45</div>
-                  <div className="flex-1 h-4 bg-white/10 rounded-full overflow-hidden flex">
+                  <div className="flex-1 h-4 bg-primary/20 rounded-full overflow-hidden flex">
                     <div className="w-[50%] bg-primary h-full" title="Equity" />
-                    <div className="w-[50%] bg-slate-500 h-full" title="Debt" />
+                    <div className="w-[50%] bg-slate-400 h-full" title="Debt" />
                   </div>
-                  <div className="text-xs text-slate-400">50% Equity / 50% Debt</div>
+                  <div className="text-xs text-slate-500">50% Equity / 50% Debt</div>
                 </div>
                 <div className="flex gap-6 items-center">
                   <div className="w-24 text-primary font-bold text-xl">Age 65</div>
-                  <div className="flex-1 h-4 bg-white/10 rounded-full overflow-hidden flex">
+                  <div className="flex-1 h-4 bg-primary/20 rounded-full overflow-hidden flex">
                     <div className="w-[20%] bg-primary h-full" title="Equity" />
-                    <div className="w-[80%] bg-slate-500 h-full" title="Debt" />
+                    <div className="w-[80%] bg-slate-400 h-full" title="Debt" />
                   </div>
-                  <div className="text-xs text-slate-400">20% Equity / 80% Debt</div>
+                  <div className="text-xs text-slate-500">20% Equity / 80% Debt</div>
                 </div>
               </div>
             </section>
@@ -396,7 +396,7 @@ export default function RetirementGuide() {
 
           {/* Sidebar */}
           <div className="space-y-8">
-            <div className="bg-slate-900 text-white p-8 rounded-[2rem] shadow-2xl">
+            <div className="bg-primary text-slate-900 p-8 rounded-[2rem] shadow-xl">
               <h3 className="text-xl font-bold mb-6">Retirement Checklist</h3>
               <ul className="space-y-5">
                 {[
@@ -407,8 +407,8 @@ export default function RetirementGuide() {
                   'Buy a dedicated health cover for parents.',
                   'Nominate heirs for all financial assets.'
                 ].map((item, i) => (
-                  <li key={i} className="flex items-start gap-3 text-sm text-slate-300">
-                    <div className="w-5 h-5 rounded-full bg-primary/20 text-primary flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">
+                  <li key={i} className="flex items-start gap-3 text-sm text-slate-800 font-medium">
+                    <div className="w-5 h-5 rounded-full bg-white/30 text-slate-900 flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">
                       {i + 1}
                     </div>
                     {item}

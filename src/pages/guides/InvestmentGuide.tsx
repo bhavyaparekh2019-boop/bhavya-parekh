@@ -474,25 +474,25 @@ export default function InvestmentGuide() {
                 />
               </div>
             </section>
-            <section className="bg-slate-900 text-white p-8 rounded-3xl">
-              <h2 className="text-2xl font-bold mb-6">Taxation on Investments (India)</h2>
+            <section className="bg-primary/10 p-8 rounded-3xl border border-primary/20">
+              <h2 className="text-2xl font-bold text-slate-900 mb-6">Taxation on Investments (India)</h2>
               <div className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="border-l-2 border-primary pl-4">
                     <h4 className="font-bold text-primary mb-2">Equity LTCG</h4>
-                    <p className="text-sm text-slate-300">10% tax on gains exceeding ₹1 Lakh in a financial year (if held {'>'} 1 year).</p>
+                    <p className="text-sm text-slate-700">10% tax on gains exceeding ₹1 Lakh in a financial year (if held {'>'} 1 year).</p>
                   </div>
                   <div className="border-l-2 border-primary pl-4">
                     <h4 className="font-bold text-primary mb-2">Equity STCG</h4>
-                    <p className="text-sm text-slate-300">15% tax on gains if sold within 1 year of purchase.</p>
+                    <p className="text-sm text-slate-700">15% tax on gains if sold within 1 year of purchase.</p>
                   </div>
-                  <div className="border-l-2 border-slate-500 pl-4">
-                    <h4 className="font-bold text-slate-400 mb-2">Debt Taxation</h4>
-                    <p className="text-sm text-slate-300">Gains are added to your income and taxed as per your applicable income tax slab.</p>
+                  <div className="border-l-2 border-slate-400 pl-4">
+                    <h4 className="font-bold text-slate-500 mb-2">Debt Taxation</h4>
+                    <p className="text-sm text-slate-700">Gains are added to your income and taxed as per your applicable income tax slab.</p>
                   </div>
-                  <div className="border-l-2 border-slate-500 pl-4">
-                    <h4 className="font-bold text-slate-400 mb-2">Dividend Tax</h4>
-                    <p className="text-sm text-slate-300">Dividends are taxed in the hands of the investor at their slab rate.</p>
+                  <div className="border-l-2 border-slate-400 pl-4">
+                    <h4 className="font-bold text-slate-500 mb-2">Dividend Tax</h4>
+                    <p className="text-sm text-slate-700">Dividends are taxed in the hands of the investor at their slab rate.</p>
                   </div>
                 </div>
               </div>

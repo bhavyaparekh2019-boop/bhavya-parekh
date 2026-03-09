@@ -72,7 +72,7 @@ export default function ChatBot() {
       // Initialize chat if not already done
       if (!chatRef.current) {
         chatRef.current = ai.chats.create({
-          model: "gemini-3.1-pro-preview",
+          model: "gemini-3-flash-preview",
           config: {
             systemInstruction: `You are the BHP Finance AI Assistant. You are an expert in financial planning, investment strategies, insurance (life, health, general), and market analysis. 
             Your goal is to provide helpful, accurate, and professional financial advice tailored to the Indian context (Rupees, Indian tax laws like Section 80C/80D, Indian retirement schemes like EPF/PPF/NPS).
@@ -90,7 +90,15 @@ export default function ChatBot() {
       setMessages(prev => [...prev, { role: 'model', text: modelText }]);
     } catch (error: any) {
       console.error('Chat Error:', error);
-      setMessages(prev => [...prev, { role: 'model', text: `Sorry, I'm having trouble connecting right now. ${error.message || 'Please try again later.'}` }]);
+      let errorMessage = "Sorry, I'm having trouble connecting right now.";
+      
+      if (error.message?.includes('quota') || error.message?.includes('429')) {
+        errorMessage = "I've reached my free usage limit for the moment. Please try again in a few minutes or check back later.";
+      } else if (error.message) {
+        errorMessage = `Sorry, I'm having trouble connecting right now. ${error.message}`;
+      }
+      
+      setMessages(prev => [...prev, { role: 'model', text: errorMessage }]);
     } finally {
       setIsLoading(false);
     }
@@ -127,32 +135,32 @@ export default function ChatBot() {
               width: '400px'
             }}
             exit={{ opacity: 0, y: 100, scale: 0.9 }}
-            className="fixed bottom-6 right-6 bg-white dark:bg-slate-900 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.2)] border border-slate-200 dark:border-slate-800 z-50 flex flex-col overflow-hidden transition-colors"
+            className="fixed bottom-6 right-6 bg-white rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.2)] border border-slate-200 z-50 flex flex-col overflow-hidden transition-colors"
           >
             {/* Header */}
-            <div className="bg-slate-900 dark:bg-slate-950 p-4 flex items-center justify-between text-white shrink-0">
+            <div className="bg-primary p-4 flex items-center justify-between text-slate-900 shrink-0">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-slate-900">
+                <div className="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center text-white">
                   <Bot className="w-5 h-5" />
                 </div>
                 <div>
                   <h3 className="text-sm font-black uppercase tracking-widest">BHP Assistant</h3>
                   <div className="flex items-center gap-1.5">
                     <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
-                    <span className="text-[10px] text-slate-400 font-bold">ONLINE</span>
+                    <span className="text-[10px] text-slate-700 font-bold">ONLINE</span>
                   </div>
                 </div>
               </div>
               <div className="flex items-center gap-2">
                 <button 
                   onClick={() => setIsMinimized(!isMinimized)}
-                  className="p-2 hover:bg-slate-800 rounded-lg transition-colors"
+                  className="p-2 hover:bg-white/20 rounded-lg transition-colors"
                 >
                   {isMinimized ? <Maximize2 className="w-4 h-4" /> : <Minimize2 className="w-4 h-4" />}
                 </button>
                 <button 
                   onClick={() => setIsOpen(false)}
-                  className="p-2 hover:bg-slate-800 rounded-lg transition-colors"
+                  className="p-2 hover:bg-white/20 rounded-lg transition-colors"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -162,7 +170,7 @@ export default function ChatBot() {
             {!isMinimized && (
               <>
                 {/* Messages Area */}
-                <div className="flex-1 overflow-y-auto p-6 space-y-6 bg-slate-50/50 dark:bg-slate-900/50">
+                <div className="flex-1 overflow-y-auto p-6 space-y-6 bg-slate-50/50">
                   {messages.map((msg, i) => (
                     <motion.div
                       initial={{ opacity: 0, x: msg.role === 'user' ? 20 : -20 }}
@@ -175,17 +183,17 @@ export default function ChatBot() {
                     >
                       <div className={cn(
                         "w-8 h-8 rounded-lg flex items-center justify-center shrink-0",
-                        msg.role === 'user' ? "bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400" : "bg-primary text-slate-900"
+                        msg.role === 'user' ? "bg-slate-200 text-slate-600" : "bg-primary text-slate-900"
                       )}>
                         {msg.role === 'user' ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
                       </div>
                       <div className={cn(
                         "p-4 rounded-2xl text-sm leading-relaxed shadow-sm",
                         msg.role === 'user' 
-                          ? "bg-slate-900 dark:bg-primary dark:text-slate-900 text-white rounded-tr-none" 
-                          : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-100 dark:border-slate-700 rounded-tl-none"
+                          ? "bg-primary text-slate-900 rounded-tr-none" 
+                          : "bg-white text-slate-700 border border-slate-100 rounded-tl-none"
                       )}>
-                        <div className="markdown-body dark:prose-invert">
+                        <div className="markdown-body">
                           <Markdown>{msg.text}</Markdown>
                         </div>
                       </div>
@@ -196,7 +204,7 @@ export default function ChatBot() {
                       <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-slate-900 shrink-0">
                         <Bot className="w-4 h-4" />
                       </div>
-                      <div className="bg-white dark:bg-slate-800 p-4 rounded-2xl rounded-tl-none border border-slate-100 dark:border-slate-700 shadow-sm">
+                      <div className="bg-white p-4 rounded-2xl rounded-tl-none border border-slate-100 shadow-sm">
                         <Loader2 className="w-4 h-4 animate-spin text-primary" />
                       </div>
                     </div>
@@ -207,14 +215,14 @@ export default function ChatBot() {
                 {/* Input Area */}
                 <form 
                   onSubmit={handleSend}
-                  className="p-4 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 flex items-center gap-3"
+                  className="p-4 bg-white border-t border-slate-100 flex items-center gap-3"
                 >
                   <input
                     type="text"
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     placeholder="Ask about investments, planning..."
-                    className="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all outline-none dark:text-white"
+                    className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all outline-none"
                   />
                   <button
                     type="submit"

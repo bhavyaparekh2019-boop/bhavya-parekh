@@ -4,14 +4,12 @@ import { Search, Menu, X, User, ChevronDown, Loader2, Info, ArrowRight, Globe, S
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '@/src/lib/utils';
 import { useModal } from '@/src/context/ModalContext';
-import { useTheme } from '@/src/context/ThemeContext';
 import { GoogleGenAI } from "@google/genai";
 
 import Logo from './Logo';
 
 export default function Navbar() {
   const { openConsultationModal } = useModal();
-  const { theme, toggleTheme } = useTheme();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -71,12 +69,17 @@ export default function Navbar() {
       })).filter((s: any) => s.uri && s.title);
 
       setAiResponse({ ...data, sources });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Global Search Error:', error);
-      setAiResponse({ 
-        concise: "I encountered an error while searching.", 
-        full: "Please try again in a moment. I'm having trouble connecting to my financial intelligence engine." 
-      });
+      let concise = "I encountered an error while searching.";
+      let full = "Please try again in a moment. I'm having trouble connecting to my financial intelligence engine.";
+      
+      if (error.message?.includes('quota') || error.message?.includes('429')) {
+        concise = "Free usage limit reached.";
+        full = "I've reached my free usage limit for the moment. Please try again in a few minutes or check back later.";
+      }
+      
+      setAiResponse({ concise, full });
     } finally {
       setIsSearching(false);
     }
@@ -106,7 +109,7 @@ export default function Navbar() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 transition-colors">
+    <header className="sticky top-0 z-50 w-full bg-white border-b border-slate-200 transition-colors">
       {/* Top Row: Logo & Knowledge Center & Insights */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="flex justify-between items-center">
@@ -121,7 +124,7 @@ export default function Navbar() {
                 to={link.href}
                 className={cn(
                   'text-sm font-bold transition-colors hover:text-primary whitespace-nowrap',
-                  location.pathname === link.href ? 'text-primary' : 'text-slate-600 dark:text-slate-300'
+                  location.pathname === link.href ? 'text-primary' : 'text-slate-600'
                 )}
               >
                 {link.name}
@@ -133,17 +136,17 @@ export default function Navbar() {
               <button
                 className={cn(
                   'flex items-center gap-1 text-sm font-bold transition-colors hover:text-primary whitespace-nowrap',
-                  location.pathname.startsWith('/tools') ? 'text-primary' : 'text-slate-600 dark:text-slate-300'
+                  location.pathname.startsWith('/tools') ? 'text-primary' : 'text-slate-600'
                 )}
               >
                 Financial Tools <ChevronDown className="w-4 h-4" />
               </button>
-              <div className="absolute top-full left-0 mt-2 w-56 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 py-2">
+              <div className="absolute top-full left-0 mt-2 w-56 bg-white border border-slate-200 rounded-2xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 py-2">
                 {toolLinks.map((tool) => (
                   <Link
                     key={tool.name}
                     to={tool.href}
-                    className="block px-6 py-3 text-sm font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 hover:text-primary transition-colors"
+                    className="block px-6 py-3 text-sm font-bold text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors"
                   >
                     {tool.name}
                   </Link>
@@ -153,13 +156,6 @@ export default function Navbar() {
           </nav>
 
           <div className="flex items-center gap-6">
-            <button 
-              onClick={toggleTheme}
-              className="p-2 text-slate-500 hover:text-primary transition-colors rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800"
-              title={theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
-            >
-              {theme === 'light' ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
-            </button>
             <button 
               onClick={() => setIsSearchOpen(true)}
               className="p-2 text-slate-500 hover:text-primary transition-colors"
@@ -177,7 +173,7 @@ export default function Navbar() {
       </div>
 
       {/* Bottom Row: Tools & Main Navigation */}
-      <div className="bg-slate-50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-800 hidden lg:block transition-colors">
+      <div className="bg-slate-50 border-t border-slate-100 hidden lg:block transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <nav className="flex items-center gap-10">
@@ -187,7 +183,7 @@ export default function Navbar() {
                   to={link.href}
                   className={cn(
                     'text-xs font-black uppercase tracking-widest transition-all hover:text-primary',
-                    location.pathname === link.href ? 'text-primary' : 'text-slate-500 dark:text-slate-400'
+                    location.pathname === link.href ? 'text-primary' : 'text-slate-500'
                   )}
                 >
                   {link.name}
@@ -211,12 +207,12 @@ export default function Navbar() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] bg-slate-900/95 backdrop-blur-sm flex flex-col"
+            className="fixed inset-0 z-[100] bg-primary/95 backdrop-blur-sm flex flex-col"
           >
             <div className="max-w-4xl mx-auto w-full px-4 pt-20">
               <div className="flex justify-between items-center mb-8">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-slate-900">
+                  <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-primary">
                     <Sparkles className="w-6 h-6" />
                   </div>
                   <h2 className="text-2xl font-black text-white uppercase tracking-widest">Smart Search</h2>
@@ -325,15 +321,15 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 px-4 py-8 space-y-8 max-h-[85vh] overflow-y-auto shadow-2xl transition-colors">
+        <div className="lg:hidden bg-white border-t border-slate-200 px-4 py-8 space-y-8 max-h-[85vh] overflow-y-auto shadow-2xl transition-colors">
           <div>
-            <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-6">Knowledge & Insights</p>
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-6">Knowledge & Insights</p>
             <div className="grid grid-cols-1 gap-y-4">
               {knowledgeLinks.map((link) => (
                 <Link
                   key={link.name}
                   to={link.href}
-                  className="text-lg font-bold text-slate-900 dark:text-white hover:text-primary transition-colors"
+                  className="text-lg font-bold text-slate-900 hover:text-primary transition-colors"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {link.name}
@@ -342,14 +338,14 @@ export default function Navbar() {
             </div>
           </div>
 
-          <div className="pt-8 border-t border-slate-100 dark:border-slate-800">
-            <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-6">Financial Tools</p>
+          <div className="pt-8 border-t border-slate-100">
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-6">Financial Tools</p>
             <div className="grid grid-cols-1 gap-y-4">
               {toolLinks.map((tool) => (
                 <Link
                   key={tool.name}
                   to={tool.href}
-                  className="text-lg font-bold text-slate-900 dark:text-white hover:text-primary transition-colors"
+                  className="text-lg font-bold text-slate-900 hover:text-primary transition-colors"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {tool.name}
@@ -358,14 +354,14 @@ export default function Navbar() {
             </div>
           </div>
           
-          <div className="pt-8 border-t border-slate-100 dark:border-slate-800">
-            <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-6">Explore BHP Finance</p>
+          <div className="pt-8 border-t border-slate-100">
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-6">Explore BHP Finance</p>
             <div className="space-y-6">
               {mainLinks.map((link) => (
                 <Link
                   key={link.name}
                   to={link.href}
-                  className="block text-2xl font-bold text-slate-900 dark:text-white hover:text-primary transition-colors"
+                  className="block text-2xl font-bold text-slate-900 hover:text-primary transition-colors"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {link.name}

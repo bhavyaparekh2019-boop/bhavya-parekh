@@ -134,7 +134,7 @@ export default function ChromaGrid({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setSelectedItem(null)}
-              className="absolute inset-0 bg-slate-900/60 backdrop-blur-md"
+              className="absolute inset-0 bg-primary/20 backdrop-blur-md"
             />
             
             <motion.div
@@ -194,7 +194,7 @@ export default function ChromaGrid({
                           window.location.href = selectedItem.url || '#';
                         }
                       }}
-                      className="w-full bg-slate-900 text-white font-black py-5 rounded-2xl text-sm uppercase tracking-widest hover:bg-primary hover:text-slate-900 transition-all flex items-center justify-center gap-2"
+                      className="w-full bg-primary text-slate-900 font-black py-5 rounded-2xl text-sm uppercase tracking-widest hover:brightness-110 transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20"
                     >
                       Explore More <ArrowRight className="w-4 h-4" />
                     </button>

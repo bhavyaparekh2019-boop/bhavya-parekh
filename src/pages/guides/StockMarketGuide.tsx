@@ -177,55 +177,55 @@ export default function StockMarketGuide() {
             </section>
 
             {/* Market Cap Section */}
-            <section className="bg-slate-900 text-white p-10 rounded-[2.5rem]">
-              <h2 className="text-2xl font-bold mb-6">Understanding Market Capitalization</h2>
-              <p className="text-slate-400 mb-8">Market cap is the total value of all a company's shares of stock.</p>
+            <section className="bg-primary/10 p-10 rounded-[2.5rem] border border-primary/20">
+              <h2 className="text-2xl font-bold text-slate-900 mb-6">Understanding Market Capitalization</h2>
+              <p className="text-slate-600 mb-8">Market cap is the total value of all a company's shares of stock.</p>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="border border-white/10 p-5 rounded-2xl">
+                <div className="bg-white border border-primary/20 p-5 rounded-2xl shadow-sm">
                   <h4 className="font-bold text-primary mb-2">Large Cap</h4>
-                  <p className="text-xs text-slate-400">Top 100 companies. Stable, lower risk, steady dividends. (e.g., Reliance, TCS)</p>
+                  <p className="text-xs text-slate-600">Top 100 companies. Stable, lower risk, steady dividends. (e.g., Reliance, TCS)</p>
                 </div>
-                <div className="border border-white/10 p-5 rounded-2xl">
+                <div className="bg-white border border-primary/20 p-5 rounded-2xl shadow-sm">
                   <h4 className="font-bold text-primary mb-2">Mid Cap</h4>
-                  <p className="text-xs text-slate-400">101st to 250th companies. Higher growth potential but more volatile.</p>
+                  <p className="text-xs text-slate-600">101st to 250th companies. Higher growth potential but more volatile.</p>
                 </div>
-                <div className="border border-white/10 p-5 rounded-2xl">
+                <div className="bg-white border border-primary/20 p-5 rounded-2xl shadow-sm">
                   <h4 className="font-bold text-primary mb-2">Small Cap</h4>
-                  <p className="text-xs text-slate-400">251st company onwards. High risk, high reward potential. Can be very volatile.</p>
+                  <p className="text-xs text-slate-600">251st company onwards. High risk, high reward potential. Can be very volatile.</p>
                 </div>
               </div>
-              <div className="mt-10 pt-10 border-t border-white/10">
-                <h4 className="font-bold text-primary mb-6">Corporate Actions: What They Mean for You</h4>
+              <div className="mt-10 pt-10 border-t border-primary/20">
+                <h4 className="font-bold text-slate-900 mb-6">Corporate Actions: What They Mean for You</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-4">
                     <div className="flex gap-3">
-                      <div className="w-8 h-8 rounded bg-white/5 flex items-center justify-center text-primary font-bold text-xs shrink-0">B</div>
+                      <div className="w-8 h-8 rounded bg-primary/10 flex items-center justify-center text-primary font-bold text-xs shrink-0">B</div>
                       <div>
-                        <h5 className="text-sm font-bold">Bonus Issue</h5>
-                        <p className="text-[10px] text-slate-400">Free additional shares given to existing shareholders. Increases liquidity but doesn't change the company's value.</p>
+                        <h5 className="text-sm font-bold text-slate-900">Bonus Issue</h5>
+                        <p className="text-[10px] text-slate-500">Free additional shares given to existing shareholders. Increases liquidity but doesn't change the company's value.</p>
                       </div>
                     </div>
                     <div className="flex gap-3">
-                      <div className="w-8 h-8 rounded bg-white/5 flex items-center justify-center text-primary font-bold text-xs shrink-0">S</div>
+                      <div className="w-8 h-8 rounded bg-primary/10 flex items-center justify-center text-primary font-bold text-xs shrink-0">S</div>
                       <div>
-                        <h5 className="text-sm font-bold">Stock Split</h5>
-                        <p className="text-[10px] text-slate-400">Dividing existing shares into multiple ones. Makes the stock more affordable for retail investors.</p>
+                        <h5 className="text-sm font-bold text-slate-900">Stock Split</h5>
+                        <p className="text-[10px] text-slate-500">Dividing existing shares into multiple ones. Makes the stock more affordable for retail investors.</p>
                       </div>
                     </div>
                   </div>
                   <div className="space-y-4">
                     <div className="flex gap-3">
-                      <div className="w-8 h-8 rounded bg-white/5 flex items-center justify-center text-primary font-bold text-xs shrink-0">R</div>
+                      <div className="w-8 h-8 rounded bg-primary/10 flex items-center justify-center text-primary font-bold text-xs shrink-0">R</div>
                       <div>
-                        <h5 className="text-sm font-bold">Rights Issue</h5>
-                        <p className="text-[10px] text-slate-400">Offering existing shareholders the right to buy more shares at a discounted price to raise capital.</p>
+                        <h5 className="text-sm font-bold text-slate-900">Rights Issue</h5>
+                        <p className="text-[10px] text-slate-500">Offering existing shareholders the right to buy more shares at a discounted price to raise capital.</p>
                       </div>
                     </div>
                     <div className="flex gap-3">
-                      <div className="w-8 h-8 rounded bg-white/5 flex items-center justify-center text-primary font-bold text-xs shrink-0">B</div>
+                      <div className="w-8 h-8 rounded bg-primary/10 flex items-center justify-center text-primary font-bold text-xs shrink-0">B</div>
                       <div>
-                        <h5 className="text-sm font-bold">Buyback</h5>
-                        <p className="text-[10px] text-slate-400">Company buying back its own shares from the market. Usually signals that management believes the stock is undervalued.</p>
+                        <h5 className="text-sm font-bold text-slate-900">Buyback</h5>
+                        <p className="text-[10px] text-slate-500">Company buying back its own shares from the market. Usually signals that management believes the stock is undervalued.</p>
                       </div>
                     </div>
                   </div>
@@ -393,7 +393,7 @@ export default function StockMarketGuide() {
 
           {/* Sidebar */}
           <div className="space-y-8">
-            <div className="bg-slate-900 text-white p-8 rounded-[2rem] shadow-2xl">
+            <div className="bg-primary text-slate-900 p-8 rounded-[2rem] shadow-xl">
               <h3 className="text-xl font-bold mb-6">Getting Started</h3>
               <ul className="space-y-5">
                 {[
@@ -403,8 +403,8 @@ export default function StockMarketGuide() {
                   'Never invest money you need in the next 3 years.',
                   'Keep learning and stay updated with BHP Insights.'
                 ].map((item, i) => (
-                  <li key={i} className="flex items-start gap-3 text-sm text-slate-300">
-                    <div className="w-5 h-5 rounded-full bg-primary/20 text-primary flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">
+                  <li key={i} className="flex items-start gap-3 text-sm text-slate-800 font-medium">
+                    <div className="w-5 h-5 rounded-full bg-white/30 text-slate-900 flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">
                       {i + 1}
                     </div>
                     {item}

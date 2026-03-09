@@ -94,7 +94,7 @@ export default function MarketAnalysis() {
 
       const ai = new GoogleGenAI({ apiKey });
       const response = await ai.models.generateContent({
-        model: "gemini-3.1-pro-preview",
+        model: "gemini-3-flash-preview",
         contents: [{ role: 'user', parts: [{ text: `Provide a real-time market analysis for the Indian stock market (Nifty 50, Sensex) as of ${new Date().toLocaleString()}. 
         Include current index values, a structured expert commentary on market sentiment, a sentiment score (0-100, where 0 is extreme fear and 100 is extreme greed), and 10 realistic data points for a chart visualization representing the last 24 hours of Nifty 50. 
         Also list 3 top gainers and 3 top losers in the Indian market today.
@@ -226,7 +226,7 @@ export default function MarketAnalysis() {
               <button 
                 onClick={fetchMarketAnalysis}
                 disabled={loading}
-                className="flex items-center gap-2 bg-slate-900 text-white px-6 py-3 rounded-2xl font-bold text-sm hover:bg-slate-800 transition-all disabled:opacity-50 shadow-lg"
+                className="flex items-center gap-2 bg-primary text-slate-900 px-6 py-3 rounded-2xl font-bold text-sm hover:brightness-110 transition-all disabled:opacity-50 shadow-lg shadow-primary/20"
               >
                 {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
                 Refresh Data
@@ -300,7 +300,7 @@ export default function MarketAnalysis() {
                   </p>
                   
                   {/* Sentiment Gauge */}
-                  <div className="w-full h-2 bg-slate-900/10 rounded-full overflow-hidden">
+                  <div className="w-full h-2 bg-slate-900/20 rounded-full overflow-hidden">
                     <motion.div 
                       initial={{ width: 0 }}
                       animate={{ width: `${marketData.sentimentScore}%` }}
@@ -308,7 +308,7 @@ export default function MarketAnalysis() {
                       className="h-full bg-slate-900"
                     />
                   </div>
-                  <div className="flex justify-between mt-2 text-[8px] font-black text-slate-900/50 uppercase tracking-widest">
+                  <div className="flex justify-between mt-2 text-[8px] font-black text-slate-900/60 uppercase tracking-widest">
                     <span>Fear</span>
                     <span>Greed</span>
                   </div>
@@ -478,14 +478,14 @@ export default function MarketAnalysis() {
                 </div>
               </section>
 
-              <div className="bg-slate-900 text-white p-8 rounded-[2rem] shadow-xl">
+              <div className="bg-primary/10 text-slate-900 p-8 rounded-[2rem] border border-primary/20">
                 <h3 className="text-lg font-bold mb-4">Market Outlook</h3>
-                <p className="text-slate-400 text-xs leading-relaxed mb-6">
+                <p className="text-slate-600 text-xs leading-relaxed mb-6">
                   The Indian market continues to show resilience amidst global volatility. Domestic institutional investors (DIIs) are providing a strong floor, while retail participation via SIPs remains at record highs.
                 </p>
-                <div className="p-4 bg-white/5 rounded-2xl border border-white/10">
+                <div className="p-4 bg-white rounded-2xl border border-primary/20">
                   <p className="text-[10px] font-black text-primary uppercase tracking-widest mb-1">Key Level to Watch</p>
-                  <p className="text-xl font-black">Nifty 24,500</p>
+                  <p className="text-xl font-black text-primary">Nifty 24,500</p>
                 </div>
               </div>
             </div>
@@ -498,20 +498,20 @@ export default function MarketAnalysis() {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="mt-20 bg-slate-900 rounded-[3rem] p-12 text-center relative overflow-hidden"
+            className="mt-20 bg-primary rounded-[3rem] p-12 text-center relative overflow-hidden shadow-2xl shadow-primary/20"
           >
             <div className="absolute inset-0 opacity-10 pointer-events-none">
-              <div className="absolute top-0 left-0 w-64 h-64 bg-primary rounded-full blur-3xl" />
-              <div className="absolute bottom-0 right-0 w-64 h-64 bg-primary rounded-full blur-3xl" />
+              <div className="absolute top-0 left-0 w-64 h-64 bg-white rounded-full blur-3xl" />
+              <div className="absolute bottom-0 right-0 w-64 h-64 bg-white rounded-full blur-3xl" />
             </div>
             <div className="relative z-10 max-w-3xl mx-auto">
-              <h2 className="text-3xl md:text-5xl font-black text-white mb-6 tracking-tight">Need Help Navigating the Market?</h2>
-              <p className="text-xl text-slate-400 mb-10 leading-relaxed">
+              <h2 className="text-3xl md:text-5xl font-black text-slate-900 mb-6 tracking-tight">Need Help Navigating the Market?</h2>
+              <p className="text-xl text-slate-800 mb-10 leading-relaxed">
                 Our expert advisors are ready to help you build a personalized strategy based on current market conditions.
               </p>
               <button 
                 onClick={() => openConsultationModal('Investment Planning')}
-                className="bg-primary text-slate-900 px-12 py-4 rounded-full font-black text-sm uppercase tracking-widest hover:brightness-110 transition-all shadow-2xl shadow-primary/20 flex items-center gap-2 mx-auto"
+                className="bg-white text-primary px-12 py-4 rounded-full font-black text-sm uppercase tracking-widest hover:brightness-110 transition-all shadow-2xl shadow-white/20 flex items-center gap-2 mx-auto"
               >
                 Talk to an Expert <ArrowRight className="w-4 h-4" />
               </button>

@@ -197,28 +197,28 @@ export default function About() {
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="bg-slate-900 text-white p-10 rounded-[2.5rem] shadow-2xl flex flex-col justify-between"
+            className="bg-primary text-slate-900 p-10 rounded-[2.5rem] shadow-2xl flex flex-col justify-between"
           >
             <div>
               <h2 className="text-3xl font-bold mb-8 flex items-center gap-3">
-                <TrendingUp className="w-8 h-8 text-primary" />
+                <TrendingUp className="w-8 h-8 text-slate-900" />
                 What We Offer
               </h2>
-              <p className="text-slate-400 mb-8">
+              <p className="text-slate-800 mb-8">
                 At BHP Finance, we provide a wide range of financial solutions designed to meet diverse needs, including:
               </p>
               <ul className="space-y-4">
                 {offerings.map((item, idx) => (
                   <li key={idx} className="flex items-start gap-3 group">
-                    <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center shrink-0 mt-0.5 group-hover:bg-primary transition-colors">
-                      <CheckCircle2 className="w-4 h-4 text-primary group-hover:text-slate-900 transition-colors" />
+                    <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center shrink-0 mt-0.5 group-hover:bg-white transition-colors">
+                      <CheckCircle2 className="w-4 h-4 text-slate-900 group-hover:text-primary transition-colors" />
                     </div>
-                    <span className="text-slate-300 group-hover:text-white transition-colors">{item}</span>
+                    <span className="text-slate-800 group-hover:text-slate-900 transition-colors">{item}</span>
                   </li>
                 ))}
               </ul>
             </div>
-            <p className="mt-12 text-sm text-slate-500 italic">
+            <p className="mt-12 text-sm text-slate-700 italic">
               Our team works closely with clients to understand their requirements and provide practical, result-driven strategies.
             </p>
           </motion.div>

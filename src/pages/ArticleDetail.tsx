@@ -54,9 +54,13 @@ export default function ArticleDetail() {
         }
       });
       setAiSummary(response.text || "Could not generate summary.");
-    } catch (error) {
+    } catch (error: any) {
       console.error('AI Summary Error:', error);
-      setAiSummary("Error generating AI summary. Please try again.");
+      if (error.message?.includes('quota') || error.message?.includes('429')) {
+        setAiSummary("I've reached my free usage limit for the moment. Please try again in a few minutes.");
+      } else {
+        setAiSummary("Error generating AI summary. Please try again.");
+      }
     } finally {
       setIsSummarizing(false);
     }
@@ -89,17 +93,17 @@ export default function ArticleDetail() {
           className="w-full h-full object-cover"
           referrerPolicy="no-referrer"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/40 to-transparent" />
         
         <div className="absolute bottom-0 left-0 w-full p-6 md:p-12">
           <div className="max-w-7xl mx-auto">
             <Link
               to="/"
-              className="inline-flex items-center gap-2 text-white/80 hover:text-primary transition-colors mb-6 font-medium"
+              className="inline-flex items-center gap-2 text-white hover:text-white/80 transition-colors mb-6 font-medium"
             >
               <ArrowLeft className="w-4 h-4" /> Back to Insights
             </Link>
-            <span className="inline-block bg-primary text-slate-900 text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded mb-4">
+            <span className="inline-block bg-white text-primary text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded mb-4">
               {article.category}
             </span>
             <BlurText 
@@ -108,9 +112,9 @@ export default function ArticleDetail() {
               className="text-4xl md:text-6xl font-black text-white leading-tight max-w-4xl mb-6"
             />
             
-            <div className="flex flex-wrap items-center gap-6 text-white/70 text-sm">
+            <div className="flex flex-wrap items-center gap-6 text-white/90 text-sm">
               <div className="flex items-center gap-2">
-                <User className="w-4 h-4 text-primary" />
+                <User className="w-4 h-4 text-white" />
                 <span className="font-semibold text-white">{article.author}</span>
               </div>
               <div className="flex items-center gap-2">
@@ -157,24 +161,24 @@ export default function ArticleDetail() {
               <motion.div
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="mb-12 p-8 bg-slate-900 text-white rounded-3xl border border-slate-800 shadow-2xl relative overflow-hidden"
+                className="mb-12 p-8 bg-primary/10 text-slate-900 rounded-3xl border border-primary/20 relative overflow-hidden"
               >
                 <div className="absolute top-0 right-0 p-4 opacity-10">
                   <Sparkles className="w-24 h-24 text-primary" />
                 </div>
                 <div className="relative z-10">
                   <div className="flex items-center gap-3 mb-6">
-                    <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-slate-900">
+                    <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
                       <Sparkles className="w-5 h-5" />
                     </div>
-                    <h3 className="text-xl font-black text-primary uppercase tracking-widest">AI Executive Summary</h3>
+                    <h3 className="text-xl font-black text-slate-900 uppercase tracking-widest">AI Executive Summary</h3>
                   </div>
-                  <div className="prose prose-invert max-w-none text-slate-300 leading-relaxed">
+                  <div className="prose prose-slate max-w-none text-slate-800 leading-relaxed">
                     {aiSummary.split('\n').map((line, i) => (
                       <p key={i} className="mb-2">{line}</p>
                     ))}
                   </div>
-                  <div className="mt-6 flex items-center gap-2 text-[10px] text-slate-500 font-bold uppercase tracking-[0.2em]">
+                  <div className="mt-6 flex items-center gap-2 text-[10px] text-slate-600 font-bold uppercase tracking-[0.2em]">
                     <Info className="w-3 h-3" />
                     Powered by Gemini 3 Flash
                   </div>

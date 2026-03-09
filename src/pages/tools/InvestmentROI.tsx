@@ -78,9 +78,9 @@ export default function InvestmentROI() {
         </Link>
 
         <div className="bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden">
-          <div className="bg-slate-900 p-8 md:p-12 text-white">
+          <div className="bg-primary p-8 md:p-12 text-slate-900">
             <div className="flex items-center gap-4 mb-6">
-              <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center text-slate-900">
+              <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-primary shadow-sm">
                 <BarChart3 className="w-6 h-6" />
               </div>
               <BlurText 
@@ -89,7 +89,7 @@ export default function InvestmentROI() {
                 className="text-3xl font-black"
               />
             </div>
-            <p className="text-slate-400 max-w-2xl leading-relaxed">
+            <p className="text-slate-700 max-w-2xl leading-relaxed font-medium">
               Project your wealth growth in India. Calculate the potential return on your investments based on initial capital, recurring SIPs, and market performance.
             </p>
           </div>
@@ -171,8 +171,8 @@ export default function InvestmentROI() {
               </div>
             </div>
 
-            <div className="flex flex-col justify-center items-center bg-slate-900 rounded-3xl p-8 text-center text-white">
-              <p className="text-slate-400 font-bold uppercase tracking-widest text-[10px] mb-2">Projected Portfolio Value</p>
+            <div className="flex flex-col justify-center items-center bg-slate-50 rounded-3xl p-8 text-center text-slate-900 border border-slate-100">
+              <p className="text-slate-500 font-bold uppercase tracking-widest text-[10px] mb-2">Projected Portfolio Value</p>
               <motion.p
                 key={finalValue}
                 initial={{ scale: 0.9, opacity: 0 }}
@@ -181,15 +181,15 @@ export default function InvestmentROI() {
               >
                 ₹{finalValue.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
               </motion.p>
-              <div className="w-full h-px bg-slate-800 mb-6" />
+              <div className="w-full h-px bg-slate-200 mb-6" />
               <div className="space-y-3 w-full text-xs font-bold uppercase tracking-wider">
-                <div className="flex justify-between text-slate-400">
+                <div className="flex justify-between text-slate-500">
                   <span>Total Invested</span>
-                  <span className="text-white">₹{totalInvested.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</span>
+                  <span className="text-slate-900">₹{totalInvested.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</span>
                 </div>
-                <div className="flex justify-between text-slate-400">
+                <div className="flex justify-between text-slate-500">
                   <span>Total Gain</span>
-                  <span className="text-emerald-400">
+                  <span className="text-emerald-600">
                     +₹{(finalValue - totalInvested).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
                   </span>
                 </div>

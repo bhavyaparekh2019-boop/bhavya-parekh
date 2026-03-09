@@ -84,7 +84,7 @@ export default function ConsultationModal() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={closeConsultationModal}
-            className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
+            className="absolute inset-0 bg-primary/20 backdrop-blur-sm"
           />
           
           <motion.div

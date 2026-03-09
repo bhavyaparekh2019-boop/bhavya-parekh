@@ -243,25 +243,25 @@ export default function TaxGuide() {
               </div>
             </section>
 
-            <section className="bg-slate-900 text-white p-10 rounded-[2.5rem]">
-              <h2 className="text-2xl font-bold mb-6">Advance Tax: Pay as You Earn</h2>
-              <p className="text-slate-400 mb-8">If your total tax liability for the year exceeds ₹10,000, you must pay tax in installments during the year.</p>
+            <section className="bg-primary/10 p-10 rounded-[2.5rem] border border-primary/20">
+              <h2 className="text-2xl font-bold text-slate-900 mb-6">Advance Tax: Pay as You Earn</h2>
+              <p className="text-slate-600 mb-8">If your total tax liability for the year exceeds ₹10,000, you must pay tax in installments during the year.</p>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div className="p-4 bg-white/5 rounded-xl border border-white/10">
+                <div className="p-4 bg-white/50 rounded-xl border border-primary/20">
                   <h5 className="text-primary font-bold text-xs mb-1">June 15</h5>
-                  <p className="text-[10px] text-slate-400">15% of total tax</p>
+                  <p className="text-[10px] text-slate-500">15% of total tax</p>
                 </div>
-                <div className="p-4 bg-white/5 rounded-xl border border-white/10">
+                <div className="p-4 bg-white/50 rounded-xl border border-primary/20">
                   <h5 className="text-primary font-bold text-xs mb-1">Sept 15</h5>
-                  <p className="text-[10px] text-slate-400">45% of total tax</p>
+                  <p className="text-[10px] text-slate-500">45% of total tax</p>
                 </div>
-                <div className="p-4 bg-white/5 rounded-xl border border-white/10">
+                <div className="p-4 bg-white/50 rounded-xl border border-primary/20">
                   <h5 className="text-primary font-bold text-xs mb-1">Dec 15</h5>
-                  <p className="text-[10px] text-slate-400">75% of total tax</p>
+                  <p className="text-[10px] text-slate-500">75% of total tax</p>
                 </div>
-                <div className="p-4 bg-white/5 rounded-xl border border-white/10">
+                <div className="p-4 bg-white/50 rounded-xl border border-primary/20">
                   <h5 className="text-primary font-bold text-xs mb-1">Mar 15</h5>
-                  <p className="text-[10px] text-slate-400">100% of total tax</p>
+                  <p className="text-[10px] text-slate-500">100% of total tax</p>
                 </div>
               </div>
             </section>
@@ -290,23 +290,23 @@ export default function TaxGuide() {
               </div>
             </section>
 
-            <section className="bg-slate-900 text-white p-10 rounded-[2.5rem] shadow-2xl">
-              <h2 className="text-2xl font-bold mb-8 flex items-center gap-3">
+            <section className="bg-primary/5 p-10 rounded-[2.5rem] border border-primary/20 shadow-sm">
+              <h2 className="text-2xl font-bold text-slate-900 mb-8 flex items-center gap-3">
                 <Home className="w-6 h-6 text-primary" />
                 Saving Tax on Property Sales (Section 54)
               </h2>
               <div className="space-y-6">
-                <p className="text-sm text-slate-400">
+                <p className="text-sm text-slate-600">
                   If you sell a residential property and make a capital gain, you can avoid paying tax if you reinvest the gain in another residential property.
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="p-5 bg-white/5 rounded-2xl border border-white/10">
+                  <div className="p-5 bg-white rounded-2xl border border-slate-200">
                     <h4 className="font-bold text-primary mb-2">Section 54</h4>
-                    <p className="text-xs text-slate-400">Reinvest in another house within 1 year before or 2 years after the sale (3 years for construction).</p>
+                    <p className="text-xs text-slate-500">Reinvest in another house within 1 year before or 2 years after the sale (3 years for construction).</p>
                   </div>
-                  <div className="p-5 bg-white/5 rounded-2xl border border-white/10">
+                  <div className="p-5 bg-white rounded-2xl border border-slate-200">
                     <h4 className="font-bold text-primary mb-2">Section 54EC</h4>
-                    <p className="text-xs text-slate-400">Invest the capital gains in specified bonds (NHAI/REC) within 6 months of sale. Max limit: ₹50 Lakh.</p>
+                    <p className="text-xs text-slate-500">Invest the capital gains in specified bonds (NHAI/REC) within 6 months of sale. Max limit: ₹50 Lakh.</p>
                   </div>
                 </div>
               </div>
@@ -394,30 +394,30 @@ export default function TaxGuide() {
             </section>
 
             {/* Old vs New Regime */}
-            <section className="bg-slate-900 text-white p-10 rounded-[2.5rem] shadow-2xl">
+            <section className="bg-primary p-10 rounded-[2.5rem] shadow-xl text-slate-900">
               <h2 className="text-2xl font-bold mb-8 flex items-center gap-3">
-                <Landmark className="w-6 h-6 text-primary" />
+                <Landmark className="w-6 h-6 text-white" />
                 Old vs. New Tax Regime
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                 <div className="space-y-4">
-                  <h4 className="text-lg font-bold text-primary">Old Regime</h4>
-                  <p className="text-sm text-slate-400 leading-relaxed">
+                  <h4 className="text-lg font-bold text-white">Old Regime</h4>
+                  <p className="text-sm text-slate-800 leading-relaxed font-medium">
                     Allows all deductions (80C, 80D, HRA, LTA, etc.). Best for individuals with high investments and home loans.
                   </p>
-                  <div className="p-4 bg-white/5 rounded-xl border border-white/10">
-                    <p className="text-xs font-bold text-slate-300 uppercase tracking-widest mb-1">Verdict</p>
-                    <p className="text-sm">Choose if deductions exceed ₹3.75 Lakh.</p>
+                  <div className="p-4 bg-white/30 rounded-xl border border-white/20">
+                    <p className="text-xs font-bold text-slate-900 uppercase tracking-widest mb-1">Verdict</p>
+                    <p className="text-sm font-bold">Choose if deductions exceed ₹3.75 Lakh.</p>
                   </div>
                 </div>
                 <div className="space-y-4">
-                  <h4 className="text-lg font-bold text-emerald-400">New Regime (Default)</h4>
-                  <p className="text-sm text-slate-400 leading-relaxed">
+                  <h4 className="text-lg font-bold text-white">New Regime (Default)</h4>
+                  <p className="text-sm text-slate-800 leading-relaxed font-medium">
                     Lower tax rates but no deductions (except Standard Deduction and NPS). Best for those who prefer simplicity and liquidity.
                   </p>
-                  <div className="p-4 bg-white/5 rounded-xl border border-white/10">
-                    <p className="text-xs font-bold text-slate-300 uppercase tracking-widest mb-1">Verdict</p>
-                    <p className="text-sm">Choose if you have minimal investments.</p>
+                  <div className="p-4 bg-white/30 rounded-xl border border-white/20">
+                    <p className="text-xs font-bold text-slate-900 uppercase tracking-widest mb-1">Verdict</p>
+                    <p className="text-sm font-bold">Choose if you have minimal investments.</p>
                   </div>
                 </div>
               </div>

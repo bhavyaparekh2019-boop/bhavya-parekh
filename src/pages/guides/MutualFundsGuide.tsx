@@ -314,45 +314,45 @@ export default function MutualFundsGuide() {
               />
             </section>
 
-            <section className="bg-slate-900 text-white p-10 rounded-[2.5rem] shadow-2xl">
-              <h2 className="text-2xl font-bold mb-8 flex items-center gap-3">
+            <section className="bg-primary/10 p-10 rounded-[2.5rem] border border-primary/20">
+              <h2 className="text-2xl font-bold text-slate-900 mb-8 flex items-center gap-3">
                 <Target className="w-6 h-6 text-primary" />
                 BHP's 5-Step Fund Selection Process
               </h2>
               <div className="space-y-6">
                 <div className="flex gap-4 items-start">
-                  <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-slate-900 font-bold shrink-0">1</div>
+                  <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white font-bold shrink-0">1</div>
                   <div>
-                    <h4 className="font-bold">Rolling Returns Analysis</h4>
-                    <p className="text-sm text-slate-400">We don't look at point-to-point returns. We analyze performance over multiple 3-year and 5-year periods to check consistency.</p>
+                    <h4 className="font-bold text-slate-900">Rolling Returns Analysis</h4>
+                    <p className="text-sm text-slate-600">We don't look at point-to-point returns. We analyze performance over multiple 3-year and 5-year periods to check consistency.</p>
                   </div>
                 </div>
                 <div className="flex gap-4 items-start">
-                  <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-slate-900 font-bold shrink-0">2</div>
+                  <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white font-bold shrink-0">2</div>
                   <div>
-                    <h4 className="font-bold">Fund Manager Track Record</h4>
-                    <p className="text-sm text-slate-400">We evaluate the manager's experience, investment philosophy, and performance across different market cycles.</p>
+                    <h4 className="font-bold text-slate-900">Fund Manager Track Record</h4>
+                    <p className="text-sm text-slate-600">We evaluate the manager's experience, investment philosophy, and performance across different market cycles.</p>
                   </div>
                 </div>
                 <div className="flex gap-4 items-start">
-                  <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-slate-900 font-bold shrink-0">3</div>
+                  <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white font-bold shrink-0">3</div>
                   <div>
-                    <h4 className="font-bold">Portfolio Quality Check</h4>
-                    <p className="text-sm text-slate-400">Deep dive into the underlying stocks/bonds. We look for high-quality companies with strong balance sheets.</p>
+                    <h4 className="font-bold text-slate-900">Portfolio Quality Check</h4>
+                    <p className="text-sm text-slate-600">Deep dive into the underlying stocks/bonds. We look for high-quality companies with strong balance sheets.</p>
                   </div>
                 </div>
                 <div className="flex gap-4 items-start">
-                  <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-slate-900 font-bold shrink-0">4</div>
+                  <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white font-bold shrink-0">4</div>
                   <div>
-                    <h4 className="font-bold">Risk-Adjusted Returns</h4>
-                    <p className="text-sm text-slate-400">Using ratios like Sharpe and Sortino to ensure the fund isn't taking excessive risk for the returns generated.</p>
+                    <h4 className="font-bold text-slate-900">Risk-Adjusted Returns</h4>
+                    <p className="text-sm text-slate-600">Using ratios like Sharpe and Sortino to ensure the fund isn't taking excessive risk for the returns generated.</p>
                   </div>
                 </div>
                 <div className="flex gap-4 items-start">
-                  <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-slate-900 font-bold shrink-0">5</div>
+                  <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white font-bold shrink-0">5</div>
                   <div>
-                    <h4 className="font-bold">Expense Ratio & Exit Load</h4>
-                    <p className="text-sm text-slate-400">Ensuring the costs are reasonable and aligned with the fund's strategy.</p>
+                    <h4 className="font-bold text-slate-900">Expense Ratio & Exit Load</h4>
+                    <p className="text-sm text-slate-600">Ensuring the costs are reasonable and aligned with the fund's strategy.</p>
                   </div>
                 </div>
               </div>
@@ -421,22 +421,22 @@ export default function MutualFundsGuide() {
             </section>
 
             {/* Direct vs Regular */}
-            <section className="bg-indigo-900 text-white p-10 rounded-[2.5rem] shadow-xl">
+            <section className="bg-primary/20 p-10 rounded-[2.5rem] border border-primary/30">
               <div className="flex items-center gap-4 mb-6">
                 <ShieldCheck className="w-8 h-8 text-primary" />
-                <h2 className="text-2xl font-bold">Direct vs. Regular Plans</h2>
+                <h2 className="text-2xl font-bold text-slate-900">Direct vs. Regular Plans</h2>
               </div>
-              <p className="text-indigo-100 mb-8 leading-relaxed">
+              <p className="text-slate-700 mb-8 leading-relaxed">
                 Every mutual fund has two versions. Choosing the right one can save you lakhs of rupees over 20 years.
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="p-6 bg-white/5 rounded-2xl border border-white/10">
+                <div className="p-6 bg-white/50 rounded-2xl border border-primary/20">
                   <h4 className="font-bold mb-2 text-primary">Direct Plan</h4>
-                  <p className="text-sm text-indigo-200">Bought directly from the AMC. No commissions paid to brokers. Lower expense ratio = Higher returns.</p>
+                  <p className="text-sm text-slate-600">Bought directly from the AMC. No commissions paid to brokers. Lower expense ratio = Higher returns.</p>
                 </div>
-                <div className="p-6 bg-white/5 rounded-2xl border border-white/10">
-                  <h4 className="font-bold mb-2 text-slate-300">Regular Plan</h4>
-                  <p className="text-sm text-indigo-200">Bought through a distributor. Includes commission. Higher expense ratio = Slightly lower returns.</p>
+                <div className="p-6 bg-white/50 rounded-2xl border border-primary/20">
+                  <h4 className="font-bold mb-2 text-slate-500">Regular Plan</h4>
+                  <p className="text-sm text-slate-600">Bought through a distributor. Includes commission. Higher expense ratio = Slightly lower returns.</p>
                 </div>
               </div>
             </section>
@@ -469,15 +469,15 @@ export default function MutualFundsGuide() {
               </div>
             </div>
 
-            <div className="bg-slate-900 text-white p-8 rounded-[2rem]">
-              <HelpCircle className="w-10 h-10 text-primary mb-6" />
+            <div className="bg-primary text-slate-900 p-8 rounded-[2rem]">
+              <HelpCircle className="w-10 h-10 text-white mb-6" />
               <h3 className="text-xl font-bold mb-4">How to Choose?</h3>
-              <p className="text-sm text-slate-400 mb-6 leading-relaxed">
+              <p className="text-slate-800 text-sm mb-6 leading-relaxed font-medium">
                 Selecting a fund based on past returns alone is a mistake. Look at the fund manager's track record, risk ratios (Alpha/Beta), and consistency across market cycles.
               </p>
               <button 
                 onClick={() => openConsultationModal('Mutual Funds')}
-                className="w-full bg-primary text-slate-900 font-bold py-4 rounded-2xl text-sm hover:brightness-110 transition-all flex items-center justify-center gap-2"
+                className="w-full bg-white text-primary font-bold py-4 rounded-2xl text-sm hover:brightness-110 transition-all flex items-center justify-center gap-2"
               >
                 Get Personalized Advice <ArrowRight className="w-4 h-4" />
               </button>

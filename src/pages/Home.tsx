@@ -212,9 +212,17 @@ export default function Home() {
       }
     } catch (error: any) {
       console.error('Smart Search Error:', error);
+      let concise = "Search error occurred.";
+      let full = error.message || "Sorry, I encountered an error while processing your request. Please try again.";
+      
+      if (error.message?.includes('quota') || error.message?.includes('429')) {
+        concise = "Free usage limit reached.";
+        full = "I've reached my free usage limit for the moment. Please try again in a few minutes or check back later.";
+      }
+
       setAiResponse({ 
-        concise: "Search error occurred.", 
-        full: error.message || "Sorry, I encountered an error while processing your request. Please try again.",
+        concise, 
+        full,
         relatedGuides: KNOWLEDGE_CENTER_ITEMS.filter(item => 
           item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
           item.description.toLowerCase().includes(searchQuery.toLowerCase())
@@ -317,13 +325,13 @@ export default function Home() {
       </section>
 
       {/* Market Ticker */}
-      <div className="bg-slate-900 overflow-hidden py-4 border-y border-slate-800">
+      <div className="bg-primary overflow-hidden py-4 border-y border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-8 animate-marquee whitespace-nowrap">
-            <Link to="/market-analysis" className="flex items-center gap-2 hover:text-primary transition-colors group">
-              <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest group-hover:text-primary">Nifty 50</span>
+            <Link to="/market-analysis" className="flex items-center gap-2 hover:text-white transition-colors group">
+              <span className="text-[10px] font-black text-white/50 uppercase tracking-widest group-hover:text-white">Nifty 50</span>
               <span className="text-sm font-bold text-white">24,320.45</span>
-              <span className="text-xs font-bold text-emerald-500">+1.24%</span>
+              <span className="text-xs font-bold text-emerald-300">+1.24%</span>
             </Link>
             <Link to="/market-analysis" className="flex items-center gap-2 hover:text-primary transition-colors group">
               <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest group-hover:text-primary">Sensex</span>
@@ -362,39 +370,39 @@ export default function Home() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="bg-slate-900 text-white overflow-hidden"
+            className="bg-primary text-slate-900 overflow-hidden"
           >
             <div className="max-w-7xl mx-auto px-4 py-12">
               <div className="flex items-start gap-6">
-                <div className="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center text-slate-900 shrink-0 shadow-lg shadow-primary/20">
+                <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-primary shrink-0 shadow-lg shadow-primary/20">
                   <Info className="w-6 h-6" />
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-xl font-black text-primary uppercase tracking-widest">AI Smart Insight</h3>
+                    <h3 className="text-xl font-black text-slate-900 uppercase tracking-widest">AI Smart Insight</h3>
                     <button 
                       onClick={() => setAiResponse(null)}
-                      className="text-slate-400 hover:text-white transition-colors text-xs font-bold uppercase tracking-widest"
+                      className="text-slate-900/70 hover:text-slate-900 transition-colors text-xs font-bold uppercase tracking-widest"
                     >
                       Close
                     </button>
                   </div>
-                  <div className="prose prose-invert max-w-none prose-p:text-slate-300 prose-p:leading-relaxed text-lg">
-                    <p className="font-bold text-white mb-4">{aiResponse.concise}</p>
+                  <div className="prose prose-slate max-w-none prose-p:text-slate-800 prose-p:leading-relaxed text-lg">
+                    <p className="font-bold text-slate-900 mb-4">{aiResponse.concise}</p>
                     
                     {showFullAiResponse ? (
                       <motion.div
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="mt-6 pt-6 border-t border-slate-800"
+                        className="mt-6 pt-6 border-t border-slate-900/10"
                       >
-                        <p className="text-slate-300">{aiResponse.full}</p>
+                        <p className="text-slate-800">{aiResponse.full}</p>
                         
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
                           {/* Sources */}
                           {aiResponse.sources && aiResponse.sources.length > 0 && (
                             <div>
-                              <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4">Verified Sources</p>
+                              <p className="text-[10px] font-black text-slate-600 uppercase tracking-widest mb-4">Verified Sources</p>
                               <div className="space-y-2">
                                 {aiResponse.sources.map((source, idx) => (
                                   <a 
@@ -402,10 +410,10 @@ export default function Home() {
                                     href={source.uri}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="flex items-center justify-between p-3 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-all group"
+                                    className="flex items-center justify-between p-3 bg-white/20 border border-slate-900/10 rounded-xl hover:bg-white/30 transition-all group"
                                   >
-                                    <span className="text-xs font-bold text-slate-400 truncate pr-4">{source.title}</span>
-                                    <ArrowRight className="w-3 h-3 text-slate-600 group-hover:text-primary transition-colors shrink-0" />
+                                    <span className="text-xs font-bold text-slate-700 truncate pr-4">{source.title}</span>
+                                    <ArrowRight className="w-3 h-3 text-slate-600 group-hover:text-slate-900 transition-colors shrink-0" />
                                   </a>
                                 ))}
                               </div>
@@ -415,22 +423,22 @@ export default function Home() {
                           {/* Related Guides */}
                           {aiResponse.relatedGuides && aiResponse.relatedGuides.length > 0 && (
                             <div>
-                              <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4">Related Guides</p>
+                              <p className="text-[10px] font-black text-slate-600 uppercase tracking-widest mb-4">Related Guides</p>
                               <div className="space-y-2">
                                 {aiResponse.relatedGuides.map((guide, idx) => (
                                   <Link 
                                     key={idx}
                                     to={guide.url}
-                                    className="flex items-center gap-3 p-3 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-all group"
+                                    className="flex items-center gap-3 p-3 bg-white/20 border border-slate-900/10 rounded-xl hover:bg-white/30 transition-all group"
                                   >
-                                    <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                                    <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center text-slate-900 shrink-0">
                                       <guide.icon className="w-4 h-4" />
                                     </div>
                                     <div className="flex-1 min-w-0">
-                                      <p className="text-xs font-bold text-white truncate">{guide.title}</p>
-                                      <p className="text-[10px] text-slate-500 truncate">{guide.description}</p>
+                                      <p className="text-xs font-bold text-slate-900 truncate">{guide.title}</p>
+                                      <p className="text-[10px] text-slate-700 truncate">{guide.description}</p>
                                     </div>
-                                    <ArrowRight className="w-3 h-3 text-slate-600 group-hover:text-primary transition-colors shrink-0" />
+                                    <ArrowRight className="w-3 h-3 text-slate-600 group-hover:text-slate-900 transition-colors shrink-0" />
                                   </Link>
                                 ))}
                               </div>
@@ -440,14 +448,14 @@ export default function Home() {
 
                         {/* Related Articles */}
                         {aiResponse.relatedArticles && aiResponse.relatedArticles.length > 0 && (
-                          <div className="mt-8 pt-8 border-t border-slate-800">
-                            <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4">Related Articles from Knowledge Center</p>
+                          <div className="mt-8 pt-8 border-t border-slate-900/10">
+                            <p className="text-[10px] font-black text-slate-600 uppercase tracking-widest mb-4">Related Articles from Knowledge Center</p>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                               {aiResponse.relatedArticles.map((article) => (
                                 <Link 
                                   key={article.id}
                                   to={`/article/${article.id}`}
-                                  className="group block p-4 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-all"
+                                  className="group block p-4 bg-white/20 border border-slate-900/10 rounded-2xl hover:bg-white/30 transition-all"
                                 >
                                   <div className="aspect-video rounded-xl overflow-hidden mb-3">
                                     <img 
@@ -457,8 +465,8 @@ export default function Home() {
                                       referrerPolicy="no-referrer"
                                     />
                                   </div>
-                                  <h4 className="text-sm font-bold text-white line-clamp-2 group-hover:text-primary transition-colors mb-2">{article.title}</h4>
-                                  <div className="flex items-center justify-between text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                                  <h4 className="text-sm font-bold text-slate-900 line-clamp-2 group-hover:text-slate-900 transition-colors mb-2">{article.title}</h4>
+                                  <div className="flex items-center justify-between text-[10px] font-bold text-slate-700 uppercase tracking-widest">
                                     <span>{article.category}</span>
                                     <span>{article.readTime}</span>
                                   </div>
@@ -470,7 +478,7 @@ export default function Home() {
 
                         <button 
                           onClick={() => setShowFullAiResponse(false)}
-                          className="mt-8 text-primary text-sm font-bold hover:underline uppercase tracking-widest"
+                          className="mt-8 text-slate-900 text-sm font-bold hover:underline uppercase tracking-widest"
                         >
                           Show Less
                         </button>
@@ -478,7 +486,7 @@ export default function Home() {
                     ) : (
                       <button 
                         onClick={() => setShowFullAiResponse(true)}
-                        className="mt-2 text-primary text-sm font-bold hover:underline uppercase tracking-widest"
+                        className="mt-2 text-slate-900 text-sm font-bold hover:underline uppercase tracking-widest"
                       >
                         See Whole Result
                       </button>
@@ -592,7 +600,7 @@ export default function Home() {
               </div>
               <Link 
                 to="/market-analysis"
-                className="inline-flex items-center gap-2 bg-slate-900 text-white px-10 py-4 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-slate-800 transition-all shadow-xl"
+                className="inline-flex items-center gap-2 bg-primary text-slate-900 px-10 py-4 rounded-2xl font-black text-sm uppercase tracking-widest hover:brightness-110 transition-all shadow-xl shadow-primary/20"
               >
                 View Full Analysis <ArrowRight className="w-4 h-4" />
               </Link>
@@ -634,12 +642,12 @@ export default function Home() {
                   ))}
                 </div>
                 
-                <div className="mt-8 p-4 bg-slate-900 rounded-2xl text-white">
+                <div className="mt-8 p-4 bg-primary/10 rounded-2xl text-slate-900">
                   <div className="flex items-center gap-2 mb-2">
                     <Sparkles className="w-3 h-3 text-primary" />
                     <span className="text-[8px] font-black text-primary uppercase tracking-widest">AI Pulse</span>
                   </div>
-                  <p className="text-xs text-slate-300 leading-relaxed italic">
+                  <p className="text-xs text-slate-600 leading-relaxed italic">
                     "Market sentiment remains cautiously bullish as domestic institutional buying offsets global volatility. Key resistance at 24,500."
                   </p>
                 </div>

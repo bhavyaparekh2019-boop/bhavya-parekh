@@ -168,24 +168,24 @@ export default function SIPCalculator() {
 
           {/* Results Sidebar */}
           <div className="space-y-8">
-            <div className="bg-slate-900 text-white p-10 rounded-[2.5rem] shadow-2xl sticky top-32">
+            <div className="bg-primary text-slate-900 p-10 rounded-[2.5rem] shadow-2xl sticky top-32">
               <h3 className="text-xl font-bold mb-8 flex items-center gap-2">
-                <TrendingUp className="w-6 h-6 text-primary" />
+                <TrendingUp className="w-6 h-6 text-slate-900" />
                 Investment Summary
               </h3>
               
               <div className="space-y-8">
                 <div>
-                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Invested Amount</p>
+                  <p className="text-[10px] font-black text-slate-700 uppercase tracking-widest mb-1">Invested Amount</p>
                   <p className="text-2xl font-bold">{formatCurrency(results.investedAmount)}</p>
                 </div>
                 <div>
-                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Est. Returns</p>
-                  <p className="text-2xl font-bold text-emerald-400">+{formatCurrency(results.estimatedReturns)}</p>
+                  <p className="text-[10px] font-black text-slate-700 uppercase tracking-widest mb-1">Est. Returns</p>
+                  <p className="text-2xl font-bold text-emerald-700">+{formatCurrency(results.estimatedReturns)}</p>
                 </div>
-                <div className="pt-8 border-t border-white/10">
-                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Value</p>
-                  <p className="text-4xl font-black text-primary">{formatCurrency(results.totalValue)}</p>
+                <div className="pt-8 border-t border-slate-900/10">
+                  <p className="text-[10px] font-black text-slate-700 uppercase tracking-widest mb-1">Total Value</p>
+                  <p className="text-4xl font-black text-slate-900">{formatCurrency(results.totalValue)}</p>
                 </div>
               </div>
 

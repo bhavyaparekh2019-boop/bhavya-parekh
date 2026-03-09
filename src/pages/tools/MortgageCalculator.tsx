@@ -85,9 +85,9 @@ export default function MortgageCalculator() {
         </Link>
 
         <div className="bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden">
-          <div className="bg-slate-900 p-8 md:p-12 text-white">
+          <div className="bg-primary p-8 md:p-12 text-slate-900">
             <div className="flex items-center gap-4 mb-6">
-              <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center text-slate-900">
+              <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-primary shadow-sm">
                 <Calculator className="w-6 h-6" />
               </div>
               <BlurText 
@@ -96,7 +96,7 @@ export default function MortgageCalculator() {
                 className="text-3xl font-black"
               />
             </div>
-            <p className="text-slate-400 max-w-2xl leading-relaxed">
+            <p className="text-slate-700 max-w-2xl leading-relaxed font-medium">
               Plan your home purchase in India with precision. Estimate your monthly EMIs based on current interest rates and loan terms.
             </p>
           </div>
