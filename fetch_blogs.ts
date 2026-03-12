@@ -14,15 +14,20 @@ async function fetchRealBlogs() {
     - Mutual Funds
     - Stocks
     - Tax
+    - Market Analysis
+    - Personal Finance Tips
+    - Cryptocurrency & DeFi
+    - Real Estate Investing
+    - Financial Planning & Budgeting
 
-    For each category, provide 2-3 of the best recent articles.
+    For each category, provide 3-4 of the best recent articles from the last 6 months.
     Return the results as a JSON array of objects matching this TypeScript interface:
     interface Article {
       id: string;
       title: string;
       excerpt: string;
       content: string; // A detailed summary or the first few paragraphs (Markdown/HTML)
-      category: string; // Must be one of: 'Wealth Management', 'Market Trends', 'Retirement Tips', 'Corporate Finance', 'Insurance', 'Investment', 'Mutual Funds', 'Stocks', 'Tax'
+      category: string; // Must be one of the categories listed above
       author: string;
       date: string;
       readTime: string;

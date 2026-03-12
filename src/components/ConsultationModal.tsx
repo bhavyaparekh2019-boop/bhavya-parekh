@@ -24,6 +24,7 @@ export default function ConsultationModal() {
     phone: '',
     service: initialService || services[0]
   });
+  const [successNote, setSuccessNote] = useState<string | null>(null);
 
   // Update service if initialService changes
   React.useEffect(() => {
@@ -56,11 +57,13 @@ export default function ConsultationModal() {
 
       if (response.ok) {
         setIsSuccess(true);
+        setSuccessNote(data.note || null);
         setTimeout(() => {
           setIsSuccess(false);
+          setSuccessNote(null);
           closeConsultationModal();
           setFormData({ name: '', email: '', phone: '', service: services[0] });
-        }, 3000);
+        }, 5000);
       } else {
         const errorMsg = data.details ? `${data.error}: ${data.details}` : (data.error || 'Failed to submit request. Please check your connection.');
         setError(errorMsg);
@@ -107,7 +110,12 @@ export default function ConsultationModal() {
                     <CheckCircle2 className="w-10 h-10" />
                   </div>
                   <h3 className="text-2xl font-black text-slate-900 mb-2">Request Received!</h3>
-                  <p className="text-slate-500">Our expert advisor will contact you shortly.</p>
+                  <p className="text-slate-500 mb-4">Our expert advisor will contact you shortly.</p>
+                  {successNote && (
+                    <div className="p-3 bg-amber-50 border border-amber-100 rounded-xl text-amber-700 text-[10px] font-bold uppercase tracking-wider max-w-xs mx-auto">
+                      Note: {successNote}
+                    </div>
+                  )}
                 </div>
               ) : (
                 <>

@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { Search, ChevronLeft, ChevronRight, Loader2, TrendingUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ARTICLES, CATEGORIES } from '@/src/constants';
+import Fuse from 'fuse.js';
 import ArticleCard from '@/src/components/ArticleCard';
 import Sidebar from '@/src/components/Sidebar';
 import BlurText from '@/src/components/BlurText';
@@ -13,11 +14,20 @@ export default function Blogs() {
   const [activeCategory, setActiveCategory] = useState(CATEGORIES[0]);
 
   const filteredArticles = useMemo(() => {
-    return ARTICLES.filter((article) => {
-      const matchesSearch = article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          article.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesCategory = activeCategory === 'All' || article.category === activeCategory;
-      return matchesSearch && matchesCategory;
+    let results = ARTICLES;
+
+    if (searchQuery.trim()) {
+      const fuse = new Fuse(ARTICLES, {
+        keys: ['title', 'excerpt', 'keywords'],
+        threshold: 0.4,
+        distance: 100,
+      });
+      results = fuse.search(searchQuery).map(result => result.item);
+    }
+
+    return results.filter((article) => {
+      const matchesCategory = activeCategory === 'All Topics' || article.category === activeCategory;
+      return matchesCategory;
     });
   }, [searchQuery, activeCategory]);
 

@@ -107,6 +107,27 @@ const commitments = [
   }
 ];
 
+const testimonials = [
+  {
+    name: 'Rajesh Kumar',
+    role: 'CEO, TechFlow Solutions',
+    quote: 'BHP Finance transformed our corporate investment strategy. Their transparency and expertise are unmatched in the Indian market.',
+    image: 'https://i.pravatar.cc/150?u=rajesh'
+  },
+  {
+    name: 'Priya Sharma',
+    role: 'Independent Consultant',
+    quote: 'The retirement planning advice I received was life-changing. I now have a clear roadmap for my future with complete peace of mind.',
+    image: 'https://i.pravatar.cc/150?u=priya'
+  },
+  {
+    name: 'Amit Patel',
+    role: 'Business Owner',
+    quote: 'Efficient service and honest guidance. They helped me navigate complex tax laws and optimize my business finances seamlessly.',
+    image: 'https://i.pravatar.cc/150?u=amit'
+  }
+];
+
 export default function About() {
   const { openConsultationModal } = useModal();
   return (
@@ -285,6 +306,47 @@ export default function About() {
                 </p>
               </div>
             </div>
+          </div>
+        </section>
+
+        {/* Testimonials */}
+        <section className="mt-24">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-5xl font-black text-slate-900 mb-4">What Our Clients Say</h2>
+            <p className="text-slate-500 max-w-2xl mx-auto">Real stories from individuals and businesses who trust BHP Finance.</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {testimonials.map((t, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.1 }}
+                className="bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-xl shadow-slate-200/50 flex flex-col h-full"
+              >
+                <div className="mb-6 text-primary">
+                  <HeartHandshake className="w-10 h-10" />
+                </div>
+                <p className="text-slate-600 italic mb-8 flex-grow leading-relaxed">
+                  "{t.quote}"
+                </p>
+                <div className="flex items-center gap-4 pt-6 border-t border-slate-100">
+                  <div className="w-12 h-12 rounded-full overflow-hidden bg-slate-100 shrink-0">
+                    <img 
+                      src={t.image} 
+                      alt={t.name} 
+                      className="w-full h-full object-cover"
+                      referrerPolicy="no-referrer"
+                    />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-slate-900 text-sm">{t.name}</h4>
+                    <p className="text-slate-500 text-[10px] font-black uppercase tracking-widest">{t.role}</p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
           </div>
         </section>
 

@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Search, Menu, X, User, ChevronDown, Loader2, Info, ArrowRight, Globe, Sparkles, Sun, Moon } from 'lucide-react';
+import { Search, Menu, X, User, ChevronDown, Loader2, Info, ArrowRight, Globe, Sparkles, Sun, Moon, BookOpen } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '@/src/lib/utils';
 import { useModal } from '@/src/context/ModalContext';
 import { GoogleGenAI } from "@google/genai";
+import { ARTICLES, Article } from '@/src/constants';
+import Fuse from 'fuse.js';
 
 import Logo from './Logo';
 
@@ -15,7 +17,12 @@ export default function Navbar() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);
-  const [aiResponse, setAiResponse] = useState<{ concise: string; full: string; sources?: { uri: string; title: string }[] } | null>(null);
+  const [aiResponse, setAiResponse] = useState<{ 
+    concise: string; 
+    full: string; 
+    sources?: { uri: string; title: string }[];
+    relevantArticles?: Article[];
+  } | null>(null);
   const location = useLocation();
 
   useEffect(() => {
@@ -33,26 +40,45 @@ export default function Navbar() {
     return () => window.removeEventListener('keydown', handleEsc);
   }, []);
 
-  const handleGlobalSearch = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!searchQuery.trim()) return;
+  const handleGlobalSearch = async (e?: React.FormEvent, overrideQuery?: string) => {
+    if (e) e.preventDefault();
+    const query = overrideQuery || searchQuery;
+    if (!query.trim()) return;
 
     setIsSearching(true);
     setAiResponse(null);
+    if (!overrideQuery) setSearchQuery(query);
+
+    // Local search for articles using fuzzy search
+    const fuse = new Fuse(ARTICLES, {
+      keys: ['title', 'excerpt', 'keywords', 'category'],
+      threshold: 0.4,
+      distance: 100,
+    });
+    const localResults = fuse.search(query).map(result => result.item).slice(0, 3);
 
     try {
       const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
       const response = await ai.models.generateContent({
         model: "gemini-3-flash-preview",
-        contents: `The user is asking: "${searchQuery}". Provide a professional, up-to-date financial answer tailored to the Indian market context. Use Google Search to ensure the information is current (March 2026).`,
+        contents: `The user is asking: "${query}". 
+        
+        Provide a professional, authoritative financial answer tailored to the Indian market context. 
+        Use Google Search to ensure the information is accurate as of March 2026.
+        
+        If the query is about specific stocks, mutual funds, or tax laws (like Section 80C), provide the most recent data available.
+        
+        Format your response as JSON with:
+        - "concise": A punchy, one-sentence direct answer that summarizes the core fact.
+        - "full": A detailed, multi-paragraph explanation with context, data points, and actionable advice.`,
         config: {
           tools: [{ googleSearch: {} }],
           responseMimeType: "application/json",
           responseSchema: {
             type: "OBJECT",
             properties: {
-              concise: { type: "STRING", description: "A one-sentence direct answer." },
-              full: { type: "STRING", description: "A detailed explanation with data and context." }
+              concise: { type: "STRING" },
+              full: { type: "STRING" }
             },
             required: ["concise", "full"]
           }
@@ -68,7 +94,7 @@ export default function Navbar() {
         title: chunk.web?.title
       })).filter((s: any) => s.uri && s.title);
 
-      setAiResponse({ ...data, sources });
+      setAiResponse({ ...data, sources, relevantArticles: localResults });
     } catch (error: any) {
       console.error('Global Search Error:', error);
       let concise = "I encountered an error while searching.";
@@ -79,7 +105,7 @@ export default function Navbar() {
         full = "I've reached my free usage limit for the moment. Please try again in a few minutes or check back later.";
       }
       
-      setAiResponse({ concise, full });
+      setAiResponse({ concise, full, relevantArticles: localResults });
     } finally {
       setIsSearching(false);
     }
@@ -91,13 +117,14 @@ export default function Navbar() {
     { name: 'Retirement', href: '/guides/retirement' },
     { name: 'Tax', href: '/guides/tax' },
     { name: 'Mutual Funds', href: '/guides/mutual-funds' },
-    { name: 'Stocks', href: '/guides/stocks' },
+    { name: 'Stock Market Basics', href: '/guides/stocks' },
     { name: 'Market Analysis', href: '/market-analysis' },
     { name: 'Blogs', href: '/insights' },
   ];
 
   const toolLinks = [
     { name: 'SIP Calculator', href: '/tools/sip' },
+    { name: 'Lumpsum Calculator', href: '/tools/lumpsum' },
     { name: 'Home Loan EMI', href: '/tools/mortgage' },
     { name: 'Retirement Planner', href: '/tools/retirement' },
     { name: 'Insurance Needs', href: '/tools/insurance' },
@@ -257,14 +284,50 @@ export default function Navbar() {
                     className="space-y-8 pb-20"
                   >
                     <div className="bg-white/5 border border-white/10 p-8 rounded-[2.5rem]">
-                      <div className="flex items-center gap-3 mb-6">
-                        <Info className="w-5 h-5 text-primary" />
-                        <span className="text-[10px] font-black text-primary uppercase tracking-widest">AI Summary</span>
+                      <div className="flex items-center justify-between mb-6">
+                        <div className="flex items-center gap-3">
+                          <Info className="w-5 h-5 text-primary" />
+                          <span className="text-[10px] font-black text-primary uppercase tracking-widest">AI Summary</span>
+                        </div>
+                        <div className="bg-primary/20 text-primary px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest border border-primary/20">
+                          Quick Answer
+                        </div>
                       </div>
                       <p className="text-2xl font-bold text-white leading-tight mb-6">{aiResponse.concise}</p>
                       <div className="h-px bg-white/10 mb-6" />
                       <p className="text-slate-300 leading-relaxed text-lg">{aiResponse.full}</p>
                     </div>
+
+                    {aiResponse.relevantArticles && aiResponse.relevantArticles.length > 0 && (
+                      <div className="space-y-4">
+                        <div className="flex items-center gap-3">
+                          <BookOpen className="w-5 h-5 text-primary" />
+                          <span className="text-[10px] font-black text-primary uppercase tracking-widest">Relevant Articles from BHP Finance</span>
+                        </div>
+                        <div className="grid grid-cols-1 gap-4">
+                          {aiResponse.relevantArticles.map((article) => (
+                            <Link 
+                              key={article.id}
+                              to={`/article/${article.id}`}
+                              onClick={() => setIsSearchOpen(false)}
+                              className="flex flex-col md:flex-row gap-6 p-6 bg-white/5 border border-white/10 rounded-[2rem] hover:bg-white/10 transition-all group"
+                            >
+                              <div className="md:w-32 h-24 rounded-2xl overflow-hidden shrink-0">
+                                <img src={article.image} alt={article.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                              </div>
+                              <div className="flex flex-col justify-center">
+                                <div className="flex items-center gap-3 mb-2">
+                                  <span className="text-[8px] font-black text-primary uppercase tracking-widest px-2 py-0.5 bg-primary/10 rounded-full">{article.category}</span>
+                                  <span className="text-[8px] font-bold text-slate-500 uppercase tracking-widest">{article.readTime}</span>
+                                </div>
+                                <h4 className="text-lg font-bold text-white group-hover:text-primary transition-colors line-clamp-1">{article.title}</h4>
+                                <p className="text-sm text-slate-400 line-clamp-2 mt-1">{article.excerpt}</p>
+                              </div>
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    )}
 
                     {aiResponse.sources && aiResponse.sources.length > 0 && (
                       <div className="space-y-4">
@@ -288,6 +351,11 @@ export default function Navbar() {
                         </div>
                       </div>
                     )}
+
+                    <div className="pt-10 flex items-center justify-center gap-2 text-[10px] text-slate-500 font-bold uppercase tracking-[0.2em]">
+                      <Sparkles className="w-3 h-3" />
+                      Powered by Gemini 3 Flash • Real-time Financial Intelligence
+                    </div>
                   </motion.div>
                 ) : (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -302,10 +370,7 @@ export default function Navbar() {
                     ].map((topic) => (
                       <button
                         key={topic}
-                        onClick={() => {
-                          setSearchQuery(topic);
-                          // Trigger search manually would be better but let's just set it
-                        }}
+                        onClick={() => handleGlobalSearch(undefined, topic)}
                         className="text-left p-6 bg-white/5 border border-white/10 rounded-[2rem] hover:bg-white/10 transition-all group"
                       >
                         <p className="text-slate-300 font-bold group-hover:text-white transition-colors">{topic}</p>

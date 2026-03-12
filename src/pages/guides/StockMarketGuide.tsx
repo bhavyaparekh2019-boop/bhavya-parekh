@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { BarChart2, TrendingUp, Activity, BookOpen, Globe, ArrowRight, CheckCircle2, AlertTriangle } from 'lucide-react';
+import { BarChart2, TrendingUp, Activity, BookOpen, Globe, ArrowRight, CheckCircle2, AlertTriangle, PieChart, Zap, Target, Coins, RefreshCcw } from 'lucide-react';
 import BlurText from '@/src/components/BlurText';
 import ChromaGrid from '@/src/components/ChromaGrid';
 import { useModal } from '@/src/context/ModalContext';
@@ -77,9 +77,9 @@ export default function StockMarketGuide() {
                 Knowledge Base
               </span>
               <BlurText 
-                text="Stock Market Fundamentals"
+                text="Stock Market Investing Basics"
                 centered={false}
-                highlight="Fundamentals"
+                highlight="Investing Basics"
                 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 tracking-tight"
               />
               <p className="text-xl text-slate-600 leading-relaxed">
@@ -132,47 +132,175 @@ export default function StockMarketGuide() {
               />
             </section>
 
+            {/* Investment Strategies Section */}
+            <section className="bg-white p-10 rounded-[2.5rem] border border-slate-200 shadow-sm">
+              <h2 className="text-2xl font-bold text-slate-900 mb-8 flex items-center gap-3">
+                <Target className="w-6 h-6 text-primary" />
+                Popular Investment Strategies
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                      <TrendingUp className="w-5 h-5" />
+                    </div>
+                    <h4 className="font-bold text-slate-900">Systematic Investment Plan (SIP)</h4>
+                  </div>
+                  <p className="text-sm text-slate-600 mb-4">Investing a fixed amount at regular intervals (monthly/quarterly). Best for long-term wealth creation and salaried individuals.</p>
+                  <ul className="text-xs text-slate-500 space-y-2">
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="w-3 h-3 text-emerald-500 mt-0.5 shrink-0" />
+                      <span>Rupee Cost Averaging: Buy more when prices are low.</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="w-3 h-3 text-emerald-500 mt-0.5 shrink-0" />
+                      <span>Disciplined Investing: Automates your savings.</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="w-3 h-3 text-emerald-500 mt-0.5 shrink-0" />
+                      <span>Power of Compounding: Small amounts grow significantly.</span>
+                    </li>
+                  </ul>
+                </div>
+                <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                      <Coins className="w-5 h-5" />
+                    </div>
+                    <h4 className="font-bold text-slate-900">Lumpsum Investing</h4>
+                  </div>
+                  <p className="text-sm text-slate-600 mb-4">Investing a large sum of money at once. Ideal when you have surplus cash or during market corrections.</p>
+                  <ul className="text-xs text-slate-500 space-y-2">
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="w-3 h-3 text-emerald-500 mt-0.5 shrink-0" />
+                      <span>Immediate Market Exposure: Full amount starts earning.</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="w-3 h-3 text-emerald-500 mt-0.5 shrink-0" />
+                      <span>Lower Transaction Costs: Fewer buy orders.</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="w-3 h-3 text-emerald-500 mt-0.5 shrink-0" />
+                      <span>High Potential: Best for undervalued markets.</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </section>
+
             {/* Analysis Section */}
             <section className="bg-white p-10 rounded-[2.5rem] border border-slate-200 shadow-sm">
               <h2 className="text-2xl font-bold text-slate-900 mb-8 flex items-center gap-3">
                 <BookOpen className="w-6 h-6 text-primary" />
-                How to Analyze Stocks
+                Fundamental Analysis: The Bedrock of Investing
               </h2>
+              <div className="prose prose-slate max-w-none mb-8">
+                <p className="text-slate-600">
+                  Fundamental analysis is the process of evaluating a security's intrinsic value by examining related economic and financial factors. The goal is to determine if a stock is undervalued or overvalued.
+                </p>
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100">
-                  <h4 className="font-bold text-slate-900 mb-3">Fundamental Analysis</h4>
-                  <p className="text-sm text-slate-600 mb-4">Focuses on the company's financial health, management, and industry position to find its "intrinsic value".</p>
-                  <ul className="text-xs text-slate-500 space-y-2">
-                    <li>• P/E Ratio (Price to Earnings)</li>
-                    <li>• Debt to Equity Ratio</li>
-                    <li>• Revenue & Profit Growth</li>
+                  <h4 className="font-bold text-slate-900 mb-3 flex items-center gap-2">
+                    <TrendingUp className="w-4 h-4 text-primary" />
+                    Quantitative Factors
+                  </h4>
+                  <ul className="text-sm text-slate-600 space-y-3">
+                    <li className="flex items-start gap-2">
+                      <span className="font-bold text-primary">P/E Ratio:</span>
+                      Price to Earnings. Tells you how much the market is willing to pay for every ₹1 of profit.
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="font-bold text-primary">EPS:</span>
+                      Earnings Per Share. Indicates the company's profitability on a per-share basis.
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="font-bold text-primary">ROE:</span>
+                      Return on Equity. Measures how effectively management is using investors' money to generate profit.
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="font-bold text-primary">Debt-to-Equity:</span>
+                      A measure of financial leverage. High debt can be risky during economic downturns.
+                    </li>
                   </ul>
                 </div>
                 <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100">
-                  <h4 className="font-bold text-slate-900 mb-3">Technical Analysis</h4>
-                  <p className="text-sm text-slate-600 mb-4">Focuses on price patterns and trading volume to predict future price movements.</p>
-                  <ul className="text-xs text-slate-500 space-y-2">
-                    <li>• Moving Averages</li>
-                    <li>• RSI (Relative Strength Index)</li>
-                    <li>• Support & Resistance Levels</li>
+                  <h4 className="font-bold text-slate-900 mb-3 flex items-center gap-2">
+                    <Target className="w-4 h-4 text-primary" />
+                    Qualitative Factors
+                  </h4>
+                  <ul className="text-sm text-slate-600 space-y-3">
+                    <li className="flex items-start gap-2">
+                      <span className="font-bold text-primary">Management Quality:</span>
+                      Experience, integrity, and track record of the leadership team.
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="font-bold text-primary">Moat:</span>
+                      A competitive advantage (like brand, patents, or network effects) that protects the company from rivals.
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="font-bold text-primary">Industry Outlook:</span>
+                      Is the sector growing? Are there regulatory tailwinds or headwinds?
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="font-bold text-primary">Corporate Governance:</span>
+                      Transparency and fairness in dealing with all stakeholders.
+                    </li>
                   </ul>
                 </div>
               </div>
-              <div className="mt-8 pt-8 border-t border-slate-100">
-                <h4 className="font-bold text-slate-900 mb-4">Dividend Investing: Passive Income</h4>
-                <p className="text-sm text-slate-600 mb-4">
-                  Dividends are a portion of a company's profit paid out to shareholders. Dividend-paying stocks can provide a steady stream of passive income.
-                </p>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="p-4 bg-emerald-50 rounded-xl border border-emerald-100">
-                    <h5 className="font-bold text-emerald-900 text-xs mb-1">Dividend Yield</h5>
-                    <p className="text-[10px] text-emerald-700">Annual dividend per share divided by the share price. A higher yield means more income relative to price.</p>
+            </section>
+
+            {/* Investment Strategies Section */}
+            <section className="bg-white p-10 rounded-[2.5rem] border border-slate-200 shadow-sm">
+              <h2 className="text-2xl font-bold text-slate-900 mb-8 flex items-center gap-3">
+                <Zap className="w-6 h-6 text-primary" />
+                Popular Investment Strategies
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div className="p-8 bg-primary/5 rounded-[2rem] border border-primary/10">
+                  <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary mb-6">
+                    <RefreshCcw className="w-6 h-6" />
                   </div>
-                  <div className="p-4 bg-emerald-50 rounded-xl border border-emerald-100">
-                    <h5 className="font-bold text-emerald-900 text-xs mb-1">Dividend Payout Ratio</h5>
-                    <p className="text-[10px] text-emerald-700">The percentage of earnings paid out as dividends. A sustainable ratio is usually below 60-70%.</p>
-                  </div>
+                  <h3 className="text-xl font-bold text-slate-900 mb-4">SIP (Systematic Investment Plan)</h3>
+                  <p className="text-sm text-slate-600 leading-relaxed mb-6">
+                    Investing a fixed amount at regular intervals (monthly/quarterly). Best for salaried individuals and long-term wealth creation.
+                  </p>
+                  <ul className="space-y-3">
+                    {['Rupee Cost Averaging', 'Disciplined Investing', 'Power of Compounding', 'No need to time the market'].map((item, i) => (
+                      <li key={i} className="flex items-center gap-2 text-xs font-bold text-slate-700">
+                        <CheckCircle2 className="w-3 h-3 text-primary" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
+                <div className="p-8 bg-emerald-50 rounded-[2rem] border border-emerald-100">
+                  <div className="w-12 h-12 bg-emerald-100 rounded-2xl flex items-center justify-center text-emerald-600 mb-6">
+                    <Coins className="w-6 h-6" />
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-900 mb-4">Lumpsum Investing</h3>
+                  <p className="text-sm text-slate-600 leading-relaxed mb-6">
+                    Investing a large sum of money at once. Ideal when you have surplus cash or when the market is significantly undervalued.
+                  </p>
+                  <ul className="space-y-3">
+                    {['Immediate market exposure', 'Lower transaction costs', 'Captures full market recovery', 'Ideal for idle cash'].map((item, i) => (
+                      <li key={i} className="flex items-center gap-2 text-xs font-bold text-slate-700">
+                        <CheckCircle2 className="w-3 h-3 text-emerald-500" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+              <div className="p-6 bg-slate-900 text-white rounded-2xl">
+                <h4 className="font-bold mb-2 flex items-center gap-2">
+                  <PieChart className="w-4 h-4 text-primary" />
+                  BHP's Verdict: Which one is for you?
+                </h4>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  For most retail investors, **SIP is the gold standard**. It removes emotion from investing. Lumpsum is powerful during market crashes (like March 2020), but requires more conviction and patience.
+                </p>
               </div>
             </section>
 

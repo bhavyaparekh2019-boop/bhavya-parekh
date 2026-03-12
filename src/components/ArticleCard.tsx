@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Bookmark } from 'lucide-react';
+import { ArrowRight, Bookmark, Sparkles, RefreshCcw } from 'lucide-react';
 import { Article } from '@/src/constants';
 import { cn } from '@/src/lib/utils';
 import { motion, AnimatePresence } from 'motion/react';
+import { useSmartImage } from '@/src/lib/hooks';
+import { Loader2 } from 'lucide-react';
 
 interface ArticleCardProps {
   article: Article;
@@ -37,6 +39,9 @@ const Tooltip = ({ isHovered, article }: { isHovered: boolean; article: Article 
 
 export default function ArticleCard({ article, featured }: ArticleCardProps): React.JSX.Element {
   const [isHovered, setIsHovered] = useState(false);
+  const { src, isLoading, refreshImage } = useSmartImage(article.image, article.title, article.category);
+  const isAiGenerated = src.startsWith('data:image');
+  const isPlaceholder = article.image.includes('picsum.photos') || !article.image;
 
   return (
     <article 
@@ -48,15 +53,45 @@ export default function ArticleCard({ article, featured }: ArticleCardProps): Re
       onMouseLeave={() => setIsHovered(false)}
     >
       <Tooltip isHovered={isHovered} article={article} />
-      <Link to={`/article/${article.id}`} className="md:w-1/2 overflow-hidden block relative">
-        <img
-          src={article.image}
-          alt={article.title}
-          className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-700"
-          referrerPolicy="no-referrer"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-      </Link>
+      <div className="md:w-1/2 overflow-hidden block relative bg-slate-100">
+        <Link to={`/article/${article.id}`} className="block h-full w-full">
+          {isLoading ? (
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 text-primary p-8 text-center">
+              <Loader2 className="w-10 h-10 animate-spin" />
+              <p className="text-xs font-black uppercase tracking-widest">Generating relevant image...</p>
+            </div>
+          ) : (
+            <>
+              <img
+                src={src}
+                alt={article.title}
+                className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-700"
+                referrerPolicy="no-referrer"
+              />
+              {isAiGenerated && (
+                <div className="absolute top-4 left-4 bg-white/80 backdrop-blur-md p-1.5 rounded-lg shadow-sm z-10">
+                  <Sparkles className="w-3 h-3 text-primary" />
+                </div>
+              )}
+            </>
+          )}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        </Link>
+        
+        {(isAiGenerated || isPlaceholder) && !isLoading && (
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              refreshImage();
+            }}
+            className="absolute top-4 right-4 z-20 bg-white/20 backdrop-blur-md text-white p-2 rounded-xl hover:bg-white/40 transition-all border border-white/20 opacity-0 group-hover:opacity-100"
+            title="Regenerate AI Image"
+          >
+            <RefreshCcw className="w-3 h-3" />
+          </button>
+        )}
+      </div>
       <div className="p-8 md:p-12 md:w-1/2 flex flex-col justify-center">
         <div className="flex items-center gap-4 mb-6">
           <span className="bg-primary/10 text-primary text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-[0.2em]">

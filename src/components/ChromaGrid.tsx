@@ -1,7 +1,8 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, Info, ArrowRight } from 'lucide-react';
+import { X, Info, ArrowRight, Loader2, Sparkles } from 'lucide-react';
 import gsap from 'gsap';
+import { useSmartImage } from '@/src/lib/hooks';
 
 interface ChromaItem {
   image?: string;
@@ -219,6 +220,7 @@ function ChromaCard({
   const cardRef = useRef<HTMLDivElement>(null);
   const Icon = item.icon;
   const isArticle = !!item.category;
+  const { src, isLoading } = useSmartImage(item.image || '', item.title, item.category || '');
 
   return (
     <motion.div
@@ -247,8 +249,21 @@ function ChromaCard({
 
       <div className="relative bg-white rounded-[2.5rem] p-8 border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-500 h-full flex flex-col z-10 overflow-hidden">
         {item.image && (
-          <div className={isArticle ? "h-48 -mx-8 -mt-8 mb-6 overflow-hidden" : "w-16 h-16 rounded-2xl overflow-hidden mb-6 border-2"} style={!isArticle ? { borderColor: item.borderColor || '#3B82F6' } : {}}>
-            <img src={item.image} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" referrerPolicy="no-referrer" />
+          <div className={isArticle ? "h-48 -mx-8 -mt-8 mb-6 overflow-hidden relative bg-slate-100" : "w-16 h-16 rounded-2xl overflow-hidden mb-6 border-2 relative bg-slate-100"} style={!isArticle ? { borderColor: item.borderColor || '#3B82F6' } : {}}>
+            {isLoading ? (
+              <div className="absolute inset-0 flex items-center justify-center text-primary">
+                <Loader2 className="w-6 h-6 animate-spin" />
+              </div>
+            ) : (
+              <>
+                <img src={src} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" referrerPolicy="no-referrer" />
+                {src.startsWith('data:image') && (
+                  <div className="absolute top-2 right-2 bg-white/80 backdrop-blur-md p-1 rounded-lg shadow-sm z-10">
+                    <Sparkles className="w-3 h-3 text-primary" />
+                  </div>
+                )}
+              </>
+            )}
           </div>
         )}
         

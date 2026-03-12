@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Calculator, Download, Mail, Home, PiggyBank, TrendingUp, ChevronRight, Sparkles, Loader2, RefreshCcw, Shield, ArrowRight } from 'lucide-react';
+import { Calculator, Download, Mail, Home, PiggyBank, TrendingUp, ChevronRight, Sparkles, Loader2, RefreshCcw, Shield, ArrowRight, Coins } from 'lucide-react';
 import { GoogleGenAI } from "@google/genai";
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '@/src/lib/utils';
@@ -13,6 +13,7 @@ export default function Sidebar() {
 
   const tools = [
     { name: 'SIP Calculator', desc: 'Calculate mutual fund returns', icon: TrendingUp, path: '/tools/sip' },
+    { name: 'Lumpsum Calculator', desc: 'One-time investment growth', icon: Coins, path: '/tools/lumpsum' },
     { name: 'Home Loan EMI', desc: 'Estimate monthly payments', icon: Home, path: '/tools/mortgage' },
     { name: 'Retirement Planner', desc: 'Calculate future savings', icon: PiggyBank, path: '/tools/retirement' },
     { name: 'Insurance Coverage', desc: 'Assess your protection needs', icon: Shield, path: '/tools/insurance' },
@@ -27,6 +28,7 @@ export default function Sidebar() {
   const [email, setEmail] = useState('');
   const [isSubscribing, setIsSubscribing] = useState(false);
   const [subscribeStatus, setSubscribeStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [subscribeNote, setSubscribeNote] = useState<string | null>(null);
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,9 +47,14 @@ export default function Sidebar() {
       });
 
       if (response.ok) {
+        const data = await response.json();
         setSubscribeStatus('success');
+        setSubscribeNote(data.note || null);
         setEmail('');
-        setTimeout(() => setSubscribeStatus('idle'), 5000);
+        setTimeout(() => {
+          setSubscribeStatus('idle');
+          setSubscribeNote(null);
+        }, 8000);
       } else {
         setSubscribeStatus('error');
       }
@@ -272,7 +279,12 @@ export default function Sidebar() {
             {isSubscribing ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Subscribe Now'}
           </button>
           {subscribeStatus === 'success' && (
-            <p className="text-xs text-emerald-600 font-bold mt-2">Thanks for subscribing!</p>
+            <div className="mt-2">
+              <p className="text-xs text-emerald-600 font-bold">Thanks for subscribing!</p>
+              {subscribeNote && (
+                <p className="text-[9px] text-amber-600 font-bold uppercase tracking-tighter mt-1">Note: {subscribeNote}</p>
+              )}
+            </div>
           )}
           {subscribeStatus === 'error' && (
             <p className="text-xs text-rose-600 font-bold mt-2">Something went wrong. Try again.</p>

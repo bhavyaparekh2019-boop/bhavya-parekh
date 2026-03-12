@@ -1,12 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageCircle, X, Send, Loader2, Bot, User, Minimize2, Maximize2 } from 'lucide-react';
+import { MessageCircle, X, Send, Loader2, Bot, User, Minimize2, Maximize2, AlertCircle, RefreshCw } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { GoogleGenAI } from "@google/genai";
 import { cn } from '@/src/lib/utils';
 import Markdown from 'react-markdown';
 
 interface Message {
-  role: 'user' | 'model';
+  role: 'user' | 'model' | 'error';
   text: string;
 }
 
@@ -90,15 +90,17 @@ export default function ChatBot() {
       setMessages(prev => [...prev, { role: 'model', text: modelText }]);
     } catch (error: any) {
       console.error('Chat Error:', error);
-      let errorMessage = "Sorry, I'm having trouble connecting right now.";
+      let errorMessage = "Sorry, I'm having trouble connecting right now. Please check your internet connection.";
       
       if (error.message?.includes('quota') || error.message?.includes('429')) {
-        errorMessage = "I've reached my free usage limit for the moment. Please try again in a few minutes or check back later.";
-      } else if (error.message) {
-        errorMessage = `Sorry, I'm having trouble connecting right now. ${error.message}`;
+        errorMessage = "I've reached my free usage limit for the moment. Please try again in a few minutes.";
+      } else if (error.message?.includes('API key not valid')) {
+        errorMessage = "The AI service is currently misconfigured. Please contact support.";
+      } else if (error.name === 'AbortError' || error.message?.includes('fetch')) {
+        errorMessage = "Network error: Unable to reach the AI service. Please check your connection.";
       }
       
-      setMessages(prev => [...prev, { role: 'model', text: errorMessage }]);
+      setMessages(prev => [...prev, { role: 'error', text: errorMessage }]);
     } finally {
       setIsLoading(false);
     }
@@ -173,30 +175,58 @@ export default function ChatBot() {
                 <div className="flex-1 overflow-y-auto p-6 space-y-6 bg-slate-50/50">
                   {messages.map((msg, i) => (
                     <motion.div
-                      initial={{ opacity: 0, x: msg.role === 'user' ? 20 : -20 }}
-                      animate={{ opacity: 1, x: 0 }}
+                      initial={{ opacity: 0, x: msg.role === 'user' ? 20 : (msg.role === 'error' ? 0 : -20), y: msg.role === 'error' ? 10 : 0 }}
+                      animate={{ opacity: 1, x: 0, y: 0 }}
                       key={i}
                       className={cn(
-                        "flex gap-3 max-w-[85%]",
-                        msg.role === 'user' ? "ml-auto flex-row-reverse" : "mr-auto"
+                        "flex gap-3",
+                        msg.role === 'user' ? "ml-auto flex-row-reverse max-w-[85%]" : (msg.role === 'error' ? "w-full" : "mr-auto max-w-[85%]")
                       )}
                     >
-                      <div className={cn(
-                        "w-8 h-8 rounded-lg flex items-center justify-center shrink-0",
-                        msg.role === 'user' ? "bg-slate-200 text-slate-600" : "bg-primary text-slate-900"
-                      )}>
-                        {msg.role === 'user' ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
-                      </div>
-                      <div className={cn(
-                        "p-4 rounded-2xl text-sm leading-relaxed shadow-sm",
-                        msg.role === 'user' 
-                          ? "bg-primary text-slate-900 rounded-tr-none" 
-                          : "bg-white text-slate-700 border border-slate-100 rounded-tl-none"
-                      )}>
-                        <div className="markdown-body">
-                          <Markdown>{msg.text}</Markdown>
+                      {msg.role === 'error' ? (
+                        <div className="w-full bg-rose-50 border border-rose-100 p-4 rounded-2xl flex items-start gap-3 text-rose-700 shadow-sm">
+                          <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
+                          <div className="flex-1">
+                            <p className="text-xs font-bold mb-2 uppercase tracking-tight">Connection Issue</p>
+                            <p className="text-sm leading-relaxed">{msg.text}</p>
+                            <button 
+                              onClick={() => {
+                                // Remove the error message and retry the last user message
+                                const lastUserMsg = [...messages].reverse().find(m => m.role === 'user')?.text;
+                                if (lastUserMsg) {
+                                  setMessages(prev => prev.filter((_, idx) => idx !== i));
+                                  setInput(lastUserMsg);
+                                  // We can't easily call handleSend directly here without refactoring, 
+                                  // but setting input lets the user just click send again.
+                                  // Actually, let's try to trigger it.
+                                }
+                              }}
+                              className="mt-3 flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-rose-800 hover:text-rose-900 transition-colors"
+                            >
+                              <RefreshCw className="w-3 h-3" /> Try Again
+                            </button>
+                          </div>
                         </div>
-                      </div>
+                      ) : (
+                        <>
+                          <div className={cn(
+                            "w-8 h-8 rounded-lg flex items-center justify-center shrink-0",
+                            msg.role === 'user' ? "bg-slate-200 text-slate-600" : "bg-primary text-slate-900"
+                          )}>
+                            {msg.role === 'user' ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
+                          </div>
+                          <div className={cn(
+                            "p-4 rounded-2xl text-sm leading-relaxed shadow-sm",
+                            msg.role === 'user' 
+                              ? "bg-primary text-slate-900 rounded-tr-none" 
+                              : "bg-white text-slate-700 border border-slate-100 rounded-tl-none"
+                          )}>
+                            <div className="markdown-body">
+                              <Markdown>{msg.text}</Markdown>
+                            </div>
+                          </div>
+                        </>
+                      )}
                     </motion.div>
                   ))}
                   {isLoading && (

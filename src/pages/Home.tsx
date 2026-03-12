@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Search, ChevronLeft, ChevronRight, Info, Loader2, TrendingUp, Shield, Sparkles, BarChart2, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ARTICLES, CATEGORIES } from '@/src/constants';
+import Fuse from 'fuse.js';
 import ArticleCard from '@/src/components/ArticleCard';
 import Sidebar from '@/src/components/Sidebar';
 import ChromaGrid from '@/src/components/ChromaGrid';
@@ -14,6 +15,7 @@ const KNOWLEDGE_CENTER_ITEMS = [
   {
     title: 'Investment',
     icon: TrendingUp,
+    image: 'https://images.unsplash.com/photo-1535320903710-d993d3d77d29?auto=format&fit=crop&q=80&w=800&h=600',
     description: 'Build a resilient portfolio and leverage compounding in India.',
     url: '/guides/investment',
     borderColor: '#3B82F6',
@@ -22,6 +24,7 @@ const KNOWLEDGE_CENTER_ITEMS = [
   {
     title: 'Insurance',
     icon: Shield,
+    image: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&q=80&w=800&h=600',
     description: 'Complete walkthrough of life and health insurance for Indian families.',
     url: '/guides/insurance',
     borderColor: '#10B981',
@@ -30,6 +33,7 @@ const KNOWLEDGE_CENTER_ITEMS = [
   {
     title: 'Retirement',
     icon: Loader2,
+    image: 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&q=80&w=800&h=600',
     description: 'Build a bulletproof corpus for a worry-free post-work life.',
     url: '/guides/retirement',
     borderColor: '#F59E0B',
@@ -38,6 +42,7 @@ const KNOWLEDGE_CENTER_ITEMS = [
   {
     title: 'Tax Planning',
     icon: Info,
+    image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&q=80&w=800&h=600',
     description: 'Minimize liability and maximize take-home pay legally.',
     url: '/guides/tax',
     borderColor: '#6366F1',
@@ -46,14 +51,16 @@ const KNOWLEDGE_CENTER_ITEMS = [
   {
     title: 'Mutual Funds',
     icon: Sparkles,
+    image: 'https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&q=80&w=800&h=600',
     description: 'Master SIPs, ELSS, and professional wealth management.',
     url: '/guides/mutual-funds',
     borderColor: '#F43F5E',
     gradient: 'linear-gradient(160deg, #F43F5E, #000)'
   },
   {
-    title: 'Stock Market',
+    title: 'Stock Market Investing Basics',
     icon: BarChart2,
+    image: 'https://images.unsplash.com/photo-1611974717483-3600997e5b47?auto=format&fit=crop&q=80&w=800&h=600',
     description: 'Demystifying the stock market for beginners in India.',
     url: '/guides/stocks',
     borderColor: '#64748B',
@@ -62,12 +69,79 @@ const KNOWLEDGE_CENTER_ITEMS = [
   {
     title: 'Market Analysis',
     icon: TrendingUp,
+    image: 'https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&q=80&w=800&h=600',
     description: 'Real-time data and AI-powered expert commentary on Indian markets.',
     url: '/market-analysis',
     borderColor: '#19d4e6',
     gradient: 'linear-gradient(145deg, #19d4e6, #000)'
+  },
+  {
+    title: 'Blogs & Insights',
+    icon: Sparkles,
+    image: 'https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&q=80&w=800&h=600',
+    description: 'Deep dives into the latest financial trends and personal stories.',
+    url: '#',
+    borderColor: '#A855F7',
+    gradient: 'linear-gradient(145deg, #A855F7, #000)'
   }
 ];
+
+const MOCK_CANDLESTICK_DATA = [
+  { time: '09:15', open: 24150, high: 24180, low: 24120, close: 24160 },
+  { time: '10:00', open: 24160, high: 24200, low: 24150, close: 24190 },
+  { time: '11:00', open: 24190, high: 24210, low: 24170, close: 24180 },
+  { time: '12:00', open: 24180, high: 24220, low: 24160, close: 24210 },
+  { time: '13:00', open: 24210, high: 24250, low: 24200, close: 24240 },
+  { time: '14:00', open: 24240, high: 24260, low: 24220, close: 24230 },
+  { time: '15:00', open: 24230, high: 24320, low: 24210, close: 24310 },
+  { time: '15:30', open: 24310, high: 24330, low: 24300, close: 24320 },
+];
+
+const CandlestickChart = ({ data }: { data: any[] }) => {
+  const minValue = Math.min(...data.map(d => d.low));
+  const maxValue = Math.max(...data.map(d => d.high));
+  const range = maxValue - minValue;
+  const padding = range * 0.1;
+  const displayMin = minValue - padding;
+  const displayMax = maxValue + padding;
+  const displayRange = displayMax - displayMin;
+
+  return (
+    <div className="h-48 w-full flex items-end gap-2 px-2">
+      {data.map((d, i) => {
+        const isPositive = d.close >= d.open;
+        const color = isPositive ? 'bg-emerald-500' : 'bg-rose-500';
+        const wickColor = isPositive ? 'bg-emerald-500/30' : 'bg-rose-500/30';
+        
+        const bodyTop = ((displayMax - Math.max(d.open, d.close)) / displayRange) * 100;
+        const bodyBottom = ((displayMax - Math.min(d.open, d.close)) / displayRange) * 100;
+        const bodyHeight = bodyBottom - bodyTop;
+        
+        const wickTop = ((displayMax - d.high) / displayRange) * 100;
+        const wickBottom = ((displayMax - d.low) / displayRange) * 100;
+        const wickHeight = wickBottom - wickTop;
+
+        return (
+          <div key={i} className="flex-1 relative h-full flex flex-col items-center">
+            {/* Wick */}
+            <div 
+              className={cn("absolute w-px", wickColor)}
+              style={{ top: `${wickTop}%`, height: `${wickHeight}%` }}
+            />
+            {/* Body */}
+            <motion.div 
+              initial={{ opacity: 0, scaleY: 0 }}
+              whileInView={{ opacity: 1, scaleY: 1 }}
+              transition={{ delay: i * 0.05, duration: 0.4 }}
+              className={cn("absolute w-full rounded-sm shadow-sm z-10", color)}
+              style={{ top: `${bodyTop}%`, height: `${Math.max(bodyHeight, 2)}%`, transformOrigin: 'center' }}
+            />
+          </div>
+        );
+      })}
+    </div>
+  );
+};
 
 export default function Home() {
   const handleAnimationComplete = () => {
@@ -88,11 +162,20 @@ export default function Home() {
   const ARTICLES_PER_PAGE = 6;
 
   const filteredArticles = useMemo(() => {
-    return ARTICLES.filter((article) => {
-      const matchesSearch = article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                           article.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
+    let results = ARTICLES;
+
+    if (searchQuery.trim()) {
+      const fuse = new Fuse(ARTICLES, {
+        keys: ['title', 'excerpt', 'keywords'],
+        threshold: 0.4,
+        distance: 100,
+      });
+      results = fuse.search(searchQuery).map(result => result.item);
+    }
+
+    return results.filter((article) => {
       const matchesCategory = activeCategory === 'All Topics' || article.category === activeCategory;
-      return matchesSearch && matchesCategory;
+      return matchesCategory;
     });
   }, [searchQuery, activeCategory]);
 
@@ -130,18 +213,19 @@ export default function Home() {
     setShowFullAiResponse(false);
 
     try {
-      // Find related guides from Knowledge Center
-      const relatedGuides = KNOWLEDGE_CENTER_ITEMS.filter(item => 
-        item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.description.toLowerCase().includes(searchQuery.toLowerCase())
-      ).slice(0, 3);
+      // Find related guides from Knowledge Center using fuzzy search
+      const fuseGuides = new Fuse(KNOWLEDGE_CENTER_ITEMS, {
+        keys: ['title', 'description'],
+        threshold: 0.4,
+      });
+      const relatedGuides = fuseGuides.search(searchQuery).map(r => r.item).slice(0, 3);
 
-      // Find related articles from Knowledge Center (ARTICLES)
-      const relatedArticles = ARTICLES.filter(article => 
-        article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        article.excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        article.keywords.some(k => k.toLowerCase().includes(searchQuery.toLowerCase()))
-      ).slice(0, 3);
+      // Find related articles from Knowledge Center (ARTICLES) using fuzzy search
+      const fuseArticles = new Fuse(ARTICLES, {
+        keys: ['title', 'excerpt', 'keywords'],
+        threshold: 0.4,
+      });
+      const relatedArticles = fuseArticles.search(searchQuery).map(r => r.item).slice(0, 3);
 
       const apiKey = process.env.GEMINI_API_KEY;
       
@@ -304,7 +388,7 @@ export default function Home() {
             >
               <div className="aspect-[4/3] rounded-[3rem] overflow-hidden shadow-2xl border-8 border-white">
                 <img 
-                  src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=1200&h=900" 
+                  src="https://images.unsplash.com/photo-1507537537190-28703c73083b?auto=format&fit=crop&q=80&w=1200&h=900" 
                   alt="Financial Growth" 
                   className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
@@ -552,7 +636,7 @@ export default function Home() {
             >
               <div className="aspect-[4/5] rounded-[2rem] overflow-hidden mb-6 shadow-xl border border-slate-100">
                 <img 
-                  src="https://images.unsplash.com/photo-1611974717483-3600997e5b47?auto=format&fit=crop&q=80&w=800&h=1000" 
+                  src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800&h=1000" 
                   alt="Market Growth" 
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   referrerPolicy="no-referrer"
@@ -629,17 +713,9 @@ export default function Home() {
                   </div>
                 </div>
                 
-                {/* Mock Chart Visualization */}
-                <div className="h-48 w-full bg-slate-50 rounded-2xl flex items-end gap-1 p-4 overflow-hidden">
-                  {[40, 60, 45, 70, 55, 80, 65, 90, 75, 100, 85, 95].map((h, i) => (
-                    <motion.div 
-                      key={i}
-                      initial={{ height: 0 }}
-                      whileInView={{ height: `${h}%` }}
-                      transition={{ delay: i * 0.05, duration: 0.5 }}
-                      className="flex-1 bg-primary/30 rounded-t-sm"
-                    />
-                  ))}
+                {/* Candlestick Chart Visualization */}
+                <div className="bg-slate-50 rounded-2xl p-4 overflow-hidden">
+                  <CandlestickChart data={MOCK_CANDLESTICK_DATA} />
                 </div>
                 
                 <div className="mt-8 p-4 bg-primary/10 rounded-2xl text-slate-900">

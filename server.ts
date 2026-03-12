@@ -16,7 +16,7 @@ async function startServer() {
     // Using provided credentials as fallbacks if environment variables are not set
     let user = process.env.EMAIL_USER || "bhadresh.parekh13@gmail.com";
     let pass = process.env.EMAIL_PASS || "hkwcnartoqcivwcd";
-    const adminEmail = process.env.ADMIN_EMAIL || "bhadresh.parekh13@gmail.com";
+    const adminEmail = process.env.ADMIN_EMAIL || "bhavya.parekh2019@gmail.com";
 
     console.log(`Email Service Config: User=${user ? 'SET' : 'MISSING'}, Pass=${pass ? 'SET' : 'MISSING'}, Admin=${adminEmail}`);
 
@@ -49,7 +49,17 @@ async function startServer() {
     }
   });
 
+  // In-memory storage for demo purposes (since we don't have a database yet)
+  const db_mock = {
+    subscriptions: [] as any[],
+    consultations: [] as any[]
+  };
+
   // API Routes
+  app.get("/api/admin/data", (req, res) => {
+    res.json(db_mock);
+  });
+
   app.post("/api/subscribe", async (req, res) => {
     const { email } = req.body;
 
@@ -58,6 +68,7 @@ async function startServer() {
     }
 
     console.log(`New subscription request: ${email}`);
+    db_mock.subscriptions.push({ email, date: new Date().toISOString() });
 
     const { transporter, user, pass, adminEmail } = getTransporter();
 
@@ -139,6 +150,7 @@ async function startServer() {
     }
 
     console.log(`New consultation request from ${name} (${email}) for ${service}`);
+    db_mock.consultations.push({ name, email, phone, service, date: new Date().toISOString() });
 
     const { transporter, user, pass, adminEmail } = getTransporter();
 

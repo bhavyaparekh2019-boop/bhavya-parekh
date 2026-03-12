@@ -12,6 +12,7 @@ import RetirementPlanner from '@/src/pages/tools/RetirementPlanner';
 import InvestmentROI from '@/src/pages/tools/InvestmentROI';
 import InsuranceCalculator from '@/src/pages/tools/InsuranceCalculator';
 import SIPCalculator from '@/src/pages/tools/SIPCalculator';
+import LumpsumCalculator from '@/src/pages/tools/LumpsumCalculator';
 import InsuranceGuide from '@/src/pages/guides/InsuranceGuide';
 import InvestmentGuide from '@/src/pages/guides/InvestmentGuide';
 import RetirementGuide from '@/src/pages/guides/RetirementGuide';
@@ -21,6 +22,7 @@ import StockMarketGuide from '@/src/pages/guides/StockMarketGuide';
 import MarketAnalysis from '@/src/pages/MarketAnalysis';
 import Insights from '@/src/pages/Insights';
 import About from '@/src/pages/About';
+import Admin from '@/src/pages/Admin';
 
 import ErrorBoundary from '@/src/components/ErrorBoundary';
 
@@ -40,6 +42,7 @@ export default function App() {
                 <Route path="/tools/roi" element={<InvestmentROI />} />
                 <Route path="/tools/insurance" element={<InsuranceCalculator />} />
                 <Route path="/tools/sip" element={<SIPCalculator />} />
+                <Route path="/tools/lumpsum" element={<LumpsumCalculator />} />
                 <Route path="/guides/insurance" element={<InsuranceGuide />} />
                 <Route path="/guides/investment" element={<InvestmentGuide />} />
                 <Route path="/guides/retirement" element={<RetirementGuide />} />
@@ -49,6 +52,7 @@ export default function App() {
                 <Route path="/market-analysis" element={<MarketAnalysis />} />
                 <Route path="/insights" element={<Insights />} />
                 <Route path="/about" element={<About />} />
+                <Route path="/admin" element={<Admin />} />
                 <Route path="*" element={<Home />} />
               </Routes>
             </div>

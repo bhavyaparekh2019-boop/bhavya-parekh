@@ -248,6 +248,45 @@ export default function RetirementPlanner() {
               </div>
             )}
           </div>
+
+          {/* Recommended Resources */}
+          <div className="border-t border-slate-100 p-8 md:p-12">
+            <h3 className="text-xl font-black text-slate-900 mb-6">Explore Retirement Options</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <Link 
+                to="/articles/26"
+                className="group p-6 rounded-2xl border border-slate-200 hover:border-primary hover:shadow-lg transition-all bg-white"
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <span className="px-3 py-1 bg-blue-50 text-blue-600 text-[10px] font-black uppercase tracking-widest rounded-full">NPS Focus</span>
+                  <TrendingUp className="w-5 h-5 text-slate-300 group-hover:text-primary transition-colors" />
+                </div>
+                <h4 className="font-bold text-slate-900 mb-2 group-hover:text-primary transition-colors">NPS & APY Optimization</h4>
+                <p className="text-xs text-slate-500 leading-relaxed">Learn how to maximize your retirement benefits through the National Pension System and Atal Pension Yojana.</p>
+              </Link>
+
+              <Link 
+                to="/articles/2"
+                className="group p-6 rounded-2xl border border-slate-200 hover:border-primary hover:shadow-lg transition-all bg-white"
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <span className="px-3 py-1 bg-emerald-50 text-emerald-600 text-[10px] font-black uppercase tracking-widest rounded-full">PPF & EPF</span>
+                  <PiggyBank className="w-5 h-5 text-slate-300 group-hover:text-primary transition-colors" />
+                </div>
+                <h4 className="font-bold text-slate-900 mb-2 group-hover:text-primary transition-colors">NPS vs EPF vs PPF Guide</h4>
+                <p className="text-xs text-slate-500 leading-relaxed">A deep dive into India's most popular retirement vehicles, comparing tax efficiency and long-term potential.</p>
+              </Link>
+            </div>
+            
+            <div className="mt-8 text-center">
+              <Link 
+                to="/guides/retirement"
+                className="inline-flex items-center gap-2 text-sm font-bold text-primary hover:underline"
+              >
+                View Full Retirement Roadmap <ArrowLeft className="w-4 h-4 rotate-180" />
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     </main>

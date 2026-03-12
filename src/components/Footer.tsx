@@ -1,10 +1,43 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Globe, Share2, Mail, MapPin } from 'lucide-react';
+import { Globe, Share2, Mail, MapPin, Send, CheckCircle2, AlertCircle } from 'lucide-react';
 
 import Logo from './Logo';
 
 export default function Footer() {
+  const [email, setEmail] = useState('');
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [message, setMessage] = useState('');
+  const [subscribeNote, setSubscribeNote] = useState('');
+
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+
+    setStatus('loading');
+    try {
+      const response = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setStatus('success');
+        setMessage('Thank you for subscribing!');
+        setSubscribeNote(data.note || '');
+        setEmail('');
+      } else {
+        throw new Error(data.error || 'Subscription failed');
+      }
+    } catch (error) {
+      setStatus('error');
+      setMessage(error instanceof Error ? error.message : 'Something went wrong');
+    }
+  };
+
   const sections = [
     {
       title: 'Guides',
@@ -20,13 +53,14 @@ export default function Footer() {
       links: [
         { name: 'About Us', href: '/about' },
         { name: 'Insights', href: '/insights' },
-        { name: 'Contact', href: '/contact' }
+        { name: 'Admin Dashboard', href: '/admin' }
       ],
     },
     {
       title: 'Tools',
       links: [
         { name: 'SIP Calculator', href: '/tools/sip' },
+        { name: 'Lumpsum Calculator', href: '/tools/lumpsum' },
         { name: 'EMI Calculator', href: '/tools/mortgage' },
         { name: 'ROI Calculator', href: '/tools/roi' }
       ],
@@ -42,6 +76,53 @@ export default function Footer() {
             <p className="text-slate-500 text-sm leading-relaxed mb-8 max-w-xs">
               Empowering individuals and institutions with strategic financial guidance and innovative market insights since 2002.
             </p>
+            
+            <div className="mb-8">
+              <h4 className="font-bold text-slate-900 mb-4 text-sm uppercase tracking-wider">Subscribe to our Newsletter</h4>
+              <form onSubmit={handleSubscribe} className="relative max-w-sm">
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter your email"
+                  className="w-full pl-4 pr-12 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                  required
+                />
+                <button
+                  type="submit"
+                  disabled={status === 'loading'}
+                  className="absolute right-1.5 top-1.5 p-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50"
+                >
+                  {status === 'loading' ? (
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  ) : (
+                    <Send className="w-4 h-4" />
+                  )}
+                </button>
+              </form>
+              
+              {status === 'success' && (
+                <div className="mt-3 flex flex-col gap-1">
+                  <div className="flex items-center gap-2 text-emerald-600 text-xs font-medium">
+                    <CheckCircle2 className="w-4 h-4" />
+                    {message}
+                  </div>
+                  {subscribeNote && (
+                    <p className="text-[10px] text-slate-400 italic ml-6">
+                      Note: {subscribeNote}
+                    </p>
+                  )}
+                </div>
+              )}
+              
+              {status === 'error' && (
+                <div className="mt-3 flex items-center gap-2 text-rose-600 text-xs font-medium">
+                  <AlertCircle className="w-4 h-4" />
+                  {message}
+                </div>
+              )}
+            </div>
+
             <div className="flex gap-4">
               {[Globe, Share2, Mail].map((Icon, i) => (
                 <a
