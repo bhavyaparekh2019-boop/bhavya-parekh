@@ -2,7 +2,7 @@
 
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --color-primary: #00BCD4;
+  --color-primary: #10b981;
   --color-background-light: #f6f8f8;
   --color-background-dark: #0a0f10;
   --animate-marquee: marquee 30s linear infinite;

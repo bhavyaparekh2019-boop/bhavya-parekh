@@ -300,8 +300,8 @@ export default function Home() {
       let full = error.message || "Sorry, I encountered an error while processing your request. Please try again.";
       
       if (error.message?.includes('quota') || error.message?.includes('429')) {
-        concise = "Free usage limit reached.";
-        full = "I've reached my free usage limit for the moment. Please try again in a few minutes or check back later.";
+        concise = "AI usage limit reached.";
+        full = "I've reached my daily limit for real-time search grounding. You can still explore our pre-written guides and articles below, or try again later today.";
       }
 
       setAiResponse({ 

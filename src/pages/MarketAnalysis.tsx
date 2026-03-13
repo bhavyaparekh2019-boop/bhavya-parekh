@@ -188,7 +188,12 @@ export default function MarketAnalysis() {
       console.error('Market Analysis Error:', err);
       // Fallback to mock data on error but show a warning
       setMarketData(MOCK_MARKET_DATA);
-      setError('Note: Showing simulated data as real-time connection failed.');
+      
+      if (err.message?.includes('quota') || err.message?.includes('429')) {
+        setError('Note: AI usage limit reached. Showing simulated market data for now.');
+      } else {
+        setError('Note: Showing simulated data as real-time connection failed.');
+      }
     } finally {
       setLoading(false);
     }

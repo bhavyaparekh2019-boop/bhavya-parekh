@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Search, Menu, X, User, ChevronDown, Loader2, Info, ArrowRight, Globe, Sparkles, Sun, Moon, BookOpen } from 'lucide-react';
+import { Search, Menu, X, User, ChevronDown, Loader2, Info, ArrowRight, Globe, Sparkles, Sun, Moon, BookOpen, Filter, Calendar, TrendingUp, TrendingDown, Activity } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '@/src/lib/utils';
 import { useModal } from '@/src/context/ModalContext';
@@ -10,6 +10,10 @@ import Fuse from 'fuse.js';
 
 import Logo from './Logo';
 
+// Extract unique categories and authors for filters
+const UNIQUE_CATEGORIES = Array.from(new Set(ARTICLES.map(a => a.category))).sort();
+const UNIQUE_AUTHORS = Array.from(new Set(ARTICLES.map(a => a.author))).sort();
+
 export default function Navbar() {
   const { openConsultationModal } = useModal();
   const [isScrolled, setIsScrolled] = useState(false);
@@ -17,11 +21,28 @@ export default function Navbar() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);
+  
+  // Filter state
+  const [showFilters, setShowFilters] = useState(false);
+  const [filters, setFilters] = useState({
+    category: '',
+    author: '',
+    startDate: '',
+    endDate: ''
+  });
+
   const [aiResponse, setAiResponse] = useState<{ 
     concise: string; 
     full: string; 
     sources?: { uri: string; title: string }[];
     relevantArticles?: Article[];
+    stockData?: {
+      symbol: string;
+      price: string;
+      change: string;
+      changePercent: string;
+      isPositive: boolean;
+    };
   } | null>(null);
   const location = useLocation();
 
@@ -50,12 +71,33 @@ export default function Navbar() {
     if (!overrideQuery) setSearchQuery(query);
 
     // Local search for articles using fuzzy search
-    const fuse = new Fuse(ARTICLES, {
-      keys: ['title', 'excerpt', 'keywords', 'category'],
+    let filteredArticles = [...ARTICLES];
+
+    // Apply filters
+    if (filters.category) {
+      filteredArticles = filteredArticles.filter(a => a.category === filters.category);
+    }
+    if (filters.author) {
+      filteredArticles = filteredArticles.filter(a => a.author === filters.author);
+    }
+    if (filters.startDate || filters.endDate) {
+      filteredArticles = filteredArticles.filter(a => {
+        const articleDate = new Date(a.date);
+        if (filters.startDate && articleDate < new Date(filters.startDate)) return false;
+        if (filters.endDate && articleDate > new Date(filters.endDate)) return false;
+        return true;
+      });
+    }
+
+    const fuse = new Fuse(filteredArticles, {
+      keys: ['title', 'excerpt', 'keywords', 'category', 'author'],
       threshold: 0.4,
       distance: 100,
     });
-    const localResults = fuse.search(query).map(result => result.item).slice(0, 3);
+    
+    const localResults = query.trim() 
+      ? fuse.search(query).map(result => result.item).slice(0, 3)
+      : filteredArticles.slice(0, 3);
 
     try {
       const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
@@ -68,9 +110,12 @@ export default function Navbar() {
         
         If the query is about specific stocks, mutual funds, or tax laws (like Section 80C), provide the most recent data available.
         
+        If the user is searching for a specific stock symbol (e.g., RELIANCE, TCS, AAPL), you MUST include the "stockData" object in your JSON response with the current price, change, and percentage change.
+        
         Format your response as JSON with:
         - "concise": A punchy, one-sentence direct answer that summarizes the core fact.
-        - "full": A detailed, multi-paragraph explanation with context, data points, and actionable advice.`,
+        - "full": A detailed, multi-paragraph explanation with context, data points, and actionable advice.
+        - "stockData": (Optional) An object containing symbol, price, change, changePercent, and isPositive (boolean).`,
         config: {
           tools: [{ googleSearch: {} }],
           responseMimeType: "application/json",
@@ -78,7 +123,18 @@ export default function Navbar() {
             type: "OBJECT",
             properties: {
               concise: { type: "STRING" },
-              full: { type: "STRING" }
+              full: { type: "STRING" },
+              stockData: {
+                type: "OBJECT",
+                properties: {
+                  symbol: { type: "STRING" },
+                  price: { type: "STRING" },
+                  change: { type: "STRING" },
+                  changePercent: { type: "STRING" },
+                  isPositive: { type: "BOOLEAN" }
+                },
+                required: ["symbol", "price", "change", "changePercent", "isPositive"]
+              }
             },
             required: ["concise", "full"]
           }
@@ -102,7 +158,10 @@ export default function Navbar() {
       
       if (error.message?.includes('quota') || error.message?.includes('429')) {
         concise = "Free usage limit reached.";
-        full = "I've reached my free usage limit for the moment. Please try again in a few minutes or check back later.";
+        full = "I've reached my free usage limit for the moment. Please try again in a few minutes or check your plan for higher limits.";
+      } else if (error.message?.includes('API key not valid')) {
+        concise = "AI configuration error.";
+        full = "The Gemini API key is invalid or missing. Please check your environment configuration in the settings menu.";
       }
       
       setAiResponse({ concise, full, relevantArticles: localResults });
@@ -132,6 +191,7 @@ export default function Navbar() {
   ];
 
   const mainLinks = [
+    { name: 'Portfolio', href: '/portfolio' },
     { name: 'About Us', href: '/about' },
   ];
 
@@ -234,7 +294,7 @@ export default function Navbar() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] bg-primary/95 backdrop-blur-sm flex flex-col"
+            className="fixed inset-0 z-[100] bg-slate-950/95 backdrop-blur-md flex flex-col"
           >
             <div className="max-w-4xl mx-auto w-full px-4 pt-20">
               <div className="flex justify-between items-center mb-8">
@@ -252,23 +312,111 @@ export default function Navbar() {
                 </button>
               </div>
 
-              <form onSubmit={handleGlobalSearch} className="relative">
-                <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 w-6 h-6" />
-                <input
-                  autoFocus
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Ask anything about Indian finance, markets, or taxes..."
-                  className="w-full bg-white/10 border-2 border-white/10 rounded-3xl py-6 pl-16 pr-32 text-xl text-white placeholder:text-slate-500 focus:outline-none focus:border-primary/50 transition-all"
-                />
-                <button 
-                  type="submit"
-                  disabled={isSearching}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 bg-primary text-slate-900 px-6 py-3 rounded-2xl font-black text-xs uppercase tracking-widest hover:brightness-110 transition-all disabled:opacity-50"
-                >
-                  {isSearching ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Search'}
-                </button>
+              <form onSubmit={handleGlobalSearch} className="space-y-4">
+                <div className="relative">
+                  <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 w-6 h-6" />
+                  <input
+                    autoFocus
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Ask anything about Indian finance, markets, or taxes..."
+                    className="w-full bg-white/10 border-2 border-white/10 rounded-3xl py-6 pl-16 pr-44 text-xl text-white placeholder:text-slate-500 focus:outline-none focus:border-primary/50 transition-all"
+                  />
+                  <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setShowFilters(!showFilters)}
+                      className={cn(
+                        "p-3 rounded-2xl transition-all flex items-center gap-2",
+                        showFilters ? "bg-primary text-slate-900" : "bg-white/5 text-slate-400 hover:text-white"
+                      )}
+                    >
+                      <Filter className="w-4 h-4" />
+                      <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline">Filters</span>
+                    </button>
+                    <button 
+                      type="submit"
+                      disabled={isSearching}
+                      className="bg-primary text-slate-900 px-6 py-3 rounded-2xl font-black text-xs uppercase tracking-widest hover:brightness-110 transition-all disabled:opacity-50"
+                    >
+                      {isSearching ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Search'}
+                    </button>
+                  </div>
+                </div>
+
+                <AnimatePresence>
+                  {showFilters && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      className="overflow-hidden"
+                    >
+                      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-6 bg-white/5 border border-white/10 rounded-[2rem]">
+                        <div>
+                          <label className="block text-[8px] font-black text-slate-500 uppercase tracking-widest mb-2">Category</label>
+                          <select
+                            value={filters.category}
+                            onChange={(e) => setFilters({ ...filters, category: e.target.value })}
+                            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-primary/50"
+                          >
+                            <option value="" className="bg-slate-900">All Categories</option>
+                            {UNIQUE_CATEGORIES.map(cat => (
+                              <option key={cat} value={cat} className="bg-slate-900">{cat}</option>
+                            ))}
+                          </select>
+                        </div>
+                        <div>
+                          <label className="block text-[8px] font-black text-slate-500 uppercase tracking-widest mb-2">Author</label>
+                          <select
+                            value={filters.author}
+                            onChange={(e) => setFilters({ ...filters, author: e.target.value })}
+                            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-primary/50"
+                          >
+                            <option value="" className="bg-slate-900">All Authors</option>
+                            {UNIQUE_AUTHORS.map(author => (
+                              <option key={author} value={author} className="bg-slate-900">{author}</option>
+                            ))}
+                          </select>
+                        </div>
+                        <div>
+                          <label className="block text-[8px] font-black text-slate-500 uppercase tracking-widest mb-2">From Date</label>
+                          <div className="relative">
+                            <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-3 h-3 text-slate-500" />
+                            <input
+                              type="date"
+                              value={filters.startDate}
+                              onChange={(e) => setFilters({ ...filters, startDate: e.target.value })}
+                              className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2 text-sm text-white focus:outline-none focus:border-primary/50 [color-scheme:dark]"
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <label className="block text-[8px] font-black text-slate-500 uppercase tracking-widest mb-2">To Date</label>
+                          <div className="relative">
+                            <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-3 h-3 text-slate-500" />
+                            <input
+                              type="date"
+                              value={filters.endDate}
+                              onChange={(e) => setFilters({ ...filters, endDate: e.target.value })}
+                              className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2 text-sm text-white focus:outline-none focus:border-primary/50 [color-scheme:dark]"
+                            />
+                          </div>
+                        </div>
+                        <div className="md:col-span-4 flex justify-end gap-4 mt-2">
+                          <button
+                            type="button"
+                            onClick={() => setFilters({ category: '', author: '', startDate: '', endDate: '' })}
+                            className="text-[10px] font-black text-slate-500 uppercase tracking-widest hover:text-white transition-colors"
+                          >
+                            Reset Filters
+                          </button>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </form>
 
               <div className="mt-12 overflow-y-auto max-h-[60vh] pr-4 no-scrollbar">
@@ -283,6 +431,42 @@ export default function Navbar() {
                     animate={{ opacity: 1, y: 0 }}
                     className="space-y-8 pb-20"
                   >
+                    {aiResponse.stockData && (
+                      <div className="bg-white/5 border border-white/10 p-8 rounded-[2.5rem] relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
+                          <Activity className="w-32 h-32 text-primary" />
+                        </div>
+                        <div className="relative z-10">
+                          <div className="flex items-center gap-3 mb-6">
+                            <Activity className="w-5 h-5 text-primary" />
+                            <span className="text-[10px] font-black text-primary uppercase tracking-widest">Real-Time Market Data</span>
+                          </div>
+                          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                            <div>
+                              <h3 className="text-4xl font-black text-white mb-2 tracking-tighter">{aiResponse.stockData.symbol}</h3>
+                              <div className="flex items-center gap-4">
+                                <span className="text-5xl font-black text-white tracking-tighter">{aiResponse.stockData.price}</span>
+                                <div className={cn(
+                                  "flex items-center gap-1 px-3 py-1 rounded-full text-sm font-black uppercase tracking-widest",
+                                  aiResponse.stockData.isPositive ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/20" : "bg-rose-500/20 text-rose-400 border border-rose-500/20"
+                                )}>
+                                  {aiResponse.stockData.isPositive ? <TrendingUp className="w-4 h-4" /> : <TrendingDown className="w-4 h-4" />}
+                                  {aiResponse.stockData.change} ({aiResponse.stockData.changePercent})
+                                </div>
+                              </div>
+                            </div>
+                            <div className="text-right">
+                              <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Market Status</p>
+                              <div className="flex items-center gap-2 justify-end">
+                                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                                <span className="text-xs font-bold text-emerald-500 uppercase tracking-widest">Live from Exchange</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
                     <div className="bg-white/5 border border-white/10 p-8 rounded-[2.5rem]">
                       <div className="flex items-center justify-between mb-6">
                         <div className="flex items-center gap-3">

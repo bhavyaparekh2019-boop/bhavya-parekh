@@ -23,6 +23,8 @@ import MarketAnalysis from '@/src/pages/MarketAnalysis';
 import Insights from '@/src/pages/Insights';
 import About from '@/src/pages/About';
 import Admin from '@/src/pages/Admin';
+import Portfolio from '@/src/pages/Portfolio';
+import NavigationDock from '@/src/components/NavigationDock';
 
 import ErrorBoundary from '@/src/components/ErrorBoundary';
 
@@ -52,6 +54,7 @@ export default function App() {
                 <Route path="/market-analysis" element={<MarketAnalysis />} />
                 <Route path="/insights" element={<Insights />} />
                 <Route path="/about" element={<About />} />
+                <Route path="/portfolio" element={<Portfolio />} />
                 <Route path="/admin" element={<Admin />} />
                 <Route path="*" element={<Home />} />
               </Routes>
@@ -59,6 +62,7 @@ export default function App() {
             <Footer />
             <ChatBot />
             <ConsultationModal />
+            <NavigationDock />
           </div>
         </Router>
       </ModalProvider>
