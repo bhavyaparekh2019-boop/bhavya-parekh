@@ -27,8 +27,8 @@ const KNOWLEDGE_CENTER_ITEMS = [
     image: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&q=80&w=800&h=600',
     description: 'Complete walkthrough of life and health insurance for Indian families.',
     url: '/guides/insurance',
-    borderColor: '#10B981',
-    gradient: 'linear-gradient(180deg, #10B981, #000)'
+    borderColor: '#0EA5E9',
+    gradient: 'linear-gradient(180deg, #0EA5E9, #000)'
   },
   {
     title: 'Retirement',
@@ -110,8 +110,8 @@ const CandlestickChart = ({ data }: { data: any[] }) => {
     <div className="h-48 w-full flex items-end gap-2 px-2">
       {data.map((d, i) => {
         const isPositive = d.close >= d.open;
-        const color = isPositive ? 'bg-emerald-500' : 'bg-rose-500';
-        const wickColor = isPositive ? 'bg-emerald-500/30' : 'bg-rose-500/30';
+        const color = isPositive ? 'bg-sky-500' : 'bg-rose-500';
+        const wickColor = isPositive ? 'bg-sky-500/30' : 'bg-rose-500/30';
         
         const bodyTop = ((displayMax - Math.max(d.open, d.close)) / displayRange) * 100;
         const bodyBottom = ((displayMax - Math.min(d.open, d.close)) / displayRange) * 100;
@@ -396,7 +396,7 @@ export default function Home() {
               </div>
               <div className="absolute -bottom-10 -left-10 bg-white p-6 rounded-3xl shadow-xl border border-slate-100 max-w-[200px]">
                 <div className="flex items-center gap-3 mb-2">
-                  <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600">
+                  <div className="w-10 h-10 rounded-full bg-sky-100 flex items-center justify-center text-sky-600">
                     <TrendingUp className="w-5 h-5" />
                   </div>
                   <span className="text-xs font-black text-slate-900 uppercase tracking-widest">Growth</span>
@@ -415,12 +415,12 @@ export default function Home() {
             <Link to="/market-analysis" className="flex items-center gap-2 hover:text-white transition-colors group">
               <span className="text-[10px] font-black text-white/50 uppercase tracking-widest group-hover:text-white">Nifty 50</span>
               <span className="text-sm font-bold text-white">24,320.45</span>
-              <span className="text-xs font-bold text-emerald-300">+1.24%</span>
+              <span className="text-xs font-bold text-sky-300">+1.24%</span>
             </Link>
             <Link to="/market-analysis" className="flex items-center gap-2 hover:text-primary transition-colors group">
               <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest group-hover:text-primary">Sensex</span>
               <span className="text-sm font-bold text-white">79,850.12</span>
-              <span className="text-xs font-bold text-emerald-500">+0.98%</span>
+              <span className="text-xs font-bold text-sky-500">+0.98%</span>
             </Link>
             <Link to="/market-analysis" className="flex items-center gap-2 hover:text-primary transition-colors group">
               <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest group-hover:text-primary">Bank Nifty</span>
@@ -435,13 +435,13 @@ export default function Home() {
             <Link to="/market-analysis" className="flex items-center gap-2 hover:text-primary transition-colors group">
               <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest group-hover:text-primary">Gold</span>
               <span className="text-sm font-bold text-white">72,140</span>
-              <span className="text-xs font-bold text-emerald-500">+0.45%</span>
+              <span className="text-xs font-bold text-sky-500">+0.45%</span>
             </Link>
             {/* Duplicate for seamless loop */}
             <Link to="/market-analysis" className="flex items-center gap-2 hover:text-primary transition-colors group">
               <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest group-hover:text-primary">Nifty 50</span>
               <span className="text-sm font-bold text-white">24,320.45</span>
-              <span className="text-xs font-bold text-emerald-500">+1.24%</span>
+              <span className="text-xs font-bold text-sky-500">+1.24%</span>
             </Link>
           </div>
         </div>
@@ -675,7 +675,7 @@ export default function Home() {
                   "Global macro-economic impact reports"
                 ].map((item, idx) => (
                   <div key={idx} className="flex items-center gap-3">
-                    <div className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600">
+                    <div className="w-5 h-5 rounded-full bg-sky-100 flex items-center justify-center text-sky-600">
                       <TrendingUp className="w-3 h-3" />
                     </div>
                     <span className="text-slate-700 font-bold">{item}</span>
@@ -709,7 +709,7 @@ export default function Home() {
                   </div>
                   <div className="text-right">
                     <p className="text-xl font-black text-slate-900">24,320.45</p>
-                    <p className="text-xs font-bold text-emerald-500">+1.24%</p>
+                    <p className="text-xs font-bold text-sky-500">+1.24%</p>
                   </div>
                 </div>
                 
@@ -731,7 +731,7 @@ export default function Home() {
               
               {/* Decorative elements */}
               <div className="absolute -top-10 -right-10 w-40 h-40 bg-primary/20 rounded-full blur-3xl" />
-              <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-emerald-400/20 rounded-full blur-3xl" />
+              <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-sky-400/20 rounded-full blur-3xl" />
             </motion.div>
           </div>
         </div>

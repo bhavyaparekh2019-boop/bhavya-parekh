@@ -28,7 +28,7 @@ const fundTypes = [
       'Dynamic Bond Funds: Managing interest rate volatility by changing portfolio duration.',
       'Short Duration Funds: Ideal for 1-3 year investment horizons.'
     ],
-    color: 'bg-emerald-50 text-emerald-600'
+    color: 'bg-sky-50 text-sky-600'
   },
   {
     title: 'Hybrid Funds',
@@ -143,8 +143,8 @@ export default function MutualFundsGuide() {
                       'Ideal for Windfalls: Bonuses, property sales, or inheritance.',
                       'Pro Tip: If unsure of market levels, use STP to move lumpsum into equity.'
                     ],
-                    borderColor: '#10B981',
-                    gradient: 'linear-gradient(180deg, #10B981, #000)'
+                    borderColor: '#0EA5E9',
+                    gradient: 'linear-gradient(180deg, #0EA5E9, #000)'
                   }
                 ]}
               />
@@ -178,8 +178,8 @@ export default function MutualFundsGuide() {
                         'Market Participation: Remaining corpus continues to grow.',
                         'Pro Tip: Use SWP from a Debt or Hybrid fund for lower volatility in income.'
                       ],
-                      borderColor: '#10B981',
-                      gradient: 'linear-gradient(180deg, #10B981, #000)'
+                      borderColor: '#0EA5E9',
+                      gradient: 'linear-gradient(180deg, #0EA5E9, #000)'
                     }
                   ]}
                 />
@@ -203,8 +203,8 @@ export default function MutualFundsGuide() {
                 description: fund.description,
                 icon: BarChart3,
                 details: fund.details,
-                borderColor: fund.color.includes('blue') ? '#3B82F6' : fund.color.includes('emerald') ? '#10B981' : fund.color.includes('amber') ? '#F59E0B' : '#6366F1',
-                gradient: `linear-gradient(145deg, ${fund.color.includes('blue') ? '#3B82F6' : fund.color.includes('emerald') ? '#10B981' : fund.color.includes('amber') ? '#F59E0B' : '#6366F1'}, #000)`
+                borderColor: fund.color.includes('blue') ? '#3B82F6' : fund.color.includes('sky') ? '#0EA5E9' : fund.color.includes('amber') ? '#F59E0B' : '#6366F1',
+                gradient: `linear-gradient(145deg, ${fund.color.includes('blue') ? '#3B82F6' : fund.color.includes('sky') ? '#0EA5E9' : fund.color.includes('amber') ? '#F59E0B' : '#6366F1'}, #000)`
               }))}
             />
               <div className="mt-8 bg-white p-8 rounded-3xl border border-slate-200">
@@ -283,8 +283,8 @@ export default function MutualFundsGuide() {
                       'Back-tested Strategies: Based on historical data and patterns.',
                       'Pro Tip: Good for diversifying away from traditional "star" fund managers.'
                     ],
-                    borderColor: '#10B981',
-                    gradient: 'linear-gradient(180deg, #10B981, #000)'
+                    borderColor: '#0EA5E9',
+                    gradient: 'linear-gradient(180deg, #0EA5E9, #000)'
                   },
                   {
                     title: 'ESG Funds',
@@ -392,8 +392,8 @@ export default function MutualFundsGuide() {
                       'TDS: Tax is not deducted at source for residents, but mandatory for NRIs.',
                       'Pro Tip: Debt funds are still better than FDs for those who want liquidity and professional management.'
                     ],
-                    borderColor: '#10B981',
-                    gradient: 'linear-gradient(180deg, #10B981, #000)'
+                    borderColor: '#0EA5E9',
+                    gradient: 'linear-gradient(180deg, #0EA5E9, #000)'
                   }
                 ]}
               />

@@ -34,7 +34,7 @@ const assetClasses = [
       'Corporate Bonds: Higher interest than FDs but with credit risk. Stick to AAA-rated bonds.',
       'Liquid Funds: Ideal for parking emergency funds with easy withdrawal.'
     ],
-    color: 'bg-emerald-50 text-emerald-600'
+    color: 'bg-sky-50 text-sky-600'
   },
   {
     title: 'Gold',
@@ -136,8 +136,8 @@ export default function InvestmentGuide() {
                   subtitle: `Returns: ${asset.returns}`,
                   handle: `Risk: ${asset.risk}`,
                   details: asset.details,
-                  borderColor: asset.color.includes('blue') ? '#3B82F6' : asset.color.includes('emerald') ? '#10B981' : asset.color.includes('amber') ? '#F59E0B' : '#6366F1',
-                  gradient: `linear-gradient(145deg, ${asset.color.includes('blue') ? '#3B82F6' : asset.color.includes('emerald') ? '#10B981' : asset.color.includes('amber') ? '#F59E0B' : '#6366F1'}, #000)`
+                  borderColor: asset.color.includes('blue') ? '#3B82F6' : asset.color.includes('sky') ? '#0EA5E9' : asset.color.includes('amber') ? '#F59E0B' : '#6366F1',
+                  gradient: `linear-gradient(145deg, ${asset.color.includes('blue') ? '#3B82F6' : asset.color.includes('sky') ? '#0EA5E9' : asset.color.includes('amber') ? '#F59E0B' : '#6366F1'}, #000)`
                 }))}
               />
             </section>
@@ -199,7 +199,7 @@ export default function InvestmentGuide() {
                   In the world of finance, risk and reward are two sides of the same coin. Generally, the higher the potential return, the higher the risk of losing capital.
                 </p>
                 <div className="relative h-2 bg-slate-100 rounded-full overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 via-amber-400 to-rose-500" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-sky-400 via-amber-400 to-rose-500" />
                 </div>
                 <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-slate-400">
                   <span>Low Risk (FD/PPF)</span>
@@ -207,9 +207,9 @@ export default function InvestmentGuide() {
                   <span>High Risk (Small Cap)</span>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                  <div className="p-4 bg-emerald-50 rounded-xl border border-emerald-100">
-                    <h4 className="font-bold text-emerald-900 text-sm mb-1">Capital Preservation</h4>
-                    <p className="text-xs text-emerald-700">Focus on keeping your principal safe. Returns usually match inflation.</p>
+                  <div className="p-4 bg-sky-50 rounded-xl border border-sky-100">
+                    <h4 className="font-bold text-sky-900 text-sm mb-1">Capital Preservation</h4>
+                    <p className="text-xs text-sky-700">Focus on keeping your principal safe. Returns usually match inflation.</p>
                   </div>
                   <div className="p-4 bg-rose-50 rounded-xl border border-rose-100">
                     <h4 className="font-bold text-rose-900 text-sm mb-1">Wealth Creation</h4>
@@ -252,8 +252,8 @@ export default function InvestmentGuide() {
                       'Equity for Inflation: Small exposure to prevent wealth erosion.',
                       'Pro Tip: Shift to SWP (Systematic Withdrawal Plan) for regular monthly income.'
                     ],
-                    borderColor: '#10B981',
-                    gradient: 'linear-gradient(180deg, #10B981, #000)'
+                    borderColor: '#0EA5E9',
+                    gradient: 'linear-gradient(180deg, #0EA5E9, #000)'
                   }
                 ]}
               />
@@ -301,8 +301,8 @@ export default function InvestmentGuide() {
                       'No Human Bias: Rules-based investment approach.',
                       'Pro Tip: Ideal for long-term wealth creation with minimal effort.'
                     ],
-                    borderColor: '#10B981',
-                    gradient: 'linear-gradient(180deg, #10B981, #000)'
+                    borderColor: '#0EA5E9',
+                    gradient: 'linear-gradient(180deg, #0EA5E9, #000)'
                   }
                 ]}
               />
@@ -399,8 +399,8 @@ export default function InvestmentGuide() {
                       'High Minimums: Usually requires significant capital.',
                       'Pro Tip: Only for high-net-worth individuals with high risk tolerance.'
                     ],
-                    borderColor: '#10B981',
-                    gradient: 'linear-gradient(180deg, #10B981, #000)'
+                    borderColor: '#0EA5E9',
+                    gradient: 'linear-gradient(180deg, #0EA5E9, #000)'
                   },
                   {
                     title: 'Hedge Funds / AIFs',
@@ -467,8 +467,8 @@ export default function InvestmentGuide() {
                         'Tactical Entry: Capitalizing on specific market themes.',
                         'Pro Tip: Review satellite positions more frequently than the core.'
                       ],
-                      borderColor: '#10B981',
-                      gradient: 'linear-gradient(180deg, #10B981, #000)'
+                      borderColor: '#0EA5E9',
+                      gradient: 'linear-gradient(180deg, #0EA5E9, #000)'
                     }
                   ]}
                 />
@@ -567,7 +567,7 @@ export default function InvestmentGuide() {
                   'Review and rebalance annually'
                 ].map((step, i) => (
                   <li key={i} className="flex items-start gap-3 text-sm text-slate-600">
-                    <div className="w-5 h-5 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">
+                    <div className="w-5 h-5 rounded-full bg-sky-50 text-sky-600 flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">
                       {i + 1}
                     </div>
                     {step}

@@ -448,7 +448,7 @@ export default function Navbar() {
                                 <span className="text-5xl font-black text-white tracking-tighter">{aiResponse.stockData.price}</span>
                                 <div className={cn(
                                   "flex items-center gap-1 px-3 py-1 rounded-full text-sm font-black uppercase tracking-widest",
-                                  aiResponse.stockData.isPositive ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/20" : "bg-rose-500/20 text-rose-400 border border-rose-500/20"
+                                  aiResponse.stockData.isPositive ? "bg-sky-500/20 text-sky-400 border border-sky-500/20" : "bg-rose-500/20 text-rose-400 border border-rose-500/20"
                                 )}>
                                   {aiResponse.stockData.isPositive ? <TrendingUp className="w-4 h-4" /> : <TrendingDown className="w-4 h-4" />}
                                   {aiResponse.stockData.change} ({aiResponse.stockData.changePercent})
@@ -458,8 +458,8 @@ export default function Navbar() {
                             <div className="text-right">
                               <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Market Status</p>
                               <div className="flex items-center gap-2 justify-end">
-                                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                                <span className="text-xs font-bold text-emerald-500 uppercase tracking-widest">Live from Exchange</span>
+                                <div className="w-2 h-2 rounded-full bg-sky-500 animate-pulse" />
+                                <span className="text-xs font-bold text-sky-500 uppercase tracking-widest">Live from Exchange</span>
                               </div>
                             </div>
                           </div>

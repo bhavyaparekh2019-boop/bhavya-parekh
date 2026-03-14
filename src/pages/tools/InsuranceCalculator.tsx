@@ -244,7 +244,7 @@ export default function InsuranceCalculator() {
 
             <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm">
               <h3 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
-                <CheckCircle2 className="w-5 h-5 text-emerald-500" />
+                <CheckCircle2 className="w-5 h-5 text-sky-500" />
                 {calculationMethod === 'DIME' ? 'Coverage Breakdown' : 'HLV Breakdown'}
               </h3>
               <div className="space-y-4">
@@ -428,7 +428,7 @@ export default function InsuranceCalculator() {
               </p>
             </div>
             <div className="space-y-4">
-              <div className="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600">
+              <div className="w-12 h-12 bg-sky-50 rounded-xl flex items-center justify-center text-sky-600">
                 <CheckCircle2 className="w-6 h-6" />
               </div>
               <h3 className="text-xl font-bold text-slate-900">Health Insurance</h3>
@@ -459,21 +459,21 @@ export default function InsuranceCalculator() {
                 </div>
                 <ul className="space-y-4">
                   <li className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-emerald-500 mt-0.5 shrink-0" />
+                    <CheckCircle2 className="w-5 h-5 text-sky-500 mt-0.5 shrink-0" />
                     <div>
                       <p className="font-bold text-sm text-slate-900">Lower Premiums</p>
                       <p className="text-xs text-slate-600">Most affordable way to get high coverage amounts.</p>
                     </div>
                   </li>
                   <li className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-emerald-500 mt-0.5 shrink-0" />
+                    <CheckCircle2 className="w-5 h-5 text-sky-500 mt-0.5 shrink-0" />
                     <div>
                       <p className="font-bold text-sm text-slate-900">Fixed Duration</p>
                       <p className="text-xs text-slate-600">Coverage lasts for 10, 20, or 30 years.</p>
                     </div>
                   </li>
                   <li className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-emerald-500 mt-0.5 shrink-0" />
+                    <CheckCircle2 className="w-5 h-5 text-sky-500 mt-0.5 shrink-0" />
                     <div>
                       <p className="font-bold text-sm text-slate-900">Pure Protection</p>
                       <p className="text-xs text-slate-600">No cash value component; focuses solely on death benefit.</p>
@@ -526,30 +526,30 @@ export default function InsuranceCalculator() {
 
           <div className="mt-12 pt-12 border-t border-slate-100">
             <h3 className="text-2xl font-bold text-slate-900 mb-6">Tax Benefits under Section 80D</h3>
-            <div className="bg-emerald-50 rounded-3xl p-8 border border-emerald-100 mb-8">
+            <div className="bg-sky-50 rounded-3xl p-8 border border-sky-100 mb-8">
               <div className="flex flex-col md:flex-row gap-8 items-start">
                 <div className="flex-1">
-                  <h4 className="text-lg font-bold text-emerald-900 mb-4">Why Health Insurance is a Tax-Saving Tool</h4>
+                  <h4 className="text-lg font-bold text-sky-900 mb-4">Why Health Insurance is a Tax-Saving Tool</h4>
                   <p className="text-slate-700 text-sm leading-relaxed mb-4">
                     In India, premiums paid for health insurance policies are eligible for tax deductions under Section 80D of the Income Tax Act.
                   </p>
                   <ul className="space-y-3 text-sm text-slate-700">
                     <li className="flex items-start gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-600 mt-0.5 shrink-0" />
+                      <CheckCircle2 className="w-4 h-4 text-sky-600 mt-0.5 shrink-0" />
                       <span><strong>Self & Family:</strong> Deduction up to ₹25,000 for self, spouse, and dependent children.</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-600 mt-0.5 shrink-0" />
+                      <CheckCircle2 className="w-4 h-4 text-sky-600 mt-0.5 shrink-0" />
                       <span><strong>Parents:</strong> Additional deduction up to ₹25,000 for parents (₹50,000 if they are senior citizens).</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-600 mt-0.5 shrink-0" />
+                      <CheckCircle2 className="w-4 h-4 text-sky-600 mt-0.5 shrink-0" />
                       <span><strong>Preventive Check-ups:</strong> Includes a sub-limit of ₹5,000 for preventive health check-ups.</span>
                     </li>
                   </ul>
                 </div>
-                <div className="w-full md:w-64 bg-white rounded-2xl p-6 shadow-sm border border-emerald-200">
-                  <div className="text-xs font-black text-emerald-600 uppercase tracking-widest mb-2">Max Deduction Limits</div>
+                <div className="w-full md:w-64 bg-white rounded-2xl p-6 shadow-sm border border-sky-200">
+                  <div className="text-xs font-black text-sky-600 uppercase tracking-widest mb-2">Max Deduction Limits</div>
                   <div className="space-y-4">
                     <div>
                       <div className="text-slate-500 text-[10px] uppercase font-bold">Below 60 Years</div>

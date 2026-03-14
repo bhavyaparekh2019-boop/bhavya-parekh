@@ -103,7 +103,7 @@ export default function Footer() {
               
               {status === 'success' && (
                 <div className="mt-3 flex flex-col gap-1">
-                  <div className="flex items-center gap-2 text-emerald-600 text-xs font-medium">
+                  <div className="flex items-center gap-2 text-sky-600 text-xs font-medium">
                     <CheckCircle2 className="w-4 h-4" />
                     {message}
                   </div>

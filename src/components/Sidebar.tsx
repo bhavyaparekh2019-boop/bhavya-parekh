@@ -292,7 +292,7 @@ export default function Sidebar() {
           </button>
           {subscribeStatus === 'success' && (
             <div className="mt-2">
-              <p className="text-xs text-emerald-600 font-bold">Thanks for subscribing!</p>
+              <p className="text-xs text-sky-600 font-bold">Thanks for subscribing!</p>
               {subscribeNote && (
                 <p className="text-[9px] text-amber-600 font-bold uppercase tracking-tighter mt-1">Note: {subscribeNote}</p>
               )}

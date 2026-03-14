@@ -42,7 +42,7 @@ interface Investment {
   sourceUrl?: string;
 }
 
-const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899', '#06B6D4'];
+const COLORS = ['#3B82F6', '#0ea5e9', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899', '#06B6D4'];
 
 export default function Portfolio() {
   const [investments, setInvestments] = useState<Investment[]>([]);
@@ -363,7 +363,7 @@ export default function Portfolio() {
             <h3 className="text-3xl font-black text-slate-900">₹{stats.currentValue.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</h3>
             <div className={cn(
               "flex items-center gap-1 mt-2 text-xs font-bold",
-              stats.totalProfit >= 0 ? "text-emerald-600" : "text-rose-600"
+              stats.totalProfit >= 0 ? "text-sky-600" : "text-rose-600"
             )}>
               {stats.totalProfit >= 0 ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
               {stats.profitPercentage.toFixed(2)}%
@@ -389,7 +389,7 @@ export default function Portfolio() {
             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Total Profit/Loss</p>
             <h3 className={cn(
               "text-3xl font-black",
-              stats.totalProfit >= 0 ? "text-emerald-600" : "text-rose-600"
+              stats.totalProfit >= 0 ? "text-sky-600" : "text-rose-600"
             )}>
               {stats.totalProfit >= 0 ? '+' : ''}₹{stats.totalProfit.toLocaleString('en-IN', { maximumFractionDigits: 2 })}
             </h3>
@@ -480,13 +480,13 @@ export default function Portfolio() {
                             <td className="px-8 py-6 text-right">
                               <div className={cn(
                                 "text-sm font-black",
-                                profit >= 0 ? "text-emerald-600" : "text-rose-600"
+                                profit >= 0 ? "text-sky-600" : "text-rose-600"
                               )}>
                                 {profit >= 0 ? '+' : ''}₹{profit.toLocaleString('en-IN', { maximumFractionDigits: 2 })}
                               </div>
                               <div className={cn(
                                 "text-[10px] font-bold uppercase tracking-widest",
-                                profit >= 0 ? "text-emerald-500" : "text-rose-500"
+                                profit >= 0 ? "text-sky-500" : "text-rose-500"
                               )}>
                                 {profitPerc.toFixed(2)}%
                               </div>
@@ -593,7 +593,7 @@ export default function Portfolio() {
                       />
                       <Bar dataKey="percentage" radius={[4, 4, 0, 0]}>
                         {chartData.performance.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={entry.percentage >= 0 ? '#10B981' : '#EF4444'} />
+                          <Cell key={`cell-${index}`} fill={entry.percentage >= 0 ? '#0ea5e9' : '#EF4444'} />
                         ))}
                       </Bar>
                     </BarChart>
@@ -740,7 +740,7 @@ export default function Portfolio() {
                       {stockDetails.analystRating && (
                         <div className={cn(
                           "px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest",
-                          stockDetails.analystRating.toLowerCase().includes('buy') ? "bg-emerald-100 text-emerald-700" :
+                          stockDetails.analystRating.toLowerCase().includes('buy') ? "bg-sky-100 text-sky-700" :
                           stockDetails.analystRating.toLowerCase().includes('sell') ? "bg-rose-100 text-rose-700" :
                           "bg-amber-100 text-amber-700"
                         )}>
@@ -771,7 +771,7 @@ export default function Portfolio() {
                       </div>
                       <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100">
                         <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1">52W High</p>
-                        <p className="text-sm font-black text-emerald-600">{stockDetails.fiftyTwoWeekHigh.startsWith('₹') ? '' : '₹'}{stockDetails.fiftyTwoWeekHigh || 'N/A'}</p>
+                        <p className="text-sm font-black text-sky-600">{stockDetails.fiftyTwoWeekHigh.startsWith('₹') ? '' : '₹'}{stockDetails.fiftyTwoWeekHigh || 'N/A'}</p>
                       </div>
                       <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100">
                         <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1">52W Low</p>

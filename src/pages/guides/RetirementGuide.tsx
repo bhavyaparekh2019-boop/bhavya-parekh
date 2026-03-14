@@ -30,7 +30,7 @@ const retirementSteps = [
       'Include a buffer for emergencies and one-time large expenses.',
       'Understand the "Real Rate of Return" after inflation and taxes.'
     ],
-    color: 'bg-emerald-50 text-emerald-600'
+    color: 'bg-sky-50 text-sky-600'
   },
   {
     title: 'Choose the Right Tools',
@@ -126,8 +126,8 @@ export default function RetirementGuide() {
                   description: step.description,
                   icon: step.icon,
                   details: step.details,
-                  borderColor: step.color.includes('blue') ? '#3B82F6' : step.color.includes('emerald') ? '#10B981' : step.color.includes('amber') ? '#F59E0B' : '#6366F1',
-                  gradient: `linear-gradient(145deg, ${step.color.includes('blue') ? '#3B82F6' : step.color.includes('emerald') ? '#10B981' : step.color.includes('amber') ? '#F59E0B' : '#6366F1'}, #000)`
+                  borderColor: step.color.includes('blue') ? '#3B82F6' : step.color.includes('sky') ? '#0EA5E9' : step.color.includes('amber') ? '#F59E0B' : '#6366F1',
+                  gradient: `linear-gradient(145deg, ${step.color.includes('blue') ? '#3B82F6' : step.color.includes('sky') ? '#0EA5E9' : step.color.includes('amber') ? '#F59E0B' : '#6366F1'}, #000)`
                 }))}
               />
             </section>
@@ -170,8 +170,8 @@ export default function RetirementGuide() {
                         'Stop SWP during market crashes to avoid "Sequence of Returns Risk".',
                         'Withdraw lump sums for unplanned expenses like weddings or travel.'
                       ],
-                      borderColor: '#10B981',
-                      gradient: 'linear-gradient(180deg, #10B981, #000)'
+                      borderColor: '#0EA5E9',
+                      gradient: 'linear-gradient(180deg, #0EA5E9, #000)'
                     }
                   ]}
                 />
@@ -184,9 +184,9 @@ export default function RetirementGuide() {
                     <h5 className="font-bold text-blue-900 text-xs mb-1">Bucket 1: Immediate Cash</h5>
                     <p className="text-[10px] text-blue-700">2-3 years of expenses in Liquid Funds/FDs. No market risk.</p>
                   </div>
-                  <div className="p-4 bg-emerald-50 rounded-xl border border-emerald-100">
-                    <h5 className="font-bold text-emerald-900 text-xs mb-1">Bucket 2: Stability</h5>
-                    <p className="text-[10px] text-emerald-700">5-7 years of expenses in Debt Funds/Bonds. Low to medium risk.</p>
+                  <div className="p-4 bg-sky-50 rounded-xl border border-sky-100">
+                    <h5 className="font-bold text-sky-900 text-xs mb-1">Bucket 2: Stability</h5>
+                    <p className="text-[10px] text-sky-700">5-7 years of expenses in Debt Funds/Bonds. Low to medium risk.</p>
                   </div>
                   <div className="p-4 bg-amber-50 rounded-xl border border-amber-100">
                     <h5 className="font-bold text-amber-900 text-xs mb-1">Bucket 3: Growth</h5>
@@ -242,9 +242,9 @@ export default function RetirementGuide() {
                     <h4 className="font-bold text-blue-900 mb-2">The 25x Rule</h4>
                     <p className="text-xs text-blue-700">You need to save 25 times your annual expenses to be considered financially independent.</p>
                   </div>
-                  <div className="p-5 bg-emerald-50 rounded-2xl border border-emerald-100">
-                    <h4 className="font-bold text-emerald-900 mb-2">The 4% Rule</h4>
-                    <p className="text-xs text-emerald-700">You can safely withdraw 4% of your portfolio annually without running out of money.</p>
+                  <div className="p-5 bg-sky-50 rounded-2xl border border-sky-100">
+                    <h4 className="font-bold text-sky-900 mb-2">The 4% Rule</h4>
+                    <p className="text-xs text-sky-700">You can safely withdraw 4% of your portfolio annually without running out of money.</p>
                   </div>
                 </div>
               </div>
@@ -291,8 +291,8 @@ export default function RetirementGuide() {
                       'Tax-Efficient Transfer: Using trusts or gifts to transfer shares.',
                       'Ensuring Business Stability: Protecting the livelihood of employees and partners.'
                     ],
-                    borderColor: '#10B981',
-                    gradient: 'linear-gradient(180deg, #10B981, #000)'
+                    borderColor: '#0EA5E9',
+                    gradient: 'linear-gradient(180deg, #0EA5E9, #000)'
                   }
                 ]}
               />
@@ -328,8 +328,8 @@ export default function RetirementGuide() {
                       'Social Media Legacy: Instructions for memorializing or deleting accounts.',
                       'Crypto Keys: Pro Tip: Ensure private keys are securely stored and accessible to heirs.'
                     ],
-                    borderColor: '#10B981',
-                    gradient: 'linear-gradient(180deg, #10B981, #000)'
+                    borderColor: '#0EA5E9',
+                    gradient: 'linear-gradient(180deg, #0EA5E9, #000)'
                   }
                 ]}
               />
@@ -370,7 +370,7 @@ export default function RetirementGuide() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
                   <div className="space-y-4">
                     <h4 className="font-bold text-slate-900 flex items-center gap-2">
-                      <CheckCircle2 className="w-5 h-5 text-emerald-500" />
+                      <CheckCircle2 className="w-5 h-5 text-sky-500" />
                       Key Advantages
                     </h4>
                     <ul className="space-y-3 text-sm text-slate-600">

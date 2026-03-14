@@ -270,7 +270,7 @@ export default function RetirementPlanner() {
                 className="group p-6 rounded-2xl border border-slate-200 hover:border-primary hover:shadow-lg transition-all bg-white"
               >
                 <div className="flex items-center justify-between mb-4">
-                  <span className="px-3 py-1 bg-emerald-50 text-emerald-600 text-[10px] font-black uppercase tracking-widest rounded-full">PPF & EPF</span>
+                  <span className="px-3 py-1 bg-sky-50 text-sky-600 text-[10px] font-black uppercase tracking-widest rounded-full">PPF & EPF</span>
                   <PiggyBank className="w-5 h-5 text-slate-300 group-hover:text-primary transition-colors" />
                 </div>
                 <h4 className="font-bold text-slate-900 mb-2 group-hover:text-primary transition-colors">NPS vs EPF vs PPF Guide</h4>

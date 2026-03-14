@@ -16,14 +16,14 @@ export default function Logo({ className, showText = true, size = 'md' }: LogoPr
 
   return (
     <div className={cn('flex items-center gap-3 group', className)}>
-      <div className={cn('relative flex items-center justify-center bg-white border border-[#059669] rounded-sm overflow-hidden transition-transform group-hover:scale-105', sizes[size], 'aspect-square')}>
+      <div className={cn('relative flex items-center justify-center bg-white border border-[#0284c7] rounded-sm overflow-hidden transition-transform group-hover:scale-105', sizes[size], 'aspect-square')}>
         <svg viewBox="0 0 200 200" className="w-full h-full p-1">
           <text 
             x="50%" 
             y="45%" 
             dominantBaseline="middle" 
             textAnchor="middle" 
-            fill="#059669" 
+            fill="#0284c7" 
             className="font-sans font-bold" 
             fontSize="70"
           >
@@ -34,7 +34,7 @@ export default function Logo({ className, showText = true, size = 'md' }: LogoPr
             y="75%" 
             dominantBaseline="middle" 
             textAnchor="middle" 
-            fill="#059669" 
+            fill="#0284c7" 
             className="font-sans font-bold" 
             fontSize="28" 
             letterSpacing="8"

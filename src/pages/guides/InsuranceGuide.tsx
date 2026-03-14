@@ -30,7 +30,7 @@ const insuranceTypes = [
       'Cashless hospitalization. Direct settlement with network hospitals.',
       'OPD Cover: Reimburses doctor visits and pharmacy bills.'
     ],
-    color: 'bg-emerald-50 text-emerald-600'
+    color: 'bg-sky-50 text-sky-600'
   },
   {
     title: 'Motor Insurance',
@@ -139,8 +139,8 @@ export default function InsuranceGuide() {
                   description: type.description,
                   icon: type.icon,
                   details: type.details,
-                  borderColor: type.color.includes('rose') ? '#F43F5E' : type.color.includes('emerald') ? '#10B981' : type.color.includes('blue') ? '#3B82F6' : '#F59E0B',
-                  gradient: `linear-gradient(145deg, ${type.color.includes('rose') ? '#F43F5E' : type.color.includes('emerald') ? '#10B981' : type.color.includes('blue') ? '#3B82F6' : '#F59E0B'}, #000)`
+                  borderColor: type.color.includes('rose') ? '#F43F5E' : type.color.includes('sky') ? '#0EA5E9' : type.color.includes('blue') ? '#3B82F6' : '#F59E0B',
+                  gradient: `linear-gradient(145deg, ${type.color.includes('rose') ? '#F43F5E' : type.color.includes('sky') ? '#0EA5E9' : type.color.includes('blue') ? '#3B82F6' : '#F59E0B'}, #000)`
                 }))}
               />
             </section>
@@ -193,7 +193,7 @@ export default function InsuranceGuide() {
                     </tr>
                     <tr className="border-b border-slate-50">
                       <td className="py-4 font-bold text-slate-900">Premium</td>
-                      <td className="py-4 text-emerald-600 font-bold">Very Low</td>
+                      <td className="py-4 text-sky-600 font-bold">Very Low</td>
                       <td className="py-4 text-rose-600 font-bold">High</td>
                     </tr>
                     <tr className="border-b border-slate-50">
@@ -242,8 +242,8 @@ export default function InsuranceGuide() {
                       'No Bills Required: Payment is made on diagnosis, not expenses.',
                       'Pro Tip: Use this to cover lifestyle changes and lost income.'
                     ],
-                    borderColor: '#10B981',
-                    gradient: 'linear-gradient(180deg, #10B981, #000)'
+                    borderColor: '#0EA5E9',
+                    gradient: 'linear-gradient(180deg, #0EA5E9, #000)'
                   },
                   {
                     title: 'Waiver of Premium',
@@ -333,8 +333,8 @@ export default function InsuranceGuide() {
                     {
                       title: 'Customization',
                       description: 'Individual plans allow you to choose riders and coverage limits that suit your family.',
-                      borderColor: '#10B981',
-                      gradient: 'linear-gradient(180deg, #10B981, #000)'
+                      borderColor: '#0EA5E9',
+                      gradient: 'linear-gradient(180deg, #0EA5E9, #000)'
                     }
                   ]}
                 />

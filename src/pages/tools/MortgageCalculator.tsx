@@ -220,17 +220,17 @@ export default function MortgageCalculator() {
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="mt-8 w-full bg-emerald-50 rounded-2xl p-6 border border-emerald-100"
+                  className="mt-8 w-full bg-sky-50 rounded-2xl p-6 border border-sky-100"
                 >
-                  <p className="text-emerald-800 font-black uppercase tracking-widest text-[10px] mb-4">Prepayment Savings</p>
+                  <p className="text-sky-800 font-black uppercase tracking-widest text-[10px] mb-4">Prepayment Savings</p>
                   <div className="grid grid-cols-2 gap-4 text-center">
                     <div>
-                      <p className="text-xs text-emerald-600 font-bold uppercase mb-1">Interest Saved</p>
-                      <p className="text-xl font-black text-emerald-900">₹{totalInterestSaved.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</p>
+                      <p className="text-xs text-sky-600 font-bold uppercase mb-1">Interest Saved</p>
+                      <p className="text-xl font-black text-sky-900">₹{totalInterestSaved.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</p>
                     </div>
                     <div>
-                      <p className="text-xs text-emerald-600 font-bold uppercase mb-1">Time Saved</p>
-                      <p className="text-xl font-black text-emerald-900">{Math.floor(monthsSaved / 12)}y {monthsSaved % 12}m</p>
+                      <p className="text-xs text-sky-600 font-bold uppercase mb-1">Time Saved</p>
+                      <p className="text-xl font-black text-sky-900">{Math.floor(monthsSaved / 12)}y {monthsSaved % 12}m</p>
                     </div>
                   </div>
                 </motion.div>

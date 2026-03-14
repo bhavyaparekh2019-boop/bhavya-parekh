@@ -106,7 +106,7 @@ export default function ConsultationModal() {
 
               {isSuccess ? (
                 <div className="text-center py-12">
-                  <div className="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <div className="w-20 h-20 bg-sky-100 text-sky-600 rounded-full flex items-center justify-center mx-auto mb-6">
                     <CheckCircle2 className="w-10 h-10" />
                   </div>
                   <h3 className="text-2xl font-black text-slate-900 mb-2">Request Received!</h3>

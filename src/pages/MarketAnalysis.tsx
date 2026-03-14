@@ -275,7 +275,7 @@ export default function MarketAnalysis() {
                     <span className="text-xs font-black text-slate-400 uppercase tracking-widest">{index.name}</span>
                     <div className={cn(
                       "p-2 rounded-xl",
-                      index.isPositive ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"
+                      index.isPositive ? "bg-sky-50 text-sky-600" : "bg-rose-50 text-rose-600"
                     )}>
                       {index.isPositive ? <ArrowUpRight className="w-4 h-4" /> : <ArrowDownRight className="w-4 h-4" />}
                     </div>
@@ -284,7 +284,7 @@ export default function MarketAnalysis() {
                     <h3 className="text-2xl font-black text-slate-900">{index.value}</h3>
                     <p className={cn(
                       "text-sm font-bold",
-                      index.isPositive ? "text-emerald-600" : "text-rose-600"
+                      index.isPositive ? "text-sky-600" : "text-rose-600"
                     )}>
                       {index.change}
                     </p>
@@ -398,13 +398,13 @@ export default function MarketAnalysis() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="bg-slate-50 p-6 rounded-3xl border border-slate-100">
                       <h4 className="text-sm font-black text-slate-900 uppercase tracking-widest mb-4 flex items-center gap-2">
-                        <TrendingUp className="w-4 h-4 text-emerald-500" />
+                        <TrendingUp className="w-4 h-4 text-sky-500" />
                         Key Drivers
                       </h4>
                       <ul className="space-y-3">
                         {marketData.commentary.keyDrivers.map((driver, idx) => (
                           <li key={idx} className="flex items-start gap-3 text-sm text-slate-600">
-                            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-1.5 shrink-0" />
+                            <div className="w-1.5 h-1.5 rounded-full bg-sky-500 mt-1.5 shrink-0" />
                             {driver}
                           </li>
                         ))}
@@ -449,17 +449,17 @@ export default function MarketAnalysis() {
             <div className="lg:col-span-4 space-y-8">
               <section className="bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-sm">
                 <h3 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
-                  <TrendingUp className="w-5 h-5 text-emerald-500" />
+                  <TrendingUp className="w-5 h-5 text-sky-500" />
                   Top Gainers
                 </h3>
                 <div className="space-y-4">
                   {marketData.topGainers.map((stock, idx) => (
-                    <div key={idx} className="flex items-center justify-between p-4 bg-emerald-50/50 rounded-2xl border border-emerald-100">
+                    <div key={idx} className="flex items-center justify-between p-4 bg-sky-50/50 rounded-2xl border border-sky-100">
                       <div>
                         <p className="font-bold text-slate-900 text-sm">{stock.name}</p>
                         <p className="text-xs text-slate-500">{stock.price}</p>
                       </div>
-                      <span className="text-emerald-600 font-black text-sm">{stock.change}</span>
+                      <span className="text-sky-600 font-black text-sm">{stock.change}</span>
                     </div>
                   ))}
                 </div>

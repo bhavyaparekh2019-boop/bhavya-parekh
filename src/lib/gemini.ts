@@ -25,7 +25,7 @@ export async function generateArticleImage(title: string, category: string): Pro
             
             Style Guidelines:
             - Professional, clean, and modern aesthetic suitable for a premium financial news platform (like Bloomberg or The Economist).
-            - Use a sophisticated color palette (deep blues, emerald greens, or charcoal grays with gold/primary accents).
+            - Use a sophisticated color palette (deep blues, sky blues, or charcoal grays with gold/primary accents).
             - The composition should be balanced and visually striking.
             - Avoid any text, labels, or watermarks in the image.
             - Focus on symbolic representations of the topic (e.g., bull/bear markets, digital growth, wealth building, secure futures).

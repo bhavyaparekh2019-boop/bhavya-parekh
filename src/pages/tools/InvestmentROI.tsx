@@ -189,7 +189,7 @@ export default function InvestmentROI() {
                 </div>
                 <div className="flex justify-between text-slate-500">
                   <span>Total Gain</span>
-                  <span className="text-emerald-600">
+                  <span className="text-sky-600">
                     +₹{(finalValue - totalInvested).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
                   </span>
                 </div>

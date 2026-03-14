@@ -141,7 +141,7 @@ export default function Admin() {
           {/* Newsletter Subscriptions */}
           <div className="space-y-6">
             <div className="flex items-center gap-3 mb-2">
-              <div className="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-600">
+              <div className="w-10 h-10 rounded-xl bg-sky-100 flex items-center justify-center text-sky-600">
                 <Mail className="w-5 h-5" />
               </div>
               <h2 className="text-2xl font-black text-slate-900">Subscribers</h2>
@@ -165,7 +165,7 @@ export default function Admin() {
                           {new Date(item.date).toLocaleDateString()}
                         </p>
                       </div>
-                      <Shield className="w-4 h-4 text-emerald-500 shrink-0" />
+                      <Shield className="w-4 h-4 text-sky-500 shrink-0" />
                     </div>
                   )).reverse()
                 )}

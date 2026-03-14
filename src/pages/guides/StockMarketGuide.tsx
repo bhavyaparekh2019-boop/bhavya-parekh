@@ -30,7 +30,7 @@ const marketConcepts = [
       'Price Discovery: Where buyers and sellers meet to determine fair value.',
       'Listing Requirements: Companies must meet strict criteria to be traded here.'
     ],
-    color: 'bg-emerald-50 text-emerald-600'
+    color: 'bg-sky-50 text-sky-600'
   },
   {
     title: 'Market Indices',
@@ -126,8 +126,8 @@ export default function StockMarketGuide() {
                   description: concept.description,
                   icon: concept.icon,
                   details: concept.details,
-                  borderColor: concept.color.includes('blue') ? '#3B82F6' : concept.color.includes('emerald') ? '#10B981' : concept.color.includes('amber') ? '#F59E0B' : '#6366F1',
-                  gradient: `linear-gradient(145deg, ${concept.color.includes('blue') ? '#3B82F6' : concept.color.includes('emerald') ? '#10B981' : concept.color.includes('amber') ? '#F59E0B' : '#6366F1'}, #000)`
+                  borderColor: concept.color.includes('blue') ? '#3B82F6' : concept.color.includes('sky') ? '#0EA5E9' : concept.color.includes('amber') ? '#F59E0B' : '#6366F1',
+                  gradient: `linear-gradient(145deg, ${concept.color.includes('blue') ? '#3B82F6' : concept.color.includes('sky') ? '#0EA5E9' : concept.color.includes('amber') ? '#F59E0B' : '#6366F1'}, #000)`
                 }))}
               />
             </section>
@@ -149,15 +149,15 @@ export default function StockMarketGuide() {
                   <p className="text-sm text-slate-600 mb-4">Investing a fixed amount at regular intervals (monthly/quarterly). Best for long-term wealth creation and salaried individuals.</p>
                   <ul className="text-xs text-slate-500 space-y-2">
                     <li className="flex items-start gap-2">
-                      <CheckCircle2 className="w-3 h-3 text-emerald-500 mt-0.5 shrink-0" />
+                      <CheckCircle2 className="w-3 h-3 text-sky-500 mt-0.5 shrink-0" />
                       <span>Rupee Cost Averaging: Buy more when prices are low.</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <CheckCircle2 className="w-3 h-3 text-emerald-500 mt-0.5 shrink-0" />
+                      <CheckCircle2 className="w-3 h-3 text-sky-500 mt-0.5 shrink-0" />
                       <span>Disciplined Investing: Automates your savings.</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <CheckCircle2 className="w-3 h-3 text-emerald-500 mt-0.5 shrink-0" />
+                      <CheckCircle2 className="w-3 h-3 text-sky-500 mt-0.5 shrink-0" />
                       <span>Power of Compounding: Small amounts grow significantly.</span>
                     </li>
                   </ul>
@@ -172,15 +172,15 @@ export default function StockMarketGuide() {
                   <p className="text-sm text-slate-600 mb-4">Investing a large sum of money at once. Ideal when you have surplus cash or during market corrections.</p>
                   <ul className="text-xs text-slate-500 space-y-2">
                     <li className="flex items-start gap-2">
-                      <CheckCircle2 className="w-3 h-3 text-emerald-500 mt-0.5 shrink-0" />
+                      <CheckCircle2 className="w-3 h-3 text-sky-500 mt-0.5 shrink-0" />
                       <span>Immediate Market Exposure: Full amount starts earning.</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <CheckCircle2 className="w-3 h-3 text-emerald-500 mt-0.5 shrink-0" />
+                      <CheckCircle2 className="w-3 h-3 text-sky-500 mt-0.5 shrink-0" />
                       <span>Lower Transaction Costs: Fewer buy orders.</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <CheckCircle2 className="w-3 h-3 text-emerald-500 mt-0.5 shrink-0" />
+                      <CheckCircle2 className="w-3 h-3 text-sky-500 mt-0.5 shrink-0" />
                       <span>High Potential: Best for undervalued markets.</span>
                     </li>
                   </ul>
@@ -275,8 +275,8 @@ export default function StockMarketGuide() {
                     ))}
                   </ul>
                 </div>
-                <div className="p-8 bg-emerald-50 rounded-[2rem] border border-emerald-100">
-                  <div className="w-12 h-12 bg-emerald-100 rounded-2xl flex items-center justify-center text-emerald-600 mb-6">
+                <div className="p-8 bg-sky-50 rounded-[2rem] border border-sky-100">
+                  <div className="w-12 h-12 bg-sky-100 rounded-2xl flex items-center justify-center text-sky-600 mb-6">
                     <Coins className="w-6 h-6" />
                   </div>
                   <h3 className="text-xl font-bold text-slate-900 mb-4">Lumpsum Investing</h3>
@@ -286,7 +286,7 @@ export default function StockMarketGuide() {
                   <ul className="space-y-3">
                     {['Immediate market exposure', 'Lower transaction costs', 'Captures full market recovery', 'Ideal for idle cash'].map((item, i) => (
                       <li key={i} className="flex items-center gap-2 text-xs font-bold text-slate-700">
-                        <CheckCircle2 className="w-3 h-3 text-emerald-500" />
+                        <CheckCircle2 className="w-3 h-3 text-sky-500" />
                         {item}
                       </li>
                     ))}
@@ -391,8 +391,8 @@ export default function StockMarketGuide() {
                       'IPO Boom: Many companies go public to capitalize on the euphoria.',
                       'Pro Tip: Stay disciplined; don\'t chase stocks at all-time highs.'
                     ],
-                    borderColor: '#10B981',
-                    gradient: 'linear-gradient(180deg, #10B981, #000)'
+                    borderColor: '#0EA5E9',
+                    gradient: 'linear-gradient(180deg, #0EA5E9, #000)'
                   },
                   {
                     title: 'Distribution Phase',
@@ -458,8 +458,8 @@ export default function StockMarketGuide() {
                       'Option Premium: The price you pay to buy an option (your maximum loss).',
                       'Time Decay: Options lose value as they get closer to expiry. Pro Tip: Don\'t hold OTM options till expiry.'
                     ],
-                    borderColor: '#10B981',
-                    gradient: 'linear-gradient(180deg, #10B981, #000)'
+                    borderColor: '#0EA5E9',
+                    gradient: 'linear-gradient(180deg, #0EA5E9, #000)'
                   }
                 ]}
               />

@@ -28,7 +28,7 @@ const features = [
       'Regular performance reporting.',
       'Ethical advisory practices.'
     ],
-    color: 'bg-emerald-50 text-emerald-600'
+    color: 'bg-sky-50 text-sky-600'
   },
   {
     title: 'Professional Expertise',
@@ -262,8 +262,8 @@ export default function About() {
               description: feature.description,
               icon: feature.icon,
               details: feature.details,
-              borderColor: feature.color.includes('blue') ? '#3B82F6' : feature.color.includes('emerald') ? '#10B981' : feature.color.includes('amber') ? '#F59E0B' : '#6366F1',
-              gradient: `linear-gradient(145deg, ${feature.color.includes('blue') ? '#3B82F6' : feature.color.includes('emerald') ? '#10B981' : feature.color.includes('amber') ? '#F59E0B' : '#6366F1'}, #000)`
+              borderColor: feature.color.includes('blue') ? '#3B82F6' : feature.color.includes('sky') ? '#0EA5E9' : feature.color.includes('amber') ? '#F59E0B' : '#6366F1',
+              gradient: `linear-gradient(145deg, ${feature.color.includes('blue') ? '#3B82F6' : feature.color.includes('sky') ? '#0EA5E9' : feature.color.includes('amber') ? '#F59E0B' : '#6366F1'}, #000)`
             }))}
           />
         </section>

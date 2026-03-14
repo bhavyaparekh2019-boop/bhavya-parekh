@@ -158,8 +158,8 @@ export default function SIPCalculator() {
                       'Small amounts grow into large corpuses.',
                       'Time is the most important factor.'
                     ],
-                    borderColor: '#10B981',
-                    gradient: 'linear-gradient(180deg, #10B981, #000)'
+                    borderColor: '#0EA5E9',
+                    gradient: 'linear-gradient(180deg, #0EA5E9, #000)'
                   }
                 ]}
               />
@@ -181,7 +181,7 @@ export default function SIPCalculator() {
                 </div>
                 <div>
                   <p className="text-[10px] font-black text-slate-700 uppercase tracking-widest mb-1">Est. Returns</p>
-                  <p className="text-2xl font-bold text-emerald-700">+{formatCurrency(results.estimatedReturns)}</p>
+                  <p className="text-2xl font-bold text-sky-700">+{formatCurrency(results.estimatedReturns)}</p>
                 </div>
                 <div className="pt-8 border-t border-slate-900/10">
                   <p className="text-[10px] font-black text-slate-700 uppercase tracking-widest mb-1">Total Value</p>

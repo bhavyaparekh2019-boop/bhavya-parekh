@@ -30,7 +30,7 @@ const taxSections = [
       'Health Checkups: Up to ₹5,000 included within the overall limits of 80D.',
       'Medical Expenditure: For senior citizens without insurance, actual medical bills are deductible.'
     ],
-    color: 'bg-emerald-50 text-emerald-600'
+    color: 'bg-sky-50 text-sky-600'
   },
   {
     title: 'Section 24(b)',
@@ -126,8 +126,8 @@ export default function TaxGuide() {
                 description: `Limit: ${section.limit}`,
                 icon: section.title.includes('80C') ? Landmark : section.title.includes('80D') ? Shield : section.title.includes('24') ? Calculator : FileText,
                 details: section.details,
-                borderColor: section.color.includes('blue') ? '#3B82F6' : section.color.includes('emerald') ? '#10B981' : section.color.includes('amber') ? '#F59E0B' : '#6366F1',
-                gradient: `linear-gradient(145deg, ${section.color.includes('blue') ? '#3B82F6' : section.color.includes('emerald') ? '#10B981' : section.color.includes('amber') ? '#F59E0B' : '#6366F1'}, #000)`
+                borderColor: section.color.includes('blue') ? '#3B82F6' : section.color.includes('sky') ? '#0EA5E9' : section.color.includes('amber') ? '#F59E0B' : '#6366F1',
+                gradient: `linear-gradient(145deg, ${section.color.includes('blue') ? '#3B82F6' : section.color.includes('sky') ? '#0EA5E9' : section.color.includes('amber') ? '#F59E0B' : '#6366F1'}, #000)`
               }))}
             />
               <div className="mt-8 bg-white p-8 rounded-3xl border border-slate-200">
@@ -162,8 +162,8 @@ export default function TaxGuide() {
                         'Reduces Taxable Salary: Directly lowers the base on which tax is calculated.',
                         'Pro Tip: This is over and above all other 80C/80D deductions.'
                       ],
-                      borderColor: '#10B981',
-                      gradient: 'linear-gradient(180deg, #10B981, #000)'
+                      borderColor: '#0EA5E9',
+                      gradient: 'linear-gradient(180deg, #0EA5E9, #000)'
                     }
                   ]}
                 />
@@ -214,7 +214,7 @@ export default function TaxGuide() {
                 <p className="text-sm text-slate-600 mb-4">
                   A strategy to reduce your tax liability by selling stocks or mutual funds that are currently at a loss to offset the capital gains from other investments.
                 </p>
-                <div className="bg-emerald-50 p-4 rounded-xl text-xs text-emerald-700 italic">
+                <div className="bg-sky-50 p-4 rounded-xl text-xs text-sky-700 italic">
                   Example: If you have ₹50,000 in gains and ₹20,000 in losses, you can sell the loss-making asset to bring your taxable gain down to ₹30,000.
                 </div>
               </div>
@@ -340,17 +340,17 @@ export default function TaxGuide() {
                 <div className="space-y-4">
                   <h4 className="font-bold text-slate-900">Early Year (April - June)</h4>
                   <ul className="space-y-2 text-sm text-slate-600">
-                    <li className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3 text-emerald-500" /> Declare investments to employer</li>
-                    <li className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3 text-emerald-500" /> Start SIPs in ELSS funds</li>
-                    <li className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3 text-emerald-500" /> Review previous year's tax return</li>
+                    <li className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3 text-sky-500" /> Declare investments to employer</li>
+                    <li className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3 text-sky-500" /> Start SIPs in ELSS funds</li>
+                    <li className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3 text-sky-500" /> Review previous year's tax return</li>
                   </ul>
                 </div>
                 <div className="space-y-4">
                   <h4 className="font-bold text-slate-900">Year End (Jan - March)</h4>
                   <ul className="space-y-2 text-sm text-slate-600">
-                    <li className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3 text-emerald-500" /> Submit investment proofs</li>
-                    <li className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3 text-emerald-500" /> Top up PPF and NPS accounts</li>
-                    <li className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3 text-emerald-500" /> Check for any pending tax savings</li>
+                    <li className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3 text-sky-500" /> Submit investment proofs</li>
+                    <li className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3 text-sky-500" /> Top up PPF and NPS accounts</li>
+                    <li className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3 text-sky-500" /> Check for any pending tax savings</li>
                   </ul>
                 </div>
               </div>
@@ -446,15 +446,15 @@ export default function TaxGuide() {
               </div>
             </div>
 
-            <div className="bg-emerald-50 p-8 rounded-[2rem] border border-emerald-100">
-              <h3 className="text-lg font-bold text-emerald-900 mb-4 flex items-center gap-2">
-                <Shield className="w-5 h-5 text-emerald-600" />
+            <div className="bg-sky-50 p-8 rounded-[2rem] border border-sky-100">
+              <h3 className="text-lg font-bold text-sky-900 mb-4 flex items-center gap-2">
+                <Shield className="w-5 h-5 text-sky-600" />
                 ELSS: The Dual Benefit
               </h3>
-              <p className="text-sm text-emerald-700 mb-6 leading-relaxed">
+              <p className="text-sm text-sky-700 mb-6 leading-relaxed">
                 Equity Linked Savings Schemes (ELSS) offer the shortest lock-in period (3 years) among all 80C options and the potential for high equity returns.
               </p>
-              <button className="w-full bg-emerald-600 text-white font-bold py-4 rounded-2xl text-sm hover:bg-emerald-700 transition-all flex items-center justify-center gap-2">
+              <button className="w-full bg-sky-600 text-white font-bold py-4 rounded-2xl text-sm hover:bg-sky-700 transition-all flex items-center justify-center gap-2">
                 View ELSS Funds <ArrowRight className="w-4 h-4" />
               </button>
             </div>

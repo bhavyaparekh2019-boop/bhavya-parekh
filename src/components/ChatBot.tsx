@@ -148,7 +148,7 @@ export default function ChatBot() {
                 <div>
                   <h3 className="text-sm font-black uppercase tracking-widest">BHP Assistant</h3>
                   <div className="flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
+                    <span className="w-1.5 h-1.5 bg-sky-500 rounded-full animate-pulse" />
                     <span className="text-[10px] text-slate-700 font-bold">ONLINE</span>
                   </div>
                 </div>

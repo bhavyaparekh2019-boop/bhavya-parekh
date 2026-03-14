@@ -31,7 +31,7 @@ export default function Dock({
       onMouseLeave={() => mouseX.set(Infinity)}
       style={{ height: panelHeight }}
       className={cn(
-        "fixed bottom-6 left-1/2 -translate-x-1/2 flex items-end gap-3 px-4 pb-3 rounded-[2rem] bg-slate-900/90 backdrop-blur-xl border border-white/10 shadow-2xl z-[100]",
+        "fixed bottom-6 left-1/2 -translate-x-1/2 flex items-end gap-3 px-4 pb-3 rounded-[2rem] bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl z-[100]",
         className
       )}
     >
@@ -76,7 +76,7 @@ function DockIcon({
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         style={{ width, height: width }}
-        className="flex items-center justify-center rounded-2xl bg-white/5 border border-white/10 text-slate-300 hover:bg-primary hover:text-slate-900 transition-all duration-300 group relative"
+        className="flex items-center justify-center rounded-2xl bg-white/10 border border-white/20 text-white hover:bg-white/20 transition-colors group relative"
       >
         <div className="flex items-center justify-center w-full h-full">
           {icon}
