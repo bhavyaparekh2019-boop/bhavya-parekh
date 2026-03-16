@@ -168,8 +168,9 @@ export default function InsuranceGuide() {
                 </p>
                 <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100">
                   <p className="text-xs font-bold text-slate-900 mb-2">The Thumb Rule:</p>
-                  <p className="text-sm text-primary font-bold mb-4">Life Cover = (Annual Income × 15) + Outstanding Debts - Existing Assets</p>
-                  <p className="text-xs text-slate-500">Example: If you earn ₹10 Lakh/year and have a ₹50 Lakh home loan, you should ideally have a cover of at least ₹2 Crore.</p>
+                  <p className="text-sm text-primary font-bold mb-4">Life Cover = (Annual Income × 15) + Total Debts - Existing Assets</p>
+                  <p className="text-xs text-slate-500">Note: Total Debts should include home loans, personal loans, credit card balances, and any other liabilities.</p>
+                  <p className="text-xs text-slate-500 mt-2">Example: If you earn ₹10 Lakh/year and have a ₹50 Lakh home loan + ₹5 Lakh in other loans, you should ideally have a cover of at least ₹2.05 Crore.</p>
                 </div>
               </div>
             </section>

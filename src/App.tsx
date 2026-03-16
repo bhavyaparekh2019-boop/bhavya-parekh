@@ -24,8 +24,6 @@ import Insights from '@/src/pages/Insights';
 import About from '@/src/pages/About';
 import Admin from '@/src/pages/Admin';
 import Portfolio from '@/src/pages/Portfolio';
-import NavigationDock from '@/src/components/NavigationDock';
-
 import ErrorBoundary from '@/src/components/ErrorBoundary';
 
 export default function App() {
@@ -62,7 +60,6 @@ export default function App() {
             <Footer />
             <ChatBot />
             <ConsultationModal />
-            <NavigationDock />
           </div>
         </Router>
       </ModalProvider>

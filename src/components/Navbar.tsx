@@ -536,9 +536,14 @@ export default function Navbar() {
                       </div>
                     )}
 
-                    <div className="pt-10 flex items-center justify-center gap-2 text-[10px] text-slate-500 font-bold uppercase tracking-[0.2em]">
-                      <Sparkles className="w-3 h-3" />
-                      Powered by Gemini 3 Flash • Real-time Financial Intelligence
+                    <div className="pt-10 flex flex-col items-center justify-center gap-4">
+                      <div className="flex items-center justify-center gap-2 text-[10px] text-slate-500 font-bold uppercase tracking-[0.2em]">
+                        <Sparkles className="w-3 h-3" />
+                        Powered by Gemini 3 Flash • Real-time Financial Intelligence
+                      </div>
+                      <p className="text-[9px] font-bold text-slate-600 uppercase tracking-widest text-center max-w-md opacity-60 leading-relaxed">
+                        Disclaimer: AI insights are for informational purposes and not financial advice. Consult a professional before investing.
+                      </p>
                     </div>
                   </motion.div>
                 ) : (

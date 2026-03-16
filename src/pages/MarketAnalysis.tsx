@@ -209,24 +209,17 @@ export default function MarketAnalysis() {
       <section className="bg-white border-b border-slate-200 pt-24 pb-16 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="max-w-2xl"
-            >
+            <div className="max-w-2xl">
               <span className="inline-block px-3 py-1 bg-primary/10 text-primary text-xs font-bold rounded-full mb-4 uppercase tracking-wider">
                 Live Intelligence
               </span>
-              <BlurText 
-                text="Real-Time Market Analysis"
-                centered={false}
-                highlight="Market Analysis"
-                className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 tracking-tight"
-              />
+              <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 tracking-tight">
+                Real-Time <span className="text-primary">Market Analysis</span>
+              </h1>
               <p className="text-xl text-slate-600 leading-relaxed">
                 Stay ahead of the curve with our AI-powered market insights, live data tracking, and expert commentary on the Indian financial landscape.
               </p>
-            </motion.div>
+            </div>
             <div className="flex items-center gap-4">
               <button 
                 onClick={fetchMarketAnalysis}
@@ -238,6 +231,18 @@ export default function MarketAnalysis() {
               </button>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Market Analysis Visual Section */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12">
+        <div className="w-full h-[300px] md:h-[500px] rounded-[3rem] overflow-hidden shadow-2xl border-8 border-white bg-slate-100">
+          <img 
+            src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&q=80&w=1200&h=500" 
+            alt="Market Analysis Visualization" 
+            className="w-full h-full object-cover"
+            referrerPolicy="no-referrer"
+          />
         </div>
       </section>
 
@@ -291,32 +296,75 @@ export default function MarketAnalysis() {
                   </div>
                 </motion.div>
               ))}
-              <div className="bg-primary p-6 rounded-3xl border border-primary/20 shadow-lg shadow-primary/10 flex flex-col justify-center relative overflow-hidden group">
-                <div className="absolute -right-4 -bottom-4 opacity-10 group-hover:scale-110 transition-transform duration-500">
-                  <Zap className="w-24 h-24 text-slate-900" />
+              <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm flex flex-col justify-center relative overflow-hidden group">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className={cn(
+                      "p-2 rounded-xl",
+                      marketData.sentimentScore > 70 ? "bg-sky-50 text-sky-600" : 
+                      marketData.sentimentScore > 40 ? "bg-amber-50 text-amber-600" : 
+                      "bg-rose-50 text-rose-600"
+                    )}>
+                      <Zap className="w-4 h-4" />
+                    </div>
+                    <span className="text-xs font-black text-slate-400 uppercase tracking-widest">Market Sentiment</span>
+                  </div>
+                  <div className="text-right">
+                    <span className={cn(
+                      "text-xs font-black uppercase tracking-widest",
+                      marketData.sentimentScore > 70 ? "text-sky-600" : 
+                      marketData.sentimentScore > 40 ? "text-amber-600" : 
+                      "text-rose-600"
+                    )}>
+                      {marketData.sentimentScore}%
+                    </span>
+                  </div>
                 </div>
-                <div className="relative z-10">
-                  <div className="flex items-center gap-3 mb-2">
-                    <Zap className="w-5 h-5 text-slate-900" />
-                    <span className="text-xs font-black text-slate-900 uppercase tracking-widest">Market Sentiment</span>
+                
+                <div className="flex items-center gap-4 mb-6">
+                  <div className={cn(
+                    "w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-lg transition-transform duration-500 group-hover:scale-110",
+                    marketData.sentimentScore > 70 ? "bg-sky-500 text-white shadow-sky-200" : 
+                    marketData.sentimentScore > 40 ? "bg-amber-500 text-white shadow-amber-200" : 
+                    "bg-rose-500 text-white shadow-rose-200"
+                  )}>
+                    {marketData.sentimentScore > 70 ? <TrendingUp className="w-6 h-6" /> : 
+                     marketData.sentimentScore > 40 ? <Zap className="w-6 h-6" /> : 
+                     <ArrowDownRight className="w-6 h-6" />}
                   </div>
-                  <p className="text-lg font-black text-slate-900 mb-4">
-                    {marketData.sentimentScore > 70 ? 'Bullish' : marketData.sentimentScore > 40 ? 'Neutral' : 'Bearish'}
-                  </p>
-                  
-                  {/* Sentiment Gauge */}
-                  <div className="w-full h-2 bg-slate-900/20 rounded-full overflow-hidden">
-                    <motion.div 
-                      initial={{ width: 0 }}
-                      animate={{ width: `${marketData.sentimentScore}%` }}
-                      transition={{ duration: 1.5, ease: "easeOut" }}
-                      className="h-full bg-slate-900"
-                    />
+                  <div>
+                    <p className="text-xl font-black text-slate-900 leading-none mb-1">
+                      {marketData.sentimentScore > 70 ? 'Bullish' : marketData.sentimentScore > 40 ? 'Neutral' : 'Bearish'}
+                    </p>
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                      AI Sentiment Analysis
+                    </p>
                   </div>
-                  <div className="flex justify-between mt-2 text-[8px] font-black text-slate-900/60 uppercase tracking-widest">
-                    <span>Fear</span>
-                    <span>Greed</span>
+                </div>
+                
+                {/* Sentiment Gauge */}
+                <div className="relative h-2 bg-slate-100 rounded-full overflow-hidden">
+                  <div className="absolute inset-0 flex">
+                    <div className="h-full w-[40%] bg-rose-500/5" />
+                    <div className="h-full w-[30%] bg-amber-500/5" />
+                    <div className="h-full w-[30%] bg-sky-500/5" />
                   </div>
+                  <motion.div 
+                    initial={{ width: 0 }}
+                    animate={{ width: `${marketData.sentimentScore}%` }}
+                    transition={{ duration: 1.5, ease: "easeOut" }}
+                    className={cn(
+                      "h-full rounded-full transition-colors duration-500",
+                      marketData.sentimentScore > 70 ? "bg-sky-500" : 
+                      marketData.sentimentScore > 40 ? "bg-amber-500" : 
+                      "bg-rose-500"
+                    )}
+                  />
+                </div>
+                <div className="flex justify-between mt-2 text-[8px] font-black text-slate-400 uppercase tracking-widest">
+                  <span>Extreme Fear</span>
+                  <span>Neutral</span>
+                  <span>Extreme Greed</span>
                 </div>
               </div>
             </div>
@@ -499,29 +547,37 @@ export default function MarketAnalysis() {
 
         {/* Expert Advice CTA */}
         {!loading && marketData && (
-          <motion.section
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="mt-20 bg-primary rounded-[3rem] p-12 text-center relative overflow-hidden shadow-2xl shadow-primary/20"
-          >
-            <div className="absolute inset-0 opacity-10 pointer-events-none">
-              <div className="absolute top-0 left-0 w-64 h-64 bg-white rounded-full blur-3xl" />
-              <div className="absolute bottom-0 right-0 w-64 h-64 bg-white rounded-full blur-3xl" />
-            </div>
-            <div className="relative z-10 max-w-3xl mx-auto">
-              <h2 className="text-3xl md:text-5xl font-black text-slate-900 mb-6 tracking-tight">Need Help Navigating the Market?</h2>
-              <p className="text-xl text-slate-800 mb-10 leading-relaxed">
-                Our expert advisors are ready to help you build a personalized strategy based on current market conditions.
+          <>
+            <motion.section
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="mt-20 bg-primary rounded-[3rem] p-12 text-center relative overflow-hidden shadow-2xl shadow-primary/20"
+            >
+              <div className="absolute inset-0 opacity-10 pointer-events-none">
+                <div className="absolute top-0 left-0 w-64 h-64 bg-white rounded-full blur-3xl" />
+                <div className="absolute bottom-0 right-0 w-64 h-64 bg-white rounded-full blur-3xl" />
+              </div>
+              <div className="relative z-10 max-w-3xl mx-auto">
+                <h2 className="text-3xl md:text-5xl font-black text-slate-900 mb-6 tracking-tight">Need Help Navigating the Market?</h2>
+                <p className="text-xl text-slate-800 mb-10 leading-relaxed">
+                  Our expert advisors are ready to help you build a personalized strategy based on current market conditions.
+                </p>
+                <button 
+                  onClick={() => openConsultationModal('Investment Planning')}
+                  className="bg-white text-primary px-12 py-4 rounded-full font-black text-sm uppercase tracking-widest hover:brightness-110 transition-all shadow-2xl shadow-white/20 flex items-center gap-2 mx-auto"
+                >
+                  Talk to an Expert <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
+            </motion.section>
+
+            <div className="mt-12 pb-12 text-center">
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] max-w-2xl mx-auto leading-relaxed">
+                Disclaimer: Market analysis and AI-generated insights provided by BHP Finance are for informational purposes only. This content does not constitute financial, investment, or legal advice. Past performance is not indicative of future results. Please consult with a certified financial planner before making any significant financial commitments.
               </p>
-              <button 
-                onClick={() => openConsultationModal('Investment Planning')}
-                className="bg-white text-primary px-12 py-4 rounded-full font-black text-sm uppercase tracking-widest hover:brightness-110 transition-all shadow-2xl shadow-white/20 flex items-center gap-2 mx-auto"
-              >
-                Talk to an Expert <ArrowRight className="w-4 h-4" />
-              </button>
             </div>
-          </motion.section>
+          </>
         )}
       </div>
     </div>

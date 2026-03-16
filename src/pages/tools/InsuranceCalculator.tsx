@@ -185,7 +185,7 @@ export default function InsuranceCalculator() {
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-bold text-slate-700 mb-2">Other Debts</label>
+                <label className="block text-sm font-bold text-slate-700 mb-2">Other Debts (Credit Cards, Personal Loans, etc.)</label>
                 <div className="relative">
                   <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">₹</span>
                   <input

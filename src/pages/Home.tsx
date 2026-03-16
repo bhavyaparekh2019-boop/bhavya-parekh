@@ -51,7 +51,7 @@ const KNOWLEDGE_CENTER_ITEMS = [
   {
     title: 'Mutual Funds',
     icon: Sparkles,
-    image: 'https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&q=80&w=800&h=600',
+    image: 'https://images.unsplash.com/photo-1535320903710-d993d3d77d29?auto=format&fit=crop&q=80&w=800&h=600',
     description: 'Master SIPs, ELSS, and professional wealth management.',
     url: '/guides/mutual-funds',
     borderColor: '#F43F5E',
@@ -388,7 +388,7 @@ export default function Home() {
             >
               <div className="aspect-[4/3] rounded-[3rem] overflow-hidden shadow-2xl border-8 border-white">
                 <img 
-                  src="https://images.unsplash.com/photo-1507537537190-28703c73083b?auto=format&fit=crop&q=80&w=1200&h=900" 
+                  src="https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&q=80&w=1200&h=900" 
                   alt="Financial Growth" 
                   className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
@@ -560,6 +560,12 @@ export default function Home() {
                           </div>
                         )}
 
+                        <div className="mt-8 pt-8 border-t border-slate-900/10">
+                          <p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest text-center leading-relaxed max-w-2xl mx-auto opacity-70">
+                            Disclaimer: AI-generated insights are for informational purposes only and do not constitute professional financial advice. Always consult with a qualified financial advisor before making investment decisions.
+                          </p>
+                        </div>
+
                         <button 
                           onClick={() => setShowFullAiResponse(false)}
                           className="mt-8 text-slate-900 text-sm font-bold hover:underline uppercase tracking-widest"
@@ -568,12 +574,17 @@ export default function Home() {
                         </button>
                       </motion.div>
                     ) : (
-                      <button 
-                        onClick={() => setShowFullAiResponse(true)}
-                        className="mt-2 text-slate-900 text-sm font-bold hover:underline uppercase tracking-widest"
-                      >
-                        See Whole Result
-                      </button>
+                      <div className="mt-4">
+                        <button 
+                          onClick={() => setShowFullAiResponse(true)}
+                          className="text-slate-900 text-sm font-bold hover:underline uppercase tracking-widest"
+                        >
+                          See Whole Result
+                        </button>
+                        <p className="mt-4 text-[9px] font-bold text-slate-600 uppercase tracking-widest opacity-60">
+                          * AI insights are for informational purposes only.
+                        </p>
+                      </div>
                     )}
                   </div>
                 </div>

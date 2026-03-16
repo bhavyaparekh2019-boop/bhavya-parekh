@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   TrendingUp, 
@@ -61,6 +61,9 @@ export default function Portfolio() {
   const [newSymbol, setNewSymbol] = useState('');
   const [newQuantity, setNewQuantity] = useState('');
   const [newPrice, setNewPrice] = useState('');
+
+  const priceCache = useRef<Record<string, { price: number; timestamp: number; sourceUrl?: string }>>({});
+  const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes cache
 
   // Load from localStorage
   useEffect(() => {
@@ -159,79 +162,133 @@ export default function Portfolio() {
     setIsRefreshing(true);
     setError(null);
 
-    try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-      const symbols = investments.map(inv => inv.symbol).join(', ');
-      
-      const response = await ai.models.generateContent({
-        model: "gemini-3-flash-preview",
-        contents: `Please find the current stock prices for the following Indian stock symbols: ${symbols}.
-        You MUST use the Google Search tool to find the most recent prices from NSE, BSE, or Google Finance.
-        Return the prices in INR as a JSON object where the keys are the symbols and values are the prices.
-        
-        Symbols to fetch: ${symbols}`,
-        config: {
-          tools: [{ googleSearch: {} }],
-          responseMimeType: "application/json",
-        },
+    const now = Date.now();
+    
+    // Identify symbols that need refreshing (not in cache or cache expired)
+    const symbolsToFetch = investments
+      .map(inv => inv.symbol.toUpperCase())
+      .filter(symbol => {
+        const cached = priceCache.current[symbol];
+        return !cached || (now - cached.timestamp > CACHE_DURATION);
       });
 
-      const text = response.text;
-      if (!text) throw new Error("The AI returned an empty response. This might be due to a temporary connection issue.");
-      
-      let prices: Record<string, number> = {};
-      try {
-        prices = JSON.parse(text);
-      } catch (e) {
-        // Fallback: try to extract JSON if the model included extra text
-        const match = text.match(/\{[\s\S]*\}/);
-        if (match) {
-          prices = JSON.parse(match[0]);
-        } else {
-          throw new Error("The AI response was not in a valid format.");
+    // If all prices are fresh in cache, just update the state and return
+    if (symbolsToFetch.length === 0) {
+      setInvestments(prev => prev.map(inv => {
+        const cached = priceCache.current[inv.symbol.toUpperCase()];
+        if (cached) {
+          return {
+            ...inv,
+            currentPrice: cached.price,
+            lastUpdated: new Date(cached.timestamp).toISOString(),
+            sourceUrl: cached.sourceUrl || inv.sourceUrl
+          };
         }
-      }
-      
-      // Try to get a source URL from grounding metadata
-      const groundingChunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks;
-      const sourceUrl = groundingChunks?.[0]?.web?.uri;
+        return inv;
+      }));
+      setIsRefreshing(false);
+      return;
+    }
 
+    // Batching logic: Split symbols into groups of 5
+    const BATCH_SIZE = 5;
+    const batches: string[][] = [];
+    for (let i = 0; i < symbolsToFetch.length; i += BATCH_SIZE) {
+      batches.push(symbolsToFetch.slice(i, i + BATCH_SIZE));
+    }
+
+    try {
+      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+      
+      // Fetch batches concurrently
+      const batchPromises = batches.map(async (batch) => {
+        const symbolsStr = batch.join(', ');
+        
+        try {
+          const response = await ai.models.generateContent({
+            model: "gemini-3-flash-preview",
+            contents: `Please find the current stock prices for the following Indian stock symbols: ${symbolsStr}.
+            You MUST use the Google Search tool to find the most recent prices from NSE, BSE, or Google Finance.
+            Return the prices in INR as a JSON object where the keys are the symbols and values are the prices.
+            
+            Symbols to fetch: ${symbolsStr}`,
+            config: {
+              tools: [{ googleSearch: {} }],
+              responseMimeType: "application/json",
+            },
+          });
+
+          const text = response.text;
+          if (!text) return;
+          
+          let prices: Record<string, number> = {};
+          try {
+            prices = JSON.parse(text);
+          } catch (e) {
+            const match = text.match(/\{[\s\S]*\}/);
+            if (match) prices = JSON.parse(match[0]);
+          }
+          
+          const groundingChunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks;
+          const sourceUrl = groundingChunks?.[0]?.web?.uri;
+
+          // Update cache with fuzzy matching
+          batch.forEach(requestedSymbol => {
+            const symbolBase = requestedSymbol.split('.')[0];
+            
+            const priceEntry = Object.entries(prices).find(([k]) => {
+              const keyUpper = k.toUpperCase();
+              return keyUpper === requestedSymbol || 
+                     keyUpper === symbolBase || 
+                     requestedSymbol === keyUpper.split('.')[0] ||
+                     keyUpper.includes(requestedSymbol) ||
+                     requestedSymbol.includes(keyUpper);
+            });
+
+            const price = priceEntry ? Number(priceEntry[1]) : (prices[requestedSymbol] || prices[symbolBase]);
+
+            if (price && !isNaN(price)) {
+              priceCache.current[requestedSymbol] = {
+                price,
+                timestamp: now,
+                sourceUrl: sourceUrl
+              };
+            }
+          });
+        } catch (batchErr) {
+          console.error(`Failed to fetch batch: ${symbolsStr}`, batchErr);
+          // We don't throw here to allow other batches to complete
+        }
+      });
+
+      await Promise.all(batchPromises);
+
+      // Final state update from cache
       setInvestments(prev => prev.map(inv => {
         const symbolUpper = inv.symbol.toUpperCase();
-        const symbolBase = symbolUpper.split('.')[0];
+        const cached = priceCache.current[symbolUpper];
         
-        // Find the best match in the prices object
-        const priceEntry = Object.entries(prices).find(([k]) => {
-          const keyUpper = k.toUpperCase();
-          return keyUpper === symbolUpper || 
-                 keyUpper === symbolBase || 
-                 symbolUpper === keyUpper.split('.')[0] ||
-                 keyUpper.includes(symbolUpper) ||
-                 symbolUpper.includes(keyUpper);
-        });
-
-        const price = priceEntry ? Number(priceEntry[1]) : (prices[symbolUpper] || prices[symbolBase]);
-
-        return {
-          ...inv,
-          currentPrice: (price && !isNaN(price)) ? price : inv.currentPrice,
-          lastUpdated: new Date().toISOString(),
-          sourceUrl: sourceUrl || inv.sourceUrl
-        };
+        if (cached) {
+          return {
+            ...inv,
+            currentPrice: cached.price,
+            lastUpdated: new Date(cached.timestamp).toISOString(),
+            sourceUrl: cached.sourceUrl || inv.sourceUrl
+          };
+        }
+        return inv;
       }));
-      
-      const foundCount = Object.keys(prices).length;
-      if (foundCount === 0) {
-        setError(`The AI could not find prices for: ${symbols}. Please ensure you are using standard NSE symbols (e.g., RELIANCE, TCS, HDFCBANK).`);
-      } else if (foundCount < investments.length) {
-        console.warn(`Only found ${foundCount} out of ${investments.length} prices.`);
+
+      // Check if any symbols were still not found
+      const missingSymbols = symbolsToFetch.filter(s => !priceCache.current[s]);
+      if (missingSymbols.length > 0 && missingSymbols.length === symbolsToFetch.length) {
+        setError(`Could not find prices for: ${missingSymbols.join(', ')}. Please ensure you are using standard NSE symbols.`);
       }
+      
     } catch (err: any) {
       console.error('Failed to refresh prices', err);
       if (err.message?.includes('quota') || err.message?.includes('429')) {
         setError("I've reached my free usage limit for the moment. Please try again in a few minutes.");
-      } else if (err.message?.includes('API key not valid')) {
-        setError("The AI service is misconfigured. Please check your API key in the settings.");
       } else {
         setError(`Update failed: ${err.message || 'Unknown error'}. Please try again.`);
       }

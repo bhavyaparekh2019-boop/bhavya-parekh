@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { X, Info, ArrowRight, Loader2, Sparkles } from 'lucide-react';
 import gsap from 'gsap';
 import { useSmartImage } from '@/src/lib/hooks';
+import Tooltip from '@/src/components/Tooltip';
 
 interface ChromaItem {
   image?: string;
@@ -19,6 +20,7 @@ interface ChromaItem {
   readTime?: string;
   author?: string;
   date?: string;
+  tooltip?: string;
 }
 
 interface ChromaGridProps {
@@ -269,7 +271,13 @@ function ChromaCard({
         
         {!item.image && Icon && (
           <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center mb-6 transition-colors group-hover:bg-primary/10">
-            <Icon className="w-8 h-8 text-slate-600 group-hover:text-primary transition-colors" />
+            {item.tooltip ? (
+              <Tooltip content={item.tooltip}>
+                <Icon className="w-8 h-8 text-slate-600 group-hover:text-primary transition-colors" />
+              </Tooltip>
+            ) : (
+              <Icon className="w-8 h-8 text-slate-600 group-hover:text-primary transition-colors" />
+            )}
           </div>
         )}
 
@@ -283,9 +291,17 @@ function ChromaCard({
             </div>
           )}
 
-          <h3 className={isArticle ? "text-2xl font-black text-slate-900 mb-4 leading-tight group-hover:text-primary transition-colors" : "text-xl font-bold text-slate-900 mb-1"}>
-            {item.title}
-          </h3>
+          {item.tooltip ? (
+            <Tooltip content={item.tooltip}>
+              <h3 className={isArticle ? "text-2xl font-black text-slate-900 mb-4 leading-tight group-hover:text-primary transition-colors" : "text-xl font-bold text-slate-900 mb-1"}>
+                {item.title}
+              </h3>
+            </Tooltip>
+          ) : (
+            <h3 className={isArticle ? "text-2xl font-black text-slate-900 mb-4 leading-tight group-hover:text-primary transition-colors" : "text-xl font-bold text-slate-900 mb-1"}>
+              {item.title}
+            </h3>
+          )}
           
           {item.subtitle && <p className="text-sm font-medium text-primary mb-2">{item.subtitle}</p>}
           {item.handle && <p className="text-xs text-slate-400 font-mono mb-4">{item.handle}</p>}
