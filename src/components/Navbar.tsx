@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Search, Menu, X, User, ChevronDown, Loader2, Info, ArrowRight, Globe, Sparkles, Sun, Moon, BookOpen, Filter, Calendar, TrendingUp, TrendingDown, Activity } from 'lucide-react';
+import { Search, Menu, X, User, ChevronDown, Loader2, Info, ArrowRight, Globe, Sparkles, Sun, Moon, BookOpen, Filter, Calendar, TrendingUp, TrendingDown, Activity, Shield } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '@/src/lib/utils';
 import { useModal } from '@/src/context/ModalContext';
@@ -10,12 +10,15 @@ import Fuse from 'fuse.js';
 
 import Logo from './Logo';
 
+import { auth, onAuthStateChanged } from '../lib/firebase';
+
 // Extract unique categories and authors for filters
 const UNIQUE_CATEGORIES = Array.from(new Set(ARTICLES.map(a => a.category))).sort();
 const UNIQUE_AUTHORS = Array.from(new Set(ARTICLES.map(a => a.author))).sort();
 
 export default function Navbar() {
   const { openConsultationModal } = useModal();
+  const [user, setUser] = useState<any>(null);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -45,6 +48,15 @@ export default function Navbar() {
     };
   } | null>(null);
   const location = useLocation();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (u) => {
+      setUser(u);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const isAdmin = user?.email === "bhavya.parekh2019@gmail.com";
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -276,6 +288,18 @@ export default function Navbar() {
                   {link.name}
                 </Link>
               ))}
+              {isAdmin && (
+                <Link
+                  to="/admin"
+                  className={cn(
+                    'text-xs font-black uppercase tracking-widest transition-all hover:text-primary flex items-center gap-2',
+                    location.pathname === '/admin' ? 'text-primary' : 'text-slate-500'
+                  )}
+                >
+                  <Shield className="w-3 h-3" />
+                  Admin
+                </Link>
+              )}
             </nav>
             <button
               onClick={() => openConsultationModal('Investment Planning')}
@@ -621,6 +645,16 @@ export default function Navbar() {
                   {link.name}
                 </Link>
               ))}
+              {isAdmin && (
+                <Link
+                  to="/admin"
+                  className="block text-2xl font-bold text-slate-900 hover:text-primary transition-colors flex items-center gap-2"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <Shield className="w-5 h-5" />
+                  Admin Dashboard
+                </Link>
+              )}
             </div>
           </div>
 

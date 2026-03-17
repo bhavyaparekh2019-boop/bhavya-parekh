@@ -270,7 +270,7 @@ export default function Sidebar() {
         <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
           <Mail className="w-6 h-6 text-primary" />
         </div>
-        <h3 className="text-xl font-bold text-slate-900 mb-2">The BHP Weekly</h3>
+        <h3 className="text-xl font-bold text-slate-900 mb-2">The Weekly Insight</h3>
         <p className="text-sm text-slate-600 mb-6">
           Get market insights and financial tips delivered to your inbox every Monday.
         </p>

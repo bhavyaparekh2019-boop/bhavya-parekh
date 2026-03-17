@@ -1,0 +1,99 @@
+{
+  "entities": {
+    "MutualFund": {
+      "title": "Mutual Fund",
+      "description": "Details of a mutual fund including performance metrics and risk profile.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the mutual fund."
+        },
+        "category": {
+          "type": "string",
+          "description": "The category of the fund (e.g., Large Cap, Mid Cap, Debt, Hybrid)."
+        },
+        "expenseRatio": {
+          "type": "string",
+          "description": "The annual fee charged by the fund."
+        },
+        "returns1Y": {
+          "type": "string",
+          "description": "Returns over the last 1 year."
+        },
+        "returns3Y": {
+          "type": "string",
+          "description": "Average annual returns over the last 3 years."
+        },
+        "returns5Y": {
+          "type": "string",
+          "description": "Average annual returns over the last 5 years."
+        },
+        "alpha": {
+          "type": "string",
+          "description": "Excess return relative to the benchmark."
+        },
+        "beta": {
+          "type": "string",
+          "description": "Volatility relative to the market."
+        },
+        "sharpe": {
+          "type": "string",
+          "description": "Risk-adjusted performance metric."
+        },
+        "risk": {
+          "type": "string",
+          "description": "Risk profile (e.g., Low, Moderate, High, Very High)."
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the data was last updated."
+        },
+        "isReal": {
+          "type": "boolean",
+          "description": "Flag to indicate if the data has been verified as real."
+        }
+      },
+      "required": ["name", "category", "risk"]
+    },
+    "Consultation": {
+      "title": "Consultation",
+      "description": "A request for a financial consultation.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "phone": { "type": "string" },
+        "service": { "type": "string" },
+        "date": { "type": "string", "format": "date-time" },
+        "status": { "type": "string", "enum": ["pending", "contacted", "completed"] }
+      },
+      "required": ["name", "email", "phone", "service", "date"]
+    },
+    "Subscription": {
+      "title": "Subscription",
+      "description": "A newsletter subscription.",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string", "format": "email" },
+        "date": { "type": "string", "format": "date-time" }
+      },
+      "required": ["email", "date"]
+    }
+  },
+  "firestore": {
+    "/mutual-funds": {
+      "schema": "MutualFund",
+      "description": "Collection of mutual funds."
+    },
+    "/consultations": {
+      "schema": "Consultation",
+      "description": "Collection of consultation requests."
+    },
+    "/subscriptions": {
+      "schema": "Subscription",
+      "description": "Collection of newsletter subscriptions."
+    }
+  }
+}

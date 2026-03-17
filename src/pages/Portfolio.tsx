@@ -67,7 +67,7 @@ export default function Portfolio() {
 
   // Load from localStorage
   useEffect(() => {
-    const saved = localStorage.getItem('bhp_portfolio');
+    const saved = localStorage.getItem('portfolio_data');
     if (saved) {
       try {
         setInvestments(JSON.parse(saved));
@@ -79,7 +79,7 @@ export default function Portfolio() {
 
   // Save to localStorage
   useEffect(() => {
-    localStorage.setItem('bhp_portfolio', JSON.stringify(investments));
+    localStorage.setItem('portfolio_data', JSON.stringify(investments));
   }, [investments]);
 
   // Auto-refresh logic
@@ -420,7 +420,7 @@ export default function Portfolio() {
             <h3 className="text-3xl font-black text-slate-900">₹{stats.currentValue.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</h3>
             <div className={cn(
               "flex items-center gap-1 mt-2 text-xs font-bold",
-              stats.totalProfit >= 0 ? "text-sky-600" : "text-rose-600"
+              stats.totalProfit >= 0 ? "text-emerald-600" : "text-rose-600"
             )}>
               {stats.totalProfit >= 0 ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
               {stats.profitPercentage.toFixed(2)}%
@@ -446,7 +446,7 @@ export default function Portfolio() {
             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Total Profit/Loss</p>
             <h3 className={cn(
               "text-3xl font-black",
-              stats.totalProfit >= 0 ? "text-sky-600" : "text-rose-600"
+              stats.totalProfit >= 0 ? "text-emerald-600" : "text-rose-600"
             )}>
               {stats.totalProfit >= 0 ? '+' : ''}₹{stats.totalProfit.toLocaleString('en-IN', { maximumFractionDigits: 2 })}
             </h3>
@@ -536,14 +536,15 @@ export default function Portfolio() {
                             </td>
                             <td className="px-8 py-6 text-right">
                               <div className={cn(
-                                "text-sm font-black",
-                                profit >= 0 ? "text-sky-600" : "text-rose-600"
+                                "text-sm font-black flex items-center justify-end gap-1",
+                                profit >= 0 ? "text-emerald-600" : "text-rose-600"
                               )}>
+                                {profit >= 0 ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
                                 {profit >= 0 ? '+' : ''}₹{profit.toLocaleString('en-IN', { maximumFractionDigits: 2 })}
                               </div>
                               <div className={cn(
                                 "text-[10px] font-bold uppercase tracking-widest",
-                                profit >= 0 ? "text-sky-500" : "text-rose-500"
+                                profit >= 0 ? "text-emerald-500" : "text-rose-500"
                               )}>
                                 {profitPerc.toFixed(2)}%
                               </div>

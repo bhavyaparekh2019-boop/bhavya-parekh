@@ -237,7 +237,7 @@ export default function Home() {
             concise: `For "${searchQuery}", the general financial consensus suggests careful planning and diversification.`,
             full: `Regarding your query about "${searchQuery}", it's important to consider your risk appetite and long-term goals. In the Indian context, this often involves looking at tax-saving instruments under Section 80C, balanced mutual funds, and maintaining an emergency fund. (Note: This is a demo response as no API key is configured).`,
             sources: [
-              { title: "BHP Finance Guides", uri: "/guides/investment" },
+              { title: "Market Insights Guides", uri: "/guides/investment" },
               { title: "Market Analysis", uri: "/market-analysis" }
             ],
             relatedGuides,
@@ -348,7 +348,7 @@ export default function Home() {
                 transition={{ delay: 0.1 }}
                 className="text-xl text-slate-600 mb-12 max-w-2xl leading-relaxed"
               >
-                BHP Insights: Expert Market Analysis, Professional Guidance, and the tools you need to build long-term wealth in the Indian market.
+                Expert Insights: Market Analysis, Professional Guidance, and the tools you need to build long-term wealth in the Indian market.
               </motion.p>
 
               {/* Hero Search */}
@@ -598,7 +598,7 @@ export default function Home() {
       <section className="bg-white py-24 border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-3xl md:text-5xl font-black text-slate-900 mb-6 tracking-tight">Why Choose BHP Finance?</h2>
+            <h2 className="text-3xl md:text-5xl font-black text-slate-900 mb-6 tracking-tight">Why Choose Our Platform?</h2>
             <p className="text-lg text-slate-600 leading-relaxed">
               We combine deep market expertise with personalized strategies to help you navigate the complexities of the Indian financial landscape.
             </p>

@@ -15,7 +15,7 @@ export default function ChatBot() {
   const [isMinimized, setIsMinimized] = useState(false);
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'model', text: 'Hello! I am your BHP Finance assistant. How can I help you with your financial planning today?' }
+    { role: 'model', text: 'Hello! I am your AI financial assistant. How can I help you with your financial planning today?' }
   ]);
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -74,7 +74,7 @@ export default function ChatBot() {
         chatRef.current = ai.chats.create({
           model: "gemini-3-flash-preview",
           config: {
-            systemInstruction: `You are the BHP Finance AI Assistant. You are an expert in financial planning, investment strategies, insurance (life, health, general), and market analysis. 
+            systemInstruction: `You are the AI Financial Assistant. You are an expert in financial planning, investment strategies, insurance (life, health, general), and market analysis. 
             Your goal is to provide helpful, accurate, and professional financial advice tailored to the Indian context (Rupees, Indian tax laws like Section 80C/80D, Indian retirement schemes like EPF/PPF/NPS).
             Always maintain a professional yet approachable tone. 
             If asked about specific tools on the site, mention the Home Loan Calculator, Retirement Planner, Investment ROI Calculator, and Insurance Planner.
@@ -146,7 +146,7 @@ export default function ChatBot() {
                   <Bot className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-black uppercase tracking-widest">BHP Assistant</h3>
+                  <h3 className="text-sm font-black uppercase tracking-widest">AI Assistant</h3>
                   <div className="flex items-center gap-1.5">
                     <span className="w-1.5 h-1.5 bg-sky-500 rounded-full animate-pulse" />
                     <span className="text-[10px] text-slate-700 font-bold">ONLINE</span>

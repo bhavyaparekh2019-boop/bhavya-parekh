@@ -1,9 +1,13 @@
-import React from 'react';
-import { motion } from 'motion/react';
-import { Shield, Heart, Car, Home, Lock, CheckCircle2, Info, Briefcase, ArrowRight } from 'lucide-react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import { Shield, Heart, Car, Home, Lock, CheckCircle2, Info, Briefcase, ArrowRight, Plane, Activity, UserCheck, Dog, Scale, Plus, X, Star, Loader2, Calculator } from 'lucide-react';
 import BlurText from '@/src/components/BlurText';
 import ChromaGrid from '@/src/components/ChromaGrid';
+import Tooltip from '@/src/components/Tooltip';
 import { useModal } from '@/src/context/ModalContext';
+import HLVCalculator from '@/src/components/HLVCalculator';
+import { getAllInsurancePlansFromFirestore, fetchRealInsurancePlans, saveInsurancePlansToFirestore, InsurancePlan } from '@/src/services/insuranceService';
+import { cn } from '@/src/lib/utils';
 
 const insuranceTypes = [
   {
@@ -46,6 +50,45 @@ const insuranceTypes = [
     color: 'bg-blue-50 text-blue-600'
   },
   {
+    title: 'Travel Insurance',
+    icon: Plane,
+    description: 'Safety net for international and domestic trips.',
+    details: [
+      'Medical Emergencies: Covers hospitalization abroad.',
+      'Trip Cancellation: Reimburses non-refundable bookings.',
+      'Lost Baggage: Compensation for delayed or lost luggage.',
+      'Passport Loss: Assistance in getting duplicate documents.',
+      'Pro Tip: Buy as soon as you book your flights for maximum coverage.'
+    ],
+    color: 'bg-emerald-50 text-emerald-600'
+  },
+  {
+    title: 'Personal Accident',
+    icon: Activity,
+    description: 'Compensation for accidental death or disability.',
+    details: [
+      'Accidental Death: Full sum assured paid to nominee.',
+      'Permanent Disability: Lump sum for loss of limbs/sight.',
+      'Temporary Disability: Weekly allowance for lost income.',
+      'Education Benefit: Fund for children\'s education after accident.',
+      'Pro Tip: Essential for those with high-risk commutes or jobs.'
+    ],
+    color: 'bg-orange-50 text-orange-600'
+  },
+  {
+    title: 'Critical Illness',
+    icon: UserCheck,
+    description: 'Lump sum payout on diagnosis of major diseases.',
+    details: [
+      'Covers 30+ illnesses like Cancer, Stroke, Kidney failure.',
+      'Lump Sum Payout: Use money for treatment or debt repayment.',
+      'No Hospitalization Required: Payout based on diagnosis.',
+      'Income Replacement: Helps when you can\'t work during recovery.',
+      'Pro Tip: Buy a standalone policy for higher coverage than riders.'
+    ],
+    color: 'bg-violet-50 text-violet-600'
+  },
+  {
     title: 'Home Insurance',
     icon: Home,
     description: 'Safeguarding your property and its contents.',
@@ -70,11 +113,128 @@ const insuranceTypes = [
       'Phishing Protection: Covers financial losses from fraudulent emails/sites.'
     ],
     color: 'bg-indigo-50 text-indigo-600'
+  },
+  {
+    title: 'Pet Insurance',
+    icon: Dog,
+    description: 'Coverage for your furry family members.',
+    details: [
+      'Medical Expenses: Covers surgeries and hospitalizations.',
+      'Accidental Injuries: Emergency care for accidents.',
+      'Third-party Liability: If your pet causes damage to others.',
+      'Mortality Benefit: Compensation in case of unfortunate death.',
+      'Pro Tip: Insure pets early (before 4 years) for better coverage.'
+    ],
+    color: 'bg-stone-50 text-stone-600'
   }
+];
+
+const METRICS = [
+  { key: 'csr', label: 'CSR', tooltip: 'Claim Settlement Ratio - Higher is better', better: 'high' },
+  { key: 'premium', label: 'Premium', tooltip: 'Approximate annual cost', better: 'low' },
+  { key: 'sumAssured', label: 'Coverage', tooltip: 'Typical sum assured offered', better: 'high' }
 ];
 
 export default function InsuranceGuide() {
   const { openConsultationModal } = useModal();
+  const [plans, setPlans] = useState<InsurancePlan[]>([]);
+  const [selectedPlanIds, setSelectedPlanIds] = useState<string[]>([]);
+  const [favorites, setFavorites] = useState<string[]>(() => {
+    const saved = localStorage.getItem('bhp_insurance_favorites');
+    return saved ? JSON.parse(saved) : [];
+  });
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [sortConfig, setSortConfig] = useState<{ key: string; mode: 'best' | 'worst' } | null>(null);
+
+  // Load plans
+  useEffect(() => {
+    const loadPlans = async () => {
+      try {
+        let data = await getAllInsurancePlansFromFirestore();
+        if (data.length === 0) {
+          data = await fetchRealInsurancePlans();
+          await saveInsurancePlansToFirestore(data);
+        }
+        setPlans(data);
+      } catch (error) {
+        console.error("Error loading insurance plans:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    loadPlans();
+  }, []);
+
+  // Save favorites
+  useEffect(() => {
+    localStorage.setItem('bhp_insurance_favorites', JSON.stringify(favorites));
+  }, [favorites]);
+
+  const toggleFavorite = (id: string) => {
+    setFavorites(prev => 
+      prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id]
+    );
+  };
+
+  const togglePlan = (id: string) => {
+    setSelectedPlanIds(prev => 
+      prev.includes(id) 
+        ? prev.filter(pid => pid !== id) 
+        : prev.length < 3 ? [...prev, id] : prev
+    );
+  };
+
+  const handleSort = (key: string) => {
+    if (!key) {
+      setSortConfig(null);
+      return;
+    }
+    setSortConfig(prev => {
+      if (prev?.key === key) {
+        if (prev.mode === 'best') return { key, mode: 'worst' };
+        return null;
+      }
+      return { key, mode: 'best' };
+    });
+  };
+
+  const selectedPlans = plans.filter(p => selectedPlanIds.includes(p.id || ''));
+
+  const parseValue = (val: any) => {
+    if (typeof val === 'number') return val;
+    if (typeof val !== 'string') return 0;
+    return parseFloat(val.replace(/[^\d.-]/g, '')) || 0;
+  };
+
+  const sortedPlans = [...selectedPlans].sort((a, b) => {
+    if (!sortConfig) return 0;
+    const metric = METRICS.find(m => m.key === sortConfig.key);
+    if (!metric) return 0;
+
+    const aValue = parseValue(a[sortConfig.key as keyof typeof a]);
+    const bValue = parseValue(b[sortConfig.key as keyof typeof b]);
+    
+    const isBestMode = sortConfig.mode === 'best';
+    const isBetterLow = metric.better === 'low';
+    
+    const shouldBeAscending = (isBestMode && isBetterLow) || (!isBestMode && !isBetterLow);
+    return shouldBeAscending ? aValue - bValue : bValue - aValue;
+  });
+
+  const getIsBestInRow = (planId: string, metricKey: string) => {
+    if (selectedPlans.length < 2) return false;
+    const metric = METRICS.find(m => m.key === metricKey);
+    if (!metric) return false;
+
+    const values = selectedPlans.map(p => ({ id: p.id, val: parseValue(p[metricKey as keyof typeof p]) }));
+    const bestVal = metric.better === 'low' 
+      ? Math.min(...values.map(v => v.val)) 
+      : Math.max(...values.map(v => v.val));
+    
+    const planVal = parseValue(selectedPlans.find(p => p.id === planId)?.[metricKey as keyof typeof selectedPlans[0]] || 0);
+    return planVal === bestVal;
+  };
   return (
     <div className="bg-slate-50 min-h-screen pb-20">
       {/* Hero Section */}
@@ -123,6 +283,164 @@ export default function InsuranceGuide() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           {/* Left Column: Types */}
           <div className="lg:col-span-2 space-y-12">
+            {/* Insurance Comparison Tool */}
+            <section id="plan-comparison" className="bg-white p-10 rounded-[2.5rem] border border-slate-200 shadow-sm overflow-hidden scroll-mt-24">
+              <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary">
+                    <Scale className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h2 className="text-2xl font-bold text-slate-900 leading-tight">Compare Insurance Plans</h2>
+                    <p className="text-sm text-slate-500">Select up to 3 plans to compare side-by-side</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4">
+                  {selectedPlanIds.length > 0 && (
+                    <button 
+                      onClick={() => {
+                        setSelectedPlanIds([]);
+                        setSortConfig(null);
+                      }}
+                      className="text-xs font-bold text-rose-500 hover:text-rose-600 uppercase tracking-widest whitespace-nowrap"
+                    >
+                      Clear All
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+                {plans.map(plan => (
+                  <div key={plan.id} className="relative group">
+                    <button
+                      onClick={() => togglePlan(plan.id || '')}
+                      className={cn(
+                        "w-full p-4 rounded-2xl border-2 transition-all text-left relative",
+                        selectedPlanIds.includes(plan.id || '') 
+                          ? "border-primary bg-primary/5" 
+                          : "border-slate-100 bg-slate-50 hover:border-slate-200"
+                      )}
+                    >
+                      <div className="flex justify-between items-start mb-2">
+                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{plan.category}</span>
+                        {selectedPlanIds.includes(plan.id || '') ? (
+                          <X className="w-4 h-4 text-primary" />
+                        ) : (
+                          <Plus className="w-4 h-4 text-slate-300 group-hover:text-primary transition-colors" />
+                        )}
+                      </div>
+                      <p className="text-sm font-bold text-slate-900 leading-tight pr-6">{plan.name}</p>
+                      <p className="text-[10px] text-slate-400 font-medium mt-1">{plan.company}</p>
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleFavorite(plan.id || '');
+                      }}
+                      className={cn(
+                        "absolute bottom-4 right-4 p-1.5 rounded-lg transition-all duration-300 z-10",
+                        favorites.includes(plan.id || '') 
+                          ? "bg-amber-50 text-amber-500" 
+                          : "bg-transparent text-slate-200 hover:text-slate-400 opacity-0 group-hover:opacity-100"
+                      )}
+                    >
+                      <Star className={cn("w-3.5 h-3.5", favorites.includes(plan.id || '') && "fill-current")} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              <AnimatePresence mode="wait">
+                {isLoading ? (
+                  <div className="flex flex-col items-center justify-center py-20 gap-4">
+                    <Loader2 className="w-10 h-10 text-primary animate-spin" />
+                    <p className="text-slate-500 font-medium">Loading insurance plans...</p>
+                  </div>
+                ) : selectedPlanIds.length > 0 ? (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    className="overflow-x-auto"
+                  >
+                    <table className="w-full text-left border-collapse">
+                      <thead>
+                        <tr>
+                          <th className="py-5 px-6 bg-slate-50/50 border-b border-slate-100 min-w-[200px]">
+                            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Comparison Metric</span>
+                          </th>
+                          {sortedPlans.map(plan => (
+                            <th key={plan.id} className="py-5 px-6 bg-slate-50/50 border-b border-slate-100 min-w-[250px]">
+                              <div className="flex flex-col">
+                                <span className="text-[10px] font-black text-primary uppercase tracking-widest mb-1">{plan.company}</span>
+                                <span className="text-lg font-black text-slate-900 leading-tight">{plan.name}</span>
+                              </div>
+                            </th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-50">
+                        {METRICS.map((metric) => (
+                          <tr key={metric.key} className="group hover:bg-slate-50/30 transition-colors">
+                            <td className="py-5 px-6">
+                              <div className="flex items-center gap-2">
+                                <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">{metric.label}</span>
+                                <Tooltip content={metric.tooltip}>
+                                  <Info className="w-3.5 h-3.5 text-slate-300 cursor-help" />
+                                </Tooltip>
+                              </div>
+                            </td>
+                            {sortedPlans.map(plan => {
+                              const isBest = getIsBestInRow(plan.id || '', metric.key);
+                              return (
+                                <td key={plan.id} className="py-5 px-6">
+                                  <div className="flex items-center gap-3">
+                                    <span className={cn(
+                                      "text-lg font-black tracking-tight",
+                                      isBest ? "text-emerald-600" : "text-slate-900"
+                                    )}>
+                                      {plan[metric.key as keyof InsurancePlan] as string}
+                                    </span>
+                                    {isBest && (
+                                      <span className="px-2 py-0.5 bg-emerald-100 text-emerald-700 text-[8px] font-black uppercase tracking-widest rounded-md">Best</span>
+                                    )}
+                                  </div>
+                                </td>
+                              );
+                            })}
+                          </tr>
+                        ))}
+                        <tr>
+                          <td className="py-5 px-6">
+                            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Key Features</span>
+                          </td>
+                          {sortedPlans.map(plan => (
+                            <td key={plan.id} className="py-5 px-6">
+                              <ul className="space-y-2">
+                                {plan.keyFeatures.map((feature, i) => (
+                                  <li key={i} className="flex items-start gap-2 text-xs text-slate-600">
+                                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5" />
+                                    {feature}
+                                  </li>
+                                ))}
+                              </ul>
+                            </td>
+                          ))}
+                        </tr>
+                      </tbody>
+                    </table>
+                  </motion.div>
+                ) : (
+                  <div className="bg-slate-50 rounded-[2rem] p-12 text-center border border-dashed border-slate-200">
+                    <Shield className="w-12 h-12 text-slate-200 mx-auto mb-4" />
+                    <h3 className="text-lg font-bold text-slate-900 mb-2">No Plans Selected</h3>
+                    <p className="text-sm text-slate-500 max-w-xs mx-auto">Select up to 3 insurance plans from the grid above to compare their features and premiums.</p>
+                  </div>
+                )}
+              </AnimatePresence>
+            </section>
+
             <section>
               <h2 className="text-2xl font-bold text-slate-900 mb-8 flex items-center gap-3">
                 <span className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white text-sm">01</span>
@@ -145,8 +463,16 @@ export default function InsuranceGuide() {
               />
             </section>
 
+            {/* HLV Calculator Section */}
+            <section id="hlv-calculator" className="scroll-mt-24">
+              <div className="mb-8">
+                <h2 className="text-3xl font-black text-slate-900 tracking-tight">Human Life Value Calculator</h2>
+                <p className="text-slate-500 mt-1">Determine the ideal life cover required to secure your family's future.</p>
+              </div>
+              <HLVCalculator />
+            </section>
+
             <section className="bg-white p-8 rounded-3xl border border-slate-200">
-              <h2 className="text-2xl font-bold text-slate-900 mb-6">Evaluating Insurers: CSR & ICR</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-3">
                   <h4 className="font-bold text-slate-900">Claim Settlement Ratio (CSR)</h4>
@@ -456,6 +782,39 @@ export default function InsuranceGuide() {
                   <p className="text-sm font-bold">BHP Finance Advisory</p>
                   <p className="text-xs text-slate-700">Strategic Planning Team</p>
                 </div>
+              </div>
+            </div>
+
+            <div className="bg-white p-8 rounded-3xl border border-slate-200">
+              <h3 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
+                <Calculator className="w-5 h-5 text-primary" />
+                Quick Tools
+              </h3>
+              <div className="space-y-4">
+                <a 
+                  href="#hlv-calculator"
+                  className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100 group hover:border-primary/30 transition-all"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-white rounded-lg shadow-sm group-hover:text-primary transition-colors">
+                      <Heart className="w-4 h-4" />
+                    </div>
+                    <span className="text-sm font-bold text-slate-700">HLV Calculator</span>
+                  </div>
+                  <ArrowRight className="w-4 h-4 text-slate-300 group-hover:text-primary group-hover:translate-x-1 transition-all" />
+                </a>
+                <a 
+                  href="#plan-comparison"
+                  className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100 group hover:border-primary/30 transition-all"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-white rounded-lg shadow-sm group-hover:text-primary transition-colors">
+                      <Scale className="w-4 h-4" />
+                    </div>
+                    <span className="text-sm font-bold text-slate-700">Plan Comparison</span>
+                  </div>
+                  <ArrowRight className="w-4 h-4 text-slate-300 group-hover:text-primary group-hover:translate-x-1 transition-all" />
+                </a>
               </div>
             </div>
 

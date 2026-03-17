@@ -1,0 +1,67 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: mutual-funds
+    // Fields: name, category, expenseRatio, returns1Y, returns3Y, returns5Y, alpha, beta, sharpe, risk, lastUpdated, isReal
+    //
+    // Collection: consultations
+    // Fields: name, email, phone, service, date, status
+    //
+    // Collection: subscriptions
+    // Fields: email, date
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() &&
+        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+          (request.auth.token.email == "bhavya.parekh2019@gmail.com" && request.auth.token.email_verified == true));
+    }
+
+    function isValidEmail(email) {
+      return email is string && email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+    }
+
+    function isValidMutualFund(data) {
+      return data.name is string && data.name.size() > 0 && data.name.size() < 200 &&
+             data.category is string &&
+             data.risk in ['Low', 'Moderate', 'High', 'Very High'];
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    match /users/{userId} {
+      allow read, write: if isAuthenticated() && request.auth.uid == userId;
+    }
+
+    match /mutual-funds/{fundId} {
+      allow read: if true; // Publicly readable
+      allow write: if isAdmin();
+    }
+
+    match /consultations/{id} {
+      allow read: if isAdmin();
+      allow create: if true; // Anyone can request a consultation
+      allow update, delete: if isAdmin();
+    }
+
+    match /subscriptions/{id} {
+      allow read: if isAdmin();
+      allow create: if true; // Anyone can subscribe
+      allow update, delete: if isAdmin();
+    }
+  }
+}

@@ -111,7 +111,7 @@ const testimonials = [
   {
     name: 'Rajesh Kumar',
     role: 'CEO, TechFlow Solutions',
-    quote: 'BHP Finance transformed our corporate investment strategy. Their transparency and expertise are unmatched in the Indian market.',
+    quote: 'Market Insights transformed our corporate investment strategy. Their transparency and expertise are unmatched in the Indian market.',
     image: 'https://i.pravatar.cc/150?u=rajesh'
   },
   {
@@ -143,10 +143,10 @@ export default function About() {
                 className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest mb-6"
               >
                 <Users className="w-3 h-3" />
-                About BHP Finance
+                About Market Insights
               </motion.div>
               <BlurText
-                text="Welcome to BHP Finance"
+                text="Welcome to Market Insights"
                 centered={false}
                 className="text-4xl md:text-6xl font-black text-slate-900 mb-8 tracking-tight"
               />
@@ -157,10 +157,10 @@ export default function About() {
                 className="space-y-6 text-lg text-slate-600 leading-relaxed"
               >
                 <p>
-                  At <span className="font-bold text-slate-900">BHP Finance</span>, we believe financial security is not just about money — it's about confidence, stability, and peace of mind. Our mission is to provide reliable, transparent, and customer-focused financial solutions that empower individuals, families, and businesses to achieve their goals.
+                  At <span className="font-bold text-slate-900">Market Insights</span>, we believe financial security is not just about money — it's about confidence, stability, and peace of mind. Our mission is to provide reliable, transparent, and customer-focused financial solutions that empower individuals, families, and businesses to achieve their goals.
                 </p>
                 <p>
-                  Founded with a vision to simplify finance, BHP Finance has grown into a trusted name built on integrity, professionalism, and long-term relationships. We understand that every client's financial journey is unique, and we are committed to offering personalized guidance and tailored solutions that truly make a difference.
+                  Founded with a vision to simplify finance, Market Insights has grown into a trusted name built on integrity, professionalism, and long-term relationships. We understand that every client's financial journey is unique, and we are committed to offering personalized guidance and tailored solutions that truly make a difference.
                 </p>
               </motion.div>
             </div>
@@ -173,7 +173,7 @@ export default function About() {
               <div className="aspect-square rounded-[3rem] overflow-hidden shadow-2xl border-8 border-white">
                 <img 
                   src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&q=80&w=1000&h=1000" 
-                  alt="About BHP Finance" 
+                  alt="About Market Insights" 
                   className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
                 />
@@ -226,7 +226,7 @@ export default function About() {
                 What We Offer
               </h2>
               <p className="text-slate-800 mb-8">
-                At BHP Finance, we provide a wide range of financial solutions designed to meet diverse needs, including:
+                At Market Insights, we provide a wide range of financial solutions designed to meet diverse needs, including:
               </p>
               <ul className="space-y-4">
                 {offerings.map((item, idx) => (
@@ -248,7 +248,7 @@ export default function About() {
         {/* Why Choose Us */}
         <section className="mt-24">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-black text-slate-900 mb-4">Why Choose BHP Finance?</h2>
+            <h2 className="text-3xl md:text-5xl font-black text-slate-900 mb-4">Why Choose Market Insights?</h2>
             <p className="text-slate-500 max-w-2xl mx-auto">We combine expertise with a personal touch to ensure your financial success.</p>
           </div>
           <ChromaGrid 
@@ -274,7 +274,7 @@ export default function About() {
             <div>
               <h2 className="text-3xl font-bold text-slate-900 mb-6">Our Commitment</h2>
               <p className="text-slate-600 mb-8 leading-relaxed">
-                Your growth is our priority, and your success defines our achievement. At BHP Finance, we are committed to:
+                Your growth is our priority, and your success defines our achievement. At Market Insights, we are committed to:
               </p>
               <ChromaGrid 
                 cols="grid-cols-1 sm:grid-cols-2"
@@ -313,7 +313,7 @@ export default function About() {
         <section className="mt-24">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-5xl font-black text-slate-900 mb-4">What Our Clients Say</h2>
-            <p className="text-slate-500 max-w-2xl mx-auto">Real stories from individuals and businesses who trust BHP Finance.</p>
+            <p className="text-slate-500 max-w-2xl mx-auto">Real stories from individuals and businesses who trust Market Insights.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {testimonials.map((t, idx) => (
@@ -354,7 +354,7 @@ export default function About() {
         <section className="mt-24 text-center pb-12">
           <h2 className="text-3xl md:text-5xl font-black text-slate-900 mb-6">Let's Build Your Financial Future Together</h2>
           <p className="text-slate-600 max-w-2xl mx-auto mb-10 text-lg">
-            Whether you are planning for personal milestones, expanding your business, or seeking financial stability, BHP Finance is here to guide you every step of the way.
+            Whether you are planning for personal milestones, expanding your business, or seeking financial stability, Market Insights is here to guide you every step of the way.
           </p>
           <motion.button
             whileHover={{ scale: 1.05 }}

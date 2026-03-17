@@ -27,7 +27,7 @@ export default function Logo({ className, showText = true, size = 'md' }: LogoPr
             className="font-sans font-bold" 
             fontSize="70"
           >
-            BHP
+            MI
           </text>
           <text 
             x="50%" 
@@ -39,13 +39,13 @@ export default function Logo({ className, showText = true, size = 'md' }: LogoPr
             fontSize="28" 
             letterSpacing="8"
           >
-            FINANCE
+            INSIGHTS
           </text>
         </svg>
       </div>
       {showText && (
         <span className={cn('font-bold tracking-tight text-slate-900', size === 'sm' ? 'text-lg' : 'text-xl')}>
-          BHP Finance
+          Market Insights
         </span>
       )}
     </div>

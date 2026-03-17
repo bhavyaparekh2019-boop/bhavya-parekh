@@ -296,7 +296,7 @@ export default function StockMarketGuide() {
               <div className="p-6 bg-slate-900 text-white rounded-2xl">
                 <h4 className="font-bold mb-2 flex items-center gap-2">
                   <PieChart className="w-4 h-4 text-primary" />
-                  BHP's Verdict: Which one is for you?
+                  Expert Verdict: Which one is for you?
                 </h4>
                 <p className="text-xs text-slate-400 leading-relaxed">
                   For most retail investors, **SIP is the gold standard**. It removes emotion from investing. Lumpsum is powerful during market crashes (like March 2020), but requires more conviction and patience.
@@ -464,7 +464,7 @@ export default function StockMarketGuide() {
                 ]}
               />
               <div className="mt-8 p-6 bg-amber-50 rounded-2xl border border-amber-100">
-                <h4 className="font-bold text-amber-900 text-sm mb-2">BHP's Warning on F&O</h4>
+                <h4 className="font-bold text-amber-900 text-sm mb-2">Expert Warning on F&O</h4>
                 <p className="text-xs text-amber-800">
                   SEBI data shows that 9 out of 10 individual traders in the equity F&O segment incur losses. We recommend derivatives only for hedging purposes for sophisticated portfolios.
                 </p>
@@ -529,7 +529,7 @@ export default function StockMarketGuide() {
                   'Complete your KYC process.',
                   'Start with Blue-chip companies or Index Funds.',
                   'Never invest money you need in the next 3 years.',
-                  'Keep learning and stay updated with BHP Insights.'
+                  'Keep learning and stay updated with Market Insights.'
                 ].map((item, i) => (
                   <li key={i} className="flex items-start gap-3 text-sm text-slate-800 font-medium">
                     <div className="w-5 h-5 rounded-full bg-white/30 text-slate-900 flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">

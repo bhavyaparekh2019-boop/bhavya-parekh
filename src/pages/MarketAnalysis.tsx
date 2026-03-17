@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { TrendingUp, BarChart2, Info, Loader2, RefreshCw, ArrowUpRight, ArrowDownRight, Globe, Zap, ArrowRight, Shield } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { TrendingUp, BarChart2, Info, Loader2, RefreshCw, ArrowUpRight, ArrowDownRight, Globe, Zap, ArrowRight, Shield, Sparkles } from 'lucide-react';
 import { GoogleGenAI, Type } from "@google/genai";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
 import BlurText from '@/src/components/BlurText';
@@ -541,6 +542,53 @@ export default function MarketAnalysis() {
                   <p className="text-xl font-black text-primary">Nifty 24,500</p>
                 </div>
               </div>
+
+              <section className="bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-sm">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+                    <Sparkles className="w-5 h-5 text-primary" />
+                    Mutual Funds Pulse
+                  </h3>
+                  <Link 
+                    to="/guides/mutual-funds"
+                    className="text-[10px] font-black text-primary uppercase tracking-widest hover:underline"
+                  >
+                    View Guide
+                  </Link>
+                </div>
+                <div className="space-y-4">
+                  <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-xs font-bold text-slate-600">Small Cap Funds</span>
+                      <span className="text-xs font-black text-emerald-600">+32.4% (1Y)</span>
+                    </div>
+                    <div className="w-full bg-slate-200 h-1 rounded-full overflow-hidden">
+                      <div className="bg-emerald-500 h-full w-[85%]" />
+                    </div>
+                  </div>
+                  <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-xs font-bold text-slate-600">Mid Cap Funds</span>
+                      <span className="text-xs font-black text-emerald-600">+24.8% (1Y)</span>
+                    </div>
+                    <div className="w-full bg-slate-200 h-1 rounded-full overflow-hidden">
+                      <div className="bg-emerald-500 h-full w-[70%]" />
+                    </div>
+                  </div>
+                  <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-xs font-bold text-slate-600">Large Cap Funds</span>
+                      <span className="text-xs font-black text-emerald-600">+18.2% (1Y)</span>
+                    </div>
+                    <div className="w-full bg-slate-200 h-1 rounded-full overflow-hidden">
+                      <div className="bg-emerald-500 h-full w-[55%]" />
+                    </div>
+                  </div>
+                </div>
+                <p className="mt-6 text-[10px] text-slate-400 font-medium leading-relaxed italic">
+                  "SIP inflows hit a record ₹20,000 Cr in Feb 2026, signaling strong retail confidence."
+                </p>
+              </section>
             </div>
           </div>
         )}

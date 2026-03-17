@@ -570,7 +570,7 @@ export default function InsuranceCalculator() {
                 Insurance is the foundation of a solid financial plan. Without it, a single unexpected event—a medical emergency, a car accident, or the loss of a breadwinner—can wipe out years of savings and investment growth.
               </p>
               <p>
-                At BHP Finance, we recommend a "Protection First" approach. Before aggressively investing in the market, ensure you have:
+                We recommend a "Protection First" approach. Before aggressively investing in the market, ensure you have:
               </p>
               <ul>
                 <li><strong>Adequate Life Insurance:</strong> To clear debts and provide for dependents.</li>

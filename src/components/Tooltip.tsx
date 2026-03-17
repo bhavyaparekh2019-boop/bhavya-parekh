@@ -15,6 +15,7 @@ export default function Tooltip({ content, children, delay = 0.2 }: TooltipProps
       className="relative inline-block"
       onMouseEnter={() => setIsVisible(true)}
       onMouseLeave={() => setIsVisible(false)}
+      onClick={() => setIsVisible(!isVisible)}
     >
       {children}
       <AnimatePresence>

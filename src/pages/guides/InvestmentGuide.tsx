@@ -655,7 +655,7 @@ export default function InvestmentGuide() {
             <section className="bg-primary/10 p-8 rounded-3xl border border-primary/20">
               <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-3">
                 <Target className="w-6 h-6 text-primary" />
-                BHP's Core Portfolio Construction Model
+                The Core & Satellite Portfolio Model
               </h2>
               <div className="space-y-6">
                 <p className="text-sm text-slate-700">
@@ -903,7 +903,7 @@ export default function InvestmentGuide() {
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-slate-900 font-bold">B</div>
                 <div>
-                  <p className="text-sm font-bold">BHP Finance Advisory</p>
+                  <p className="text-sm font-bold">Professional Financial Advisory</p>
                   <p className="text-xs text-slate-700">Wealth Management Team</p>
                 </div>
               </div>

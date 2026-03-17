@@ -24,7 +24,7 @@ export const ARTICLES: Article[] = [
       <p>One of the most significant shifts in the Indian market over the last three years has been the democratization of equity investing. Systematic Investment Plans (SIPs) have reached record highs, with monthly inflows crossing the ₹18,000 crore mark. This "wall of domestic money" has provided a robust cushion against the volatility of Foreign Institutional Investor (FII) flows. Even when global markets faced headwinds from high US Treasury yields, the Indian indices remained resilient, supported by the growing risk appetite of the Indian middle class.</p>
       
       <h3>Manufacturing and the PLI Boost</h3>
-      <p>The government's Production Linked Incentive (PLI) schemes are finally beginning to show results on the ground. From electronics to specialty chemicals and defense, India is positioning itself as a global manufacturing hub. This structural shift is reflected in the earnings of mid-cap and small-cap companies, many of which have seen their order books swell to multi-year highs. Analysts at BHP Finance believe that the capital goods and industrial sectors will be the primary drivers of the Nifty's journey towards the 25,000 level.</p>
+      <p>The government's Production Linked Incentive (PLI) schemes are finally beginning to show results on the ground. From electronics to specialty chemicals and defense, India is positioning itself as a global manufacturing hub. This structural shift is reflected in the earnings of mid-cap and small-cap companies, many of which have seen their order books swell to multi-year highs. Market analysts believe that the capital goods and industrial sectors will be the primary drivers of the Nifty's journey towards the 25,000 level.</p>
       
       <h3>The Interest Rate Cycle and Banking Resilience</h3>
       <p>While the global focus remains on the US Federal Reserve, the Reserve Bank of India (RBI) has managed the inflation-growth trade-off with remarkable precision. Indian banks are currently boasting some of the cleanest balance sheets in a decade, with Gross Non-Performing Assets (GNPA) at multi-year lows. As the interest rate cycle eventually pivots towards easing, we expect credit growth to accelerate, further fueling the corporate earnings cycle.</p>
@@ -57,7 +57,7 @@ export const ARTICLES: Article[] = [
       <p>The Public Provident Fund (PPF) continues to be the darling of Indian savers due to its EEE (Exempt-Exempt-Exempt) status. While the interest rates are reviewed quarterly, it remains one of the best ways to build a tax-free corpus over a 15-year horizon. It is particularly useful for self-employed professionals who do not have access to EPF.</p>
       
       <h3>The Strategy for 2024</h3>
-      <p>A balanced retirement strategy should involve maximizing the ₹1.5 lakh limit under Section 80C through a combination of EPF and PPF, followed by an additional ₹50,000 in NPS. For those in the 30% tax bracket, the tax savings alone provide an immediate "return" on investment. At BHP Finance, we recommend a "Core and Satellite" approach—where your EPF/PPF forms the stable core, and NPS/Equity Mutual Funds provide the growth satellite to beat long-term inflation.</p>
+      <p>A balanced retirement strategy should involve maximizing the ₹1.5 lakh limit under Section 80C through a combination of EPF and PPF, followed by an additional ₹50,000 in NPS. For those in the 30% tax bracket, the tax savings alone provide an immediate "return" on investment. Financial experts recommend a "Core and Satellite" approach—where your EPF/PPF forms the stable core, and NPS/Equity Mutual Funds provide the growth satellite to beat long-term inflation.</p>
     `,
     category: 'Retirement Tips',
     author: 'Michael Chen',
@@ -80,7 +80,7 @@ export const ARTICLES: Article[] = [
       <p>Beyond the IT giants, a new breed of Indian startups is building "Vertical AI" solutions—AI models trained on specific industry data like Indian healthcare, vernacular languages, or agricultural patterns. These companies are solving uniquely Indian problems at scale, creating a massive opportunity for venture capital and early-stage investors. The integration of AI with the India Stack (UPI, Aadhaar) is expected to create a "Fintech 2.0" wave that is more personalized and efficient.</p>
       
       <h3>Investment Risks and Ethics</h3>
-      <p>However, the path is not without hurdles. Data privacy regulations (DPDP Act), the high cost of compute, and the ethical implications of AI-driven automation are significant considerations. Investors must look for companies that have a clear data moat and a sustainable strategy for managing the high energy and compute costs associated with large language models. At BHP Finance, we believe a selective, research-heavy approach is the only way to play the AI theme without getting caught in a valuation bubble.</p>
+      <p>However, the path is not without hurdles. Data privacy regulations (DPDP Act), the high cost of compute, and the ethical implications of AI-driven automation are significant considerations. Investors must look for companies that have a clear data moat and a sustainable strategy for managing the high energy and compute costs associated with large language models. Experts believe a selective, research-heavy approach is the only way to play the AI theme without getting caught in a valuation bubble.</p>
     `,
     category: 'Market Trends',
     author: 'David Rodriguez',
@@ -103,7 +103,7 @@ export const ARTICLES: Article[] = [
       <p>With the periodic talk of inheritance tax and the complexities of the Hindu Undivided Family (HUF) structure, private trusts have become the preferred vehicle for holding family wealth. They offer a layer of protection against creditors and ensure that the wealth is managed by professionals for the benefit of future generations. A well-structured trust can also facilitate a smooth transfer of control without triggering massive tax liabilities or legal disputes.</p>
       
       <h3>Educating the Next Gen</h3>
-      <p>Succession is not just about passing on shares; it\'s about passing on the "entrepreneurial DNA." Many Indian families are now insisting that the next generation works outside the family business for several years before joining. This brings in fresh perspectives and ensures that leadership is earned, not just inherited. At BHP Finance, we work closely with family offices to design succession frameworks that preserve both the family legacy and the business\'s competitive edge.</p>
+      <p>Succession is not just about passing on shares; it\'s about passing on the "entrepreneurial DNA." Many Indian families are now insisting that the next generation works outside the family business for several years before joining. This brings in fresh perspectives and ensures that leadership is earned, not just inherited. Advisory firms work closely with family offices to design succession frameworks that preserve both the family legacy and the business\'s competitive edge.</p>
     `,
     category: 'Wealth Management',
     author: 'Robert Taylor',
@@ -126,7 +126,7 @@ export const ARTICLES: Article[] = [
       <p>Global pension funds and sovereign wealth funds are increasingly applying strict ESG filters to their Indian portfolios. Companies with high ESG scores are seeing a "green premium" in their valuations and lower borrowing costs. Conversely, companies in carbon-intensive sectors that fail to show a clear transition plan are facing "divestment" risks. This shift is driving a massive wave of investment in renewable energy, green hydrogen, and circular economy solutions across India.</p>
       
       <h3>The Investor\'s Dilemma</h3>
-      <p>For individual investors, the challenge is separating genuine sustainability from "greenwashing." At BHP Finance, we use a proprietary ESG scoring model that goes beyond self-reported data. We look at a company\'s historical track record, its capital expenditure on green technologies, and its governance practices. We believe that in the long run, companies that prioritize sustainability will be more resilient to regulatory shocks and better positioned to capture the opportunities of the 21st-century economy.</p>
+      <p>For individual investors, the challenge is separating genuine sustainability from "greenwashing." Professional advisors use a proprietary ESG scoring model that goes beyond self-reported data. We look at a company\'s historical track record, its capital expenditure on green technologies, and its governance practices. We believe that in the long run, companies that prioritize sustainability will be more resilient to regulatory shocks and better positioned to capture the opportunities of the 21st-century economy.</p>
     `,
     category: 'Wealth Management',
     author: 'Sarah Jenkins, Senior Advisor',
@@ -149,7 +149,7 @@ export const ARTICLES: Article[] = [
       <p>The first wave of Indian fintech was about "burning cash" to acquire users for payments. The second wave is about "monetizing" those users through high-margin services like insurance, wealth management, and credit. We are seeing a consolidation in the industry, where only the most efficient players with robust risk-management systems will survive. The focus has shifted from "User Growth" to "Unit Economics" and "Profitability."</p>
       
       <h3>Regulatory Vigilance</h3>
-      <p>The rapid growth of digital lending has also brought increased scrutiny from the RBI. New guidelines on "First Loss Default Guarantee" (FLDG) and data localization are aimed at protecting consumers and ensuring financial stability. At BHP Finance, we believe that while regulation may slow down growth in the short term, it creates a much healthier and more sustainable ecosystem for the long term. We remain bullish on fintech players that prioritize compliance and customer trust.</p>
+      <p>The rapid growth of digital lending has also brought increased scrutiny from the RBI. New guidelines on "First Loss Default Guarantee" (FLDG) and data localization are aimed at protecting consumers and ensuring financial stability. Experts believe that while regulation may slow down growth in the short term, it creates a much healthier and more sustainable ecosystem for the long term. We remain bullish on fintech players that prioritize compliance and customer trust.</p>
     `,
     category: 'Market Trends',
     author: 'Michael Chen',
@@ -169,10 +169,10 @@ export const ARTICLES: Article[] = [
       <p>One of the biggest pain points for Indian SMEs is the delayed payment cycle from large corporates and PSUs. The Trade Receivables Discounting System (TReDS) has emerged as a lifeline. By discounting their invoices on platforms like RXIL or M1xchange, SMEs can access immediate liquidity at competitive rates based on the credit rating of their buyers. This not only improves cash flow but also reduces the reliance on high-cost unsecured loans.</p>
       
       <h3>Debt vs. Equity: The 2024 Dilemma</h3>
-      <p>While debt is the traditional route for Indian businesses, the rise of SME IPO platforms on the NSE and BSE has opened up new avenues for equity capital. Listing on the SME exchange allows companies to raise growth capital without the burden of interest payments, while also providing an exit route for early investors. However, the transition to a listed entity requires a significant upgrade in corporate governance and financial reporting—a journey that BHP Finance specializes in facilitating.</p>
+      <p>While debt is the traditional route for Indian businesses, the rise of SME IPO platforms on the NSE and BSE has opened up new avenues for equity capital. Listing on the SME exchange allows companies to raise growth capital without the burden of interest payments, while also providing an exit route for early investors. However, the transition to a listed entity requires a significant upgrade in corporate governance and financial reporting—a journey that professional advisors specialize in facilitating.</p>
       
       <h3>Automation and Financial Discipline</h3>
-      <p>In an era of thin margins, operational efficiency is paramount. We are seeing a massive shift towards cloud-based ERP and AI-driven financial tools among Indian SMEs. These tools provide real-time visibility into cash flows, inventory turnover, and customer profitability. Business owners who leverage data to make decisions are consistently outperforming those who rely on "gut feeling." At BHP Finance, we help our corporate clients implement these systems to build a robust foundation for scaling.</p>
+      <p>In an era of thin margins, operational efficiency is paramount. We are seeing a massive shift towards cloud-based ERP and AI-driven financial tools among Indian SMEs. These tools provide real-time visibility into cash flows, inventory turnover, and customer profitability. Business owners who leverage data to make decisions are consistently outperforming those who rely on "gut feeling." Professional advisors help corporate clients implement these systems to build a robust foundation for scaling.</p>
     `,
     category: 'Corporate Finance',
     author: 'Emma Wilson',
@@ -186,7 +186,7 @@ export const ARTICLES: Article[] = [
     title: 'The Essential Guide to Life Insurance in India: 2024 Edition',
     excerpt: 'Understanding the nuances of Term Insurance, the pitfalls of ULIPs, and how to calculate your Human Life Value (HLV) in the Indian context.',
     content: `
-      <p>Life insurance in India has long been sold as a "tax-saving investment" rather than a "protection tool." This fundamental misunderstanding has led millions of Indians to be woefully under-insured. In 2024, as financial literacy grows, there is a clear shift towards pure protection plans. At BHP Finance, we believe that life insurance should be the first brick in your financial house—not an afterthought for March 31st tax planning.</p>
+      <p>Life insurance in India has long been sold as a "tax-saving investment" rather than a "protection tool." This fundamental misunderstanding has led millions of Indians to be woefully under-insured. In 2024, as financial literacy grows, there is a clear shift towards pure protection plans. Financial experts believe that life insurance should be the first brick in your financial house—not an afterthought for March 31st tax planning.</p>
       
       <h3>Term Insurance: The Only "Must-Have"</h3>
       <p>For most Indian families, a pure Term Life Insurance policy is the most efficient way to secure the future. It offers high coverage (Sum Assured) at a very low premium. The thumb rule is to have a cover that is at least 10 to 15 times your annual income. However, you must also factor in your outstanding liabilities like home loans and future goals like children\'s higher education. The "Human Life Value" (HLV) method is the most scientific way to arrive at this number.</p>
@@ -217,8 +217,8 @@ export const ARTICLES: Article[] = [
       <h3>Identifying Your Key People</h3>
       <p>A "key person" is anyone whose absence would significantly harm the business's ability to operate or generate profit. This could be a founder, a top salesperson, or a lead developer with specialized knowledge.</p>
       
-      <h3>BHP’s Business Protection Strategies</h3>
-      <p>BHP Finance works with business owners to identify these risks and implement robust insurance solutions. Protecting your human capital is just as important as protecting your physical assets.</p>
+      <h3>Business Protection Strategies</h3>
+      <p>Advisory firms work with business owners to identify these risks and implement robust insurance solutions. Protecting your human capital is just as important as protecting your physical assets.</p>
     `,
     category: 'Insurance',
     author: 'Emma Wilson',
@@ -241,7 +241,7 @@ export const ARTICLES: Article[] = [
       <p>A Super Top-up plan is the most efficient way to get high coverage (e.g., ₹50 lakh or ₹1 crore) at a fraction of the cost of a base plan. It works on a "deductible" basis—where the top-up kicks in after your base plan or out-of-pocket expenses reach a certain limit. This combination ensures that you are protected against "catastrophic" medical bills without paying exorbitant premiums.</p>
       
       <h3>Restoration and No-Claim Bonuses</h3>
-      <p>Modern Indian health policies come with powerful features like "Unlimited Restoration," where the sum insured is refilled if it gets exhausted during a policy year. Similarly, "No-Claim Bonuses" can now increase your coverage by up to 50% or 100% for every claim-free year. At BHP Finance, we help our clients navigate these complex features to choose a plan that provides comprehensive protection for the entire family, including elderly parents.</p>
+      <p>Modern Indian health policies come with powerful features like "Unlimited Restoration," where the sum insured is refilled if it gets exhausted during a policy year. Similarly, "No-Claim Bonuses" can now increase your coverage by up to 50% or 100% for every claim-free year. Financial advisors help our clients navigate these complex features to choose a plan that provides comprehensive protection for the entire family, including elderly parents.</p>
     `,
     category: 'Insurance',
     author: 'Sarah Jenkins, Senior Advisor',
@@ -264,7 +264,7 @@ export const ARTICLES: Article[] = [
       <p>Gold has always been a "safe haven" for Indian families. However, the way we buy gold is changing. Sovereign Gold Bonds (SGBs) have emerged as the most efficient way to own gold—offering a 2.5% annual interest on top of the gold price appreciation, with zero storage costs and a complete tax waiver on capital gains if held till maturity. For those looking for more liquidity, Digital Gold and Gold ETFs provide an easy way to invest in small denominations with the click of a button.</p>
       
       <h3>Private Equity and Startup Investing</h3>
-      <p>For high-net-worth individuals (HNIs), the "Alternative Investment Fund" (AIF) route is opening up access to private equity and venture capital. While these carry higher risks and longer lock-in periods, they offer the potential for outsized returns by investing in India\'s next generation of unicorns. At BHP Finance, we help our clients navigate this complex landscape, ensuring that their allocation to alternatives is balanced against their liquidity needs and risk tolerance.</p>
+      <p>For high-net-worth individuals (HNIs), the "Alternative Investment Fund" (AIF) route is opening up access to private equity and venture capital. While these carry higher risks and longer lock-in periods, they offer the potential for outsized returns by investing in India\'s next generation of unicorns. Wealth managers help our clients navigate this complex landscape, ensuring that their allocation to alternatives is balanced against their liquidity needs and risk tolerance.</p>
     `,
     category: 'Wealth Management',
     author: 'Sarah Jenkins, Senior Advisor',
@@ -287,7 +287,7 @@ export const ARTICLES: Article[] = [
       <p>The National Green Hydrogen Mission is India\'s ambitious plan to become a global hub for the production and export of green hydrogen. While the technology is still in its early stages, the potential is vast—particularly in "hard-to-abate" sectors like steel, cement, and heavy transport. Several Indian conglomerates have already announced multi-billion dollar investments in the green hydrogen value chain, from electrolyzer manufacturing to renewable power generation. This is a high-risk, high-reward theme that requires a long-term investment horizon.</p>
       
       <h3>The Role of Energy Storage</h3>
-      <p>As the share of intermittent renewables in the grid increases, the need for energy storage becomes critical. We are seeing significant policy support for Battery Energy Storage Systems (BESS) and Pumped Hydro Projects. Companies that are building the infrastructure for a "round-the-clock" (RTC) renewable power supply are likely to be the biggest beneficiaries of the next phase of the energy transition. At BHP Finance, we believe that a diversified approach—investing across the renewable value chain—is the best way to capture this once-in-a-generation opportunity.</p>
+      <p>As the share of intermittent renewables in the grid increases, the need for energy storage becomes critical. We are seeing significant policy support for Battery Energy Storage Systems (BESS) and Pumped Hydro Projects. Companies that are building the infrastructure for a "round-the-clock" (RTC) renewable power supply are likely to be the biggest beneficiaries of the next phase of the energy transition. Energy analysts believe that a diversified approach—investing across the renewable value chain—is the best way to capture this once-in-a-generation opportunity.</p>
     `,
     category: 'Market Trends',
     author: 'David Rodriguez',
@@ -310,7 +310,7 @@ export const ARTICLES: Article[] = [
       <p>To achieve FIRE in 10-15 years, you typically need to save and invest 50% to 70% of your take-home pay. This requires a high degree of "frugality" and a conscious effort to avoid "lifestyle creep." Every time you get a raise or a bonus, the majority of it should go into your investments. The goal is to build a "Compounding Machine" that eventually generates enough passive income to cover all your needs.</p>
       
       <h3>Asset Allocation for FIRE</h3>
-      <p>A FIRE portfolio in India must be equity-heavy to beat long-term inflation. We generally recommend a 70:30 Equity to Debt split during the accumulation phase. Low-cost Index Funds and Flexi-cap Funds are excellent tools for this. As you approach your FIRE date, you should build a "Cash Bucket" of 2-3 years of expenses in liquid funds to manage market volatility. At BHP Finance, we help our clients design personalized FIRE roadmaps that balance their current lifestyle with their future freedom.</p>
+      <p>A FIRE portfolio in India must be equity-heavy to beat long-term inflation. We generally recommend a 70:30 Equity to Debt split during the accumulation phase. Low-cost Index Funds and Flexi-cap Funds are excellent tools for this. As you approach your FIRE date, you should build a "Cash Bucket" of 2-3 years of expenses in liquid funds to manage market volatility. Financial planners help our clients design personalized FIRE roadmaps that balance their current lifestyle with their future freedom.</p>
     `,
     category: 'Retirement Tips',
     author: 'Michael Chen',
@@ -333,7 +333,7 @@ export const ARTICLES: Article[] = [
       <p>In the commercial segment, the "Flight to Quality" is the dominant theme. Large occupiers are increasingly looking for ESG-compliant, tech-enabled office spaces that offer a superior employee experience. While the overall vacancy rates remain stable, Grade-A office spaces in prime locations like Bengaluru and Gurgaon continue to command premium rents. The rise of Co-working spaces and Managed Offices is also providing a flexible alternative for startups and SMEs, creating a new sub-sector for real estate investors.</p>
       
       <h3>Regulatory Reforms and Transparency</h3>
-      <p>The Real Estate (Regulation and Development) Act (RERA) has brought much-needed transparency and accountability to the sector. This has boosted buyer confidence and attracted significant institutional investment into the Indian property market. However, investors must still conduct thorough due diligence, particularly regarding land titles and environmental clearances. At BHP Finance, we provide comprehensive real estate advisory services, helping our clients identify high-potential opportunities while mitigating the inherent risks of property investment.</p>
+      <p>The Real Estate (Regulation and Development) Act (RERA) has brought much-needed transparency and accountability to the sector. This has boosted buyer confidence and attracted significant institutional investment into the Indian property market. However, investors must still conduct thorough due diligence, particularly regarding land titles and environmental clearances. Real estate advisors provide comprehensive real estate advisory services, helping our clients identify high-potential opportunities while mitigating the inherent risks of property investment.</p>
     `,
     category: 'Market Trends',
     author: 'Robert Taylor',
@@ -355,8 +355,8 @@ export const ARTICLES: Article[] = [
       <h3>What to Look for in a Cyber Policy</h3>
       <p>Not all cyber insurance policies are created equal. When evaluating options, Indian business owners should look for coverage that includes "Business Interruption" losses, "Cyber Extortion" (ransomware), and "Third-party Liability." It\'s also important to understand the "Pre-incident Services" offered by the insurer, such as vulnerability assessments and employee training. These proactive measures can significantly reduce the likelihood of a successful attack and may even lead to lower insurance premiums.</p>
       
-      <h3>The Role of BHP Finance in Cyber Risk Management</h3>
-      <p>At BHP Finance, we believe that insurance is just one part of a robust cybersecurity strategy. We work with our clients to assess their digital risk profile and implement best practices like multi-factor authentication (MFA), regular data backups, and incident response plans. By combining technical security with financial protection, we help Indian businesses navigate the digital age with confidence. Remember, in the world of cybersecurity, it\'s not a matter of "if" you will be attacked, but "when."</p>
+      <h3>The Role of Financial Advisors in Cyber Risk Management</h3>
+      <p>We believe that insurance is just one part of a robust cybersecurity strategy. We work with our clients to assess their digital risk profile and implement best practices like multi-factor authentication (MFA), regular data backups, and incident response plans. By combining technical security with financial protection, we help Indian businesses navigate the digital age with confidence. Remember, in the world of cybersecurity, it\'s not a matter of "if" you will be attacked, but "when."</p>
     `,
     category: 'Insurance',
     author: 'Robert Taylor',
@@ -379,7 +379,7 @@ export const ARTICLES: Article[] = [
       <p>As a major net importer of energy, India\'s economy remains highly sensitive to crude oil prices. Geopolitical tensions in the Middle East can lead to sudden spikes in oil prices, which in turn impact India\'s fiscal deficit, inflation, and currency value. Investors must monitor these developments closely, as they often dictate the Reserve Bank of India\'s (RBI) stance on interest rates. Diversifying into domestic-focused sectors like banking, FMCG, and infrastructure can provide a hedge against global energy-led volatility.</p>
       
       <h3>The Shift Towards Multi-Polarity</h3>
-      <p>We are moving away from a uni-polar world towards a more complex, multi-polar landscape. India\'s strategic autonomy and its growing influence in groups like the G20 and BRICS+ are positioning it as a key "bridge" between the East and the West. This geopolitical positioning is attracting long-term "patient capital" from global sovereign wealth funds and pension funds. At BHP Finance, we integrate geopolitical risk analysis into our investment framework, helping our clients navigate this complex new world order while securing their financial future.</p>
+      <p>We are moving away from a uni-polar world towards a more complex, multi-polar landscape. India\'s strategic autonomy and its growing influence in groups like the G20 and BRICS+ are positioning it as a key "bridge" between the East and the West. This geopolitical positioning is attracting long-term "patient capital" from global sovereign wealth funds and pension funds. Market experts integrate geopolitical risk analysis into our investment framework, helping our clients navigate this complex new world order while securing their financial future.</p>
     `,
     category: 'Market Trends',
     author: 'David Rodriguez',
@@ -402,7 +402,7 @@ export const ARTICLES: Article[] = [
       <p>One of the biggest challenges for NRIs is the high rate of Tax Deducted at Source (TDS) on the sale of Indian property. Unlike resident Indians, NRIs are subject to TDS on the full sale consideration, not just the capital gains. However, you can apply for a "Lower Deduction Certificate" from the Income Tax department to reduce this burden. Additionally, investing the capital gains in specified bonds or a new residential property can help in claiming exemptions under Section 54 and 54EC.</p>
       
       <h3>The Impact of DTAA and Global Reporting</h3>
-      <p>India has signed Double Taxation Avoidance Agreements (DTAA) with over 90 countries. These treaties ensure that you are not taxed twice on the same income. By providing a Tax Residency Certificate (TRC) from your country of residence, you can often avail of lower tax rates on dividends and interest earned in India. Moreover, with the Common Reporting Standard (CRS) in place, tax authorities across the world are now sharing financial information. At BHP Finance, we provide specialized tax advisory services for NRIs, ensuring full compliance while optimizing global tax liabilities.</p>
+      <p>India has signed Double Taxation Avoidance Agreements (DTAA) with over 90 countries. These treaties ensure that you are not taxed twice on the same income. By providing a Tax Residency Certificate (TRC) from your country of residence, you can often avail of lower tax rates on dividends and interest earned in India. Moreover, with the Common Reporting Standard (CRS) in place, tax authorities across the world are now sharing financial information. Professional advisors provide specialized tax advisory services for NRIs, ensuring full compliance while optimizing global tax liabilities.</p>
     `,
     category: 'Wealth Management',
     author: 'Sarah Jenkins, Senior Advisor',
@@ -586,7 +586,7 @@ export const ARTICLES: Article[] = [
       <p>One of the unique advantages of NPS in India is the additional ₹50,000 tax deduction available under Section 80CCD(1B), which is over and above the ₹1.5 lakh limit of Section 80C. This makes it an incredibly efficient tool for high-income earners.</p>
       
       <h3>Atal Pension Yojana (APY) for Guaranteed Income</h3>
-      <p>For those looking for a guaranteed pension, the APY offers a fixed monthly income post-retirement. While the amounts are smaller, it provides a baseline of security. BHP Finance provides specialized tools to help you model different retirement scenarios using NPS, EPF, and private investments.</p>
+      <p>For those looking for a guaranteed pension, the APY offers a fixed monthly income post-retirement. While the amounts are smaller, it provides a baseline of security. Financial tools are available to help you model different retirement scenarios using NPS, EPF, and private investments.</p>
     `,
     category: 'Retirement Tips',
     author: 'Michael Chen',
@@ -608,8 +608,8 @@ export const ARTICLES: Article[] = [
       <h3>Choosing the Right Framework</h3>
       <p>Navigating the various ESG reporting frameworks (such as GRI, SASB, or TCFD) can be daunting. Firms should focus on the metrics that are most material to their business and their stakeholders, starting with a few key indicators and expanding over time.</p>
       
-      <h3>BHP’s ESG Advisory</h3>
-      <p>BHP Finance provides tailored support to help mid-sized firms develop and implement effective ESG reporting strategies. We help you tell your sustainability story in a way that resonates with your stakeholders and drives long-term value.</p>
+      <h3>ESG Advisory</h3>
+      <p>Specialized advisors provide tailored support to help mid-sized firms develop and implement effective ESG reporting strategies. We help you tell your sustainability story in a way that resonates with your stakeholders and drives long-term value.</p>
     `,
     category: 'Corporate Finance',
     author: 'Emma Wilson',
@@ -844,7 +844,7 @@ export const ARTICLES: Article[] = [
       <h3>Cyber Liability: The New Frontier</h3>
       <p>As discussed in our previous reports, cyber threats are escalating. Cyber liability insurance is now essential for any business that handles customer data. It covers the costs of data breaches, ransomware attacks, and the resulting legal and notification expenses.</p>
       
-      <h3>BHP’s Risk Mitigation Strategy</h3>
+      <h3>Risk Mitigation Strategy</h3>
       <p>We work with our corporate clients to conduct thorough risk assessments. By identifying potential "blind spots" in your coverage, we help you build a robust insurance portfolio that scales with your business growth.</p>
     `,
     category: 'Insurance',
@@ -868,7 +868,7 @@ export const ARTICLES: Article[] = [
       <p>India's massive developer talent pool and high smartphone penetration make it a fertile ground for DeFi innovation. We are seeing Indian startups building decentralized exchanges, yield aggregators, and stablecoin-based remittance services. These tools can significantly lower the cost of financial services and provide better returns for savers.</p>
       
       <h3>Regulatory and Security Risks</h3>
-      <p>The lack of a clear regulatory framework remains the biggest hurdle for DeFi in India. Concerns about money laundering, consumer protection, and financial stability have led to a cautious approach from the RBI. Additionally, the risk of smart contract bugs and hacks is a significant consideration for any investor. At BHP Finance, we advise a "watch and learn" approach, focusing on the underlying technology while remaining cautious about direct exposure until the regulatory landscape clears.</p>
+      <p>The lack of a clear regulatory framework remains the biggest hurdle for DeFi in India. Concerns about money laundering, consumer protection, and financial stability have led to a cautious approach from the RBI. Additionally, the risk of smart contract bugs and hacks is a significant consideration for any investor. Market experts advise a "watch and learn" approach, focusing on the underlying technology while remaining cautious about direct exposure until the regulatory landscape clears.</p>
     `,
     category: 'Market Trends',
     author: 'Michael Chen',
@@ -891,7 +891,7 @@ export const ARTICLES: Article[] = [
       <p>The rationalization of tax slabs under the new regime is a welcome move for the salaried class, potentially increasing disposable income. However, the changes in the holding periods for long-term capital gains in certain asset classes require a re-evaluation of investment strategies. Investors need to be more mindful of "tax-efficient" wealth creation rather than just chasing gross returns.</p>
       
       <h3>Sectoral Winners and Losers</h3>
-      <p>While the manufacturing and infrastructure sectors are clear winners, the banking sector faces a more nuanced outlook with the push for digital public infrastructure. The focus on rural development is also expected to revive demand for FMCG and two-wheeler companies. At BHP Finance, we recommend a "Budget-Aligned" portfolio strategy, focusing on companies that are direct beneficiaries of the government's long-term vision.</p>
+      <p>While the manufacturing and infrastructure sectors are clear winners, the banking sector faces a more nuanced outlook with the push for digital public infrastructure. The focus on rural development is also expected to revive demand for FMCG and two-wheeler companies. Market analysts recommend a "Budget-Aligned" portfolio strategy, focusing on companies that are direct beneficiaries of the government's long-term vision.</p>
     `,
     category: 'Market Update',
     author: 'Sarah Jenkins, Senior Advisor',
@@ -914,7 +914,7 @@ export const ARTICLES: Article[] = [
       <p>Warning signs include parabolic price charts, a surge in IPOs of unprofitable companies, and "cocktail party" investment tips from non-experts. When the narrative shifts from "fundamentals" to "potential," it's time to be cautious. Another red flag is when investors start using leverage to chase even higher returns in an already overheated market.</p>
       
       <h3>Staying Disciplined</h3>
-      <p>The best defense against a bubble is a disciplined, research-based investment process. Stick to your asset allocation, rebalance regularly (which forces you to sell high and buy low), and always ask: "What is the underlying value of this asset?" At BHP Finance, we help our clients stay focused on their long-term goals, providing a rational voice amidst the market noise. Remember, the goal of investing is not to be the richest person in the room during the boom, but to be the one who keeps their wealth after the bust.</p>
+      <p>The best defense against a bubble is a disciplined, research-based investment process. Stick to your asset allocation, rebalance regularly (which forces you to sell high and buy low), and always ask: "What is the underlying value of this asset?" Professional advisors help our clients stay focused on their long-term goals, providing a rational voice amidst the market noise. Remember, the goal of investing is not to be the richest person in the room during the boom, but to be the one who keeps their wealth after the bust.</p>
     `,
     category: 'Wealth Management',
     author: 'David Rodriguez',
@@ -937,7 +937,7 @@ export const ARTICLES: Article[] = [
       <p>The primary benefits are liquidity and diversification. Unlike traditional real estate, which can take months to sell, tokens can potentially be traded on secondary markets in minutes. Furthermore, instead of putting all your capital into one apartment, you can spread it across multiple properties, reducing geographic and tenant-specific risks.</p>
       
       <h3>Regulatory Landscape in India</h3>
-      <p>While the technology is ready, the regulatory framework in India is still evolving. SEBI and other regulators are closely monitoring the space to ensure investor protection. At BHP Finance, we believe tokenization will eventually become a mainstream way to invest in real estate, but we advise investors to perform rigorous due diligence on the underlying property and the platform provider.</p>
+      <p>While the technology is ready, the regulatory framework in India is still evolving. SEBI and other regulators are closely monitoring the space to ensure investor protection. Experts believe tokenization will eventually become a mainstream way to invest in real estate, but we advise investors to perform rigorous due diligence on the underlying property and the platform provider.</p>
     `,
     category: 'Market Trends',
     author: 'Ananya Sharma',
@@ -962,7 +962,7 @@ export const ARTICLES: Article[] = [
       <p>Data shows that ESG-focused funds often outperform their traditional counterparts during periods of market volatility. Companies with high ESG scores tend to have lower costs of capital and are less likely to face regulatory fines or reputational damage. In India, the introduction of the Business Responsibility and Sustainability Report (BRSR) by SEBI has made ESG data more transparent and comparable.</p>
       
       <h3>Getting Started with ESG</h3>
-      <p>Investors can integrate ESG into their portfolios through thematic funds, ESG-screened ETFs, or by directly investing in "best-in-class" companies. At BHP Finance, we help our clients build "Sustainable Portfolios" that don't just generate returns, but also contribute to a better future.</p>
+      <p>Investors can integrate ESG into their portfolios through thematic funds, ESG-screened ETFs, or by directly investing in "best-in-class" companies. Advisors help our clients build "Sustainable Portfolios" that don't just generate returns, but also contribute to a better future.</p>
     `,
     category: 'Wealth Management',
     author: 'Sarah Jenkins, Senior Advisor',
@@ -985,7 +985,7 @@ export const ARTICLES: Article[] = [
       <p>Reaching FIRE requires a high savings rate—often 50% to 70% of your income. This means living frugally and avoiding "lifestyle creep." The saved capital must then be invested in a diversified portfolio of equities, debt, and real estate to generate inflation-beating returns. Utilizing tax-advantaged accounts like EPF, PPF, and NPS is crucial.</p>
       
       <h3>The "Retire Early" Myth</h3>
-      <p>For many, the "RE" in FIRE doesn't mean sitting on a beach; it means having the freedom to pursue work that is meaningful, even if it doesn't pay well. It's about "Work Optional" life. At BHP Finance, we specialize in "FIRE Planning," helping our clients map out their journey from the accumulation phase to the withdrawal phase with confidence.</p>
+      <p>For many, the "RE" in FIRE doesn't mean sitting on a beach; it means having the freedom to pursue work that is meaningful, even if it doesn't pay well. It's about "Work Optional" life. Financial planners specialize in "FIRE Planning," helping our clients map out their journey from the accumulation phase to the withdrawal phase with confidence.</p>
     `,
     category: 'Retirement Tips',
     author: 'David Rodriguez',
@@ -1008,7 +1008,7 @@ export const ARTICLES: Article[] = [
       <p>The concept of "Senior Living Communities" is gaining traction in India, moving away from the traditional "old age home" stigma. These are modern, amenity-rich complexes designed for active seniors who want a community-based lifestyle with on-site medical support. Real estate developers focusing on this niche are seeing high demand.</p>
       
       <h3>Financial Services for Seniors</h3>
-      <p>Seniors have unique financial needs, focusing on capital preservation and regular income. We are seeing a rise in specialized insurance products, reverse mortgage schemes, and estate planning services. At BHP Finance, we help our clients identify the "Silver Winners" in the stock market—companies that are strategically positioned to serve this growing and affluent demographic.</p>
+      <p>Seniors have unique financial needs, focusing on capital preservation and regular income. We are seeing a rise in specialized insurance products, reverse mortgage schemes, and estate planning services. Advisors help our clients identify the "Silver Winners" in the stock market—companies that are strategically positioned to serve this growing and affluent demographic.</p>
     `,
     category: 'Market Trends',
     author: 'Emma Wilson',
@@ -1031,7 +1031,7 @@ export const ARTICLES: Article[] = [
       <p>Be wary of anyone promising "guaranteed returns," showing off luxury lifestyles as a result of their "trading secrets," or pressuring you to act quickly. Genuine financial professionals focus on process, risk management, and long-term discipline, not overnight riches. Always check if the person providing advice is registered with SEBI as an Investment Advisor (RIA) or Research Analyst.</p>
       
       <h3>The Role of Professional Advice</h3>
-      <p>At BHP Finance, we believe in the power of education, but we also know that there is no substitute for a personalized financial plan. We encourage our clients to use social media for learning basic concepts but to always consult with a certified professional before making significant investment decisions. Your financial future is too important to be left to an algorithm or a 60-second reel.</p>
+      <p>We believe in the power of education, but we also know that there is no substitute for a personalized financial plan. We encourage our clients to use social media for learning basic concepts but to always consult with a certified professional before making significant investment decisions. Your financial future is too important to be left to an algorithm or a 60-second reel.</p>
     `,
     category: 'Wealth Management',
     author: 'Michael Chen',
@@ -1053,8 +1053,8 @@ export const ARTICLES: Article[] = [
       <h3>The Growing Threat in India</h3>
       <p>India has seen a massive surge in digital transactions, but cyber awareness has not kept pace. Fraudsters are using increasingly sophisticated methods to target individuals. While banks have some protections in place, they often don't cover the full extent of the loss, especially if the user was "tricked" into sharing credentials. Cyber insurance provides that extra layer of security.</p>
       
-      <h3>BHP’s Digital Safety Audit</h3>
-      <p>We recommend that our clients evaluate their digital risk as part of their overall insurance review. At BHP Finance, we help you find policies that offer comprehensive coverage at a reasonable price. Remember, in the digital age, your data is one of your most valuable assets—protect it accordingly.</p>
+      <h3>Digital Safety Audit</h3>
+      <p>We recommend that our clients evaluate their digital risk as part of their overall insurance review. Professional advisors help you find policies that offer comprehensive coverage at a reasonable price. Remember, in the digital age, your data is one of your most valuable assets—protect it accordingly.</p>
     `,
     category: 'Insurance',
     author: 'Emma Wilson',
@@ -1077,7 +1077,7 @@ export const ARTICLES: Article[] = [
       <p>Gig workers must be proactive about their own benefits. This means buying comprehensive private health and life insurance and setting up automated contributions to a Public Provident Fund (PPF) or National Pension System (NPS). Investing in a diversified mutual fund portfolio through SIPs is also essential for long-term wealth creation.</p>
       
       <h3>Tax Planning for Freelancers</h3>
-      <p>Freelancers can often take advantage of "Presumptive Taxation" schemes (like Section 44ADA in India), which can significantly reduce their tax liability. However, keeping meticulous records of business expenses is still crucial. At BHP Finance, we work with many "Solopreneurs" to help them build a financial structure that supports their independent lifestyle while ensuring long-term security.</p>
+      <p>Freelancers can often take advantage of "Presumptive Taxation" schemes (like Section 44ADA in India), which can significantly reduce their tax liability. However, keeping meticulous records of business expenses is still crucial. Professional planners work with many "Solopreneurs" to help them build a financial structure that supports their independent lifestyle while ensuring long-term security.</p>
     `,
     category: 'Wealth Management',
     author: 'Ananya Sharma',
@@ -1099,8 +1099,8 @@ export const ARTICLES: Article[] = [
       <h3>The Battery and Hydrogen Frontier</h3>
       <p>The next phase of the transition involves energy storage and green hydrogen. Companies developing advanced battery technologies and hydrogen electrolyzers are at the forefront of solving the "intermittency" problem of renewables. While these are higher-risk, early-stage investments, they hold the potential for exponential returns as the technology matures.</p>
       
-      <h3>BHP’s Clean Energy Portfolio</h3>
-      <p>We help our clients navigate the complex landscape of green energy, from direct equity investments in manufacturers and developers to specialized "Green Bonds" and ETFs. At BHP Finance, we believe that "Green is the new Gold," and every modern portfolio should have exposure to the companies that are powering the future.</p>
+      <h3>Clean Energy Portfolio</h3>
+      <p>We help our clients navigate the complex landscape of green energy, from direct equity investments in manufacturers and developers to specialized "Green Bonds" and ETFs. We believe that "Green is the new Gold," and every modern portfolio should have exposure to the companies that are powering the future.</p>
     `,
     category: 'Market Trends',
     author: 'Sarah Jenkins, Senior Advisor',
@@ -1123,7 +1123,7 @@ export const ARTICLES: Article[] = [
       <p>For more complex situations, a Private Family Trust can be a powerful tool. It allows you to specify exactly how and when assets should be distributed (e.g., for a child's education or over several years). Trusts can also provide protection against creditors and help avoid the lengthy and public process of probate.</p>
       
       <h3>The "Letter of Wishes"</h3>
-      <p>Beyond legal documents, we recommend our clients write a "Letter of Wishes"—a non-binding document that explains the "why" behind your decisions and provides guidance on family values and traditions. At BHP Finance, we work alongside legal experts to help you build a comprehensive estate plan that provides peace of mind for you and your family.</p>
+      <p>Beyond legal documents, we recommend our clients write a "Letter of Wishes"—a non-binding document that explains the "why" behind your decisions and provides guidance on family values and traditions. Advisory firms work alongside legal experts to help you build a comprehensive estate plan that provides peace of mind for you and your family.</p>
     `,
     category: 'Wealth Management',
     author: 'Emma Wilson',
@@ -1146,7 +1146,7 @@ export const ARTICLES: Article[] = [
       <p>On the retail side, AI is enabling "Hyper-Personalization." We are seeing tools that can analyze a user's spending patterns, risk tolerance, and life goals to provide real-time, automated investment advice. This is making professional-grade wealth management accessible to a much broader audience at a fraction of the cost.</p>
       
       <h3>The Human Element</h3>
-      <p>Despite the rise of the machines, we believe the human element remains irreplaceable, especially during periods of extreme market stress or complex life transitions. At BHP Finance, we use AI as a powerful tool for research and data analysis, but our final recommendations are always filtered through the judgment and empathy of our senior advisors. The future of finance is "Cyborg"—the perfect blend of machine intelligence and human wisdom.</p>
+      <p>Despite the rise of the machines, we believe the human element remains irreplaceable, especially during periods of extreme market stress or complex life transitions. We use AI as a powerful tool for research and data analysis, but our final recommendations are always filtered through the judgment and empathy of our senior advisors. The future of finance is "Cyborg"—the perfect blend of machine intelligence and human wisdom.</p>
     `,
     category: 'Market Trends',
     author: 'Michael Chen',
