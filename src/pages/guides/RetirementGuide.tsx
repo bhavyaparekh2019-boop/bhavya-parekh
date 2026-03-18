@@ -1,9 +1,83 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { PiggyBank, Target, Clock, ShieldCheck, Wallet, ArrowRight, CheckCircle2, AlertCircle } from 'lucide-react';
+import { PiggyBank, Target, Clock, ShieldCheck, Wallet, ArrowRight, CheckCircle2, AlertCircle, Landmark, Shield, Briefcase, Info, ChevronDown, ChevronUp, Sparkles } from 'lucide-react';
 import BlurText from '@/src/components/BlurText';
 import ChromaGrid from '@/src/components/ChromaGrid';
 import { useModal } from '@/src/context/ModalContext';
+import { AnimatePresence } from 'motion/react';
+
+const retirementSchemes = [
+  {
+    name: 'National Pension System (NPS)',
+    type: 'Market-Linked Pension',
+    description: 'A voluntary, defined contribution retirement savings scheme.',
+    benefits: [
+      'Extra ₹50,000 tax deduction under Section 80CCD(1B).',
+      'Choose between Active Choice (you decide allocation) or Auto Choice (age-based).',
+      'Equity exposure up to 75% for higher long-term growth.',
+      '60% of corpus is tax-free at age 60; 40% must be used for annuity.',
+      'Lowest fund management charges globally (0.01% to 0.09%).'
+    ],
+    color: 'bg-blue-500',
+    icon: Landmark
+  },
+  {
+    name: 'Senior Citizens Savings Scheme (SCSS)',
+    type: 'Guaranteed Income',
+    description: 'A government-backed savings instrument for individuals aged 60+.',
+    benefits: [
+      'High interest rate (currently 8.2% p.a.) paid quarterly.',
+      'Maximum investment limit of ₹30 Lakh per individual.',
+      '5-year tenure, extendable by another 3 years.',
+      'Tax deduction under Section 80C up to ₹1.5 Lakh.',
+      'Highest safety as it is backed by the Government of India.'
+    ],
+    color: 'bg-emerald-500',
+    icon: ShieldCheck
+  },
+  {
+    name: 'Public Provident Fund (PPF)',
+    type: 'Tax-Free Savings',
+    description: 'A long-term savings scheme with guaranteed returns and tax benefits.',
+    benefits: [
+      'EEE Status: Exempt-Exempt-Exempt (Investment, Interest, and Maturity are all tax-free).',
+      '15-year lock-in period, ideal for long-term retirement corpus.',
+      'Partial withdrawals allowed after 6 years for specific needs.',
+      'Loan facility available against the PPF balance.',
+      'Current interest rate is 7.1% p.a., compounded annually.'
+    ],
+    color: 'bg-amber-500',
+    icon: PiggyBank
+  },
+  {
+    name: 'Employee Provident Fund (EPF)',
+    type: 'Mandatory Savings',
+    description: 'A retirement benefit scheme for salaried employees.',
+    benefits: [
+      'Employer matches your 12% contribution (part goes to EPS).',
+      'Interest rate usually higher than other debt instruments (8.25% for FY24).',
+      'Tax-free interest if continuous service is more than 5 years.',
+      'Option for Voluntary Provident Fund (VPF) to increase contributions.',
+      'Partial withdrawals for home purchase, marriage, or medical emergencies.'
+    ],
+    color: 'bg-sky-500',
+    icon: Briefcase
+  },
+  {
+    name: 'Atal Pension Yojana (APY)',
+    type: 'Social Security',
+    description: 'A pension scheme focused on the unorganized sector.',
+    benefits: [
+      'Guaranteed minimum pension of ₹1,000 to ₹5,000 per month.',
+      'Pension starts after age 60 based on contributions.',
+      'In case of death, spouse receives the same pension amount.',
+      'If both die, the entire corpus is returned to the nominee.',
+      'Ideal for low-income individuals seeking basic social security.'
+    ],
+    color: 'bg-indigo-500',
+    icon: Shield
+  }
+];
 
 const retirementSteps = [
   {
@@ -62,6 +136,14 @@ const retirementSteps = [
 
 export default function RetirementGuide() {
   const { openConsultationModal } = useModal();
+  const [expandedSchemes, setExpandedSchemes] = React.useState<number[]>([]);
+
+  const toggleScheme = (idx: number) => {
+    setExpandedSchemes(prev => 
+      prev.includes(idx) ? prev.filter(i => i !== idx) : [...prev, idx]
+    );
+  };
+
   return (
     <div className="bg-slate-50 min-h-screen pb-20">
       {/* Hero Section */}
@@ -87,14 +169,14 @@ export default function RetirementGuide() {
               </p>
             </motion.div>
             <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.2, duration: 0.8 }}
               className="hidden lg:block"
             >
               <div className="aspect-video rounded-[2.5rem] overflow-hidden shadow-2xl border-4 border-white">
                 <img 
-                  src="https://images.unsplash.com/photo-1516733725897-1aa73b87c8e8?auto=format&fit=crop&q=80&w=1200&h=675" 
+                  src="https://images.unsplash.com/photo-1559136555-9303baea8ebd?auto=format&fit=crop&q=80&w=1200&h=675" 
                   alt="Retirement Planning" 
                   className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
@@ -130,6 +212,89 @@ export default function RetirementGuide() {
                   gradient: `linear-gradient(145deg, ${step.color.includes('blue') ? '#3B82F6' : step.color.includes('sky') ? '#0EA5E9' : step.color.includes('amber') ? '#F59E0B' : '#6366F1'}, #000)`
                 }))}
               />
+            </section>
+
+            {/* Retirement Schemes Section */}
+            <section className="bg-white p-10 rounded-[2.5rem] border border-slate-200 shadow-sm">
+              <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+                <span className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white text-sm">02</span>
+                Top Retirement Schemes in India
+              </h2>
+              <p className="text-sm text-slate-600 mb-8 leading-relaxed">
+                India offers several government-backed and market-linked schemes to help you build a secure retirement corpus. Here is a detailed breakdown of the most popular options.
+              </p>
+              <div className="grid grid-cols-1 gap-6">
+                {retirementSchemes.map((scheme, idx) => {
+                  const isExpanded = expandedSchemes.includes(idx);
+                  const Icon = scheme.icon;
+                  return (
+                    <div key={idx} className={`rounded-3xl border border-slate-200 bg-white overflow-hidden transition-all duration-300 ${isExpanded ? 'shadow-lg ring-1 ring-primary/10' : 'hover:shadow-md'}`}>
+                      <button 
+                        onClick={() => toggleScheme(idx)}
+                        className={`w-full text-left p-6 flex flex-wrap justify-between items-center gap-4 transition-colors ${isExpanded ? 'bg-slate-50' : 'hover:bg-slate-50/50'}`}
+                      >
+                        <div className="flex items-center gap-4">
+                          <div className={`w-12 h-12 rounded-2xl ${scheme.color} bg-opacity-10 flex items-center justify-center text-primary`}>
+                            <Icon className="w-6 h-6" />
+                          </div>
+                          <div>
+                            <h4 className="text-lg font-bold text-slate-900">{scheme.name}</h4>
+                            <span className="text-[10px] font-black text-primary uppercase tracking-widest bg-white px-2 py-1 rounded-md border border-slate-100 shadow-sm mt-1 inline-block">
+                              {scheme.type}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <span className="text-xs font-bold text-primary">
+                            {isExpanded ? 'Hide Details' : 'View More Details'}
+                          </span>
+                          <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                            {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                          </div>
+                        </div>
+                      </button>
+
+                      <AnimatePresence>
+                        {isExpanded && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.3 }}
+                          >
+                            <div className="px-6 pb-6 pt-2 border-t border-slate-100 bg-slate-50/30">
+                              <p className="text-sm text-slate-600 mb-6 leading-relaxed italic">
+                                "{scheme.description}"
+                              </p>
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {scheme.benefits.map((benefit, bIdx) => (
+                                  <div key={bIdx} className="flex items-start gap-3 p-3 bg-white rounded-xl border border-slate-100 shadow-sm">
+                                    <div className="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
+                                      <CheckCircle2 className="w-3 h-3 text-primary" />
+                                    </div>
+                                    <span className="text-xs text-slate-600 leading-relaxed font-medium">{benefit}</span>
+                                  </div>
+                                ))}
+                              </div>
+                              <div className="mt-6 flex justify-end">
+                                <button 
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    openConsultationModal(`Planning with ${scheme.name}`);
+                                  }}
+                                  className="flex items-center gap-2 text-xs font-bold text-primary hover:gap-3 transition-all uppercase tracking-widest"
+                                >
+                                  Get Expert Advice <ArrowRight className="w-4 h-4" />
+                                </button>
+                              </div>
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  );
+                })}
+              </div>
             </section>
 
             {/* SWP Section */}

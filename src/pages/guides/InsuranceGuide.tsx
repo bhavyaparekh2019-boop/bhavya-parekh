@@ -1,13 +1,9 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Shield, Heart, Car, Home, Lock, CheckCircle2, Info, Briefcase, ArrowRight, Plane, Activity, UserCheck, Dog, Scale, Plus, X, Star, Loader2, Calculator } from 'lucide-react';
+import { Shield, Heart, Car, Home, Lock, CheckCircle2, Info, Briefcase, ArrowRight, ShieldCheck, Sparkles, ChevronDown, ChevronUp } from 'lucide-react';
 import BlurText from '@/src/components/BlurText';
 import ChromaGrid from '@/src/components/ChromaGrid';
-import Tooltip from '@/src/components/Tooltip';
 import { useModal } from '@/src/context/ModalContext';
-import HLVCalculator from '@/src/components/HLVCalculator';
-import { getAllInsurancePlansFromFirestore, fetchRealInsurancePlans, saveInsurancePlansToFirestore, InsurancePlan } from '@/src/services/insuranceService';
-import { cn } from '@/src/lib/utils';
 
 const insuranceTypes = [
   {
@@ -19,7 +15,9 @@ const insuranceTypes = [
       'Whole Life: Coverage for life with savings component. Ideal for legacy planning.',
       'Endowment: Fixed returns with life cover. Disciplined savings for long-term goals.',
       'ULIPs: Market-linked returns with insurance. Best for 10+ year horizons.',
-      'Child Plans: Specifically designed for education and marriage milestones.'
+      'Child Plans: Specifically designed for education and marriage milestones.',
+      'Money Back: Periodic payouts during the policy term for liquidity.',
+      'Retirement/Pension: Guaranteed income post-retirement.'
     ],
     color: 'bg-rose-50 text-rose-600'
   },
@@ -32,7 +30,9 @@ const insuranceTypes = [
       'Critical Illness coverage. Lump sum payment on life-threatening diagnosis.',
       'Super Top-up plans. High coverage at a fraction of base policy cost.',
       'Cashless hospitalization. Direct settlement with network hospitals.',
-      'OPD Cover: Reimburses doctor visits and pharmacy bills.'
+      'OPD Cover: Reimburses doctor visits and pharmacy bills.',
+      'Maternity Cover: Expenses related to childbirth and newborn care.',
+      'Senior Citizen Plans: Tailored for age-related health issues.'
     ],
     color: 'bg-sky-50 text-sky-600'
   },
@@ -45,48 +45,11 @@ const insuranceTypes = [
       'Comprehensive coverage. Protects your own vehicle too.',
       'Zero Depreciation add-ons. Pro Tip: Essential for cars under 5 years old.',
       'Roadside assistance. 24/7 help for towing, flat tires, and fuel.',
-      'Engine Protection: Covers damage due to water ingression/oil leakage.'
+      'Engine Protection: Covers damage due to water ingression/oil leakage.',
+      'Commercial Vehicle Insurance: For trucks, taxis, and buses.',
+      'Two-Wheeler Insurance: Specific plans for bikes and scooters.'
     ],
     color: 'bg-blue-50 text-blue-600'
-  },
-  {
-    title: 'Travel Insurance',
-    icon: Plane,
-    description: 'Safety net for international and domestic trips.',
-    details: [
-      'Medical Emergencies: Covers hospitalization abroad.',
-      'Trip Cancellation: Reimburses non-refundable bookings.',
-      'Lost Baggage: Compensation for delayed or lost luggage.',
-      'Passport Loss: Assistance in getting duplicate documents.',
-      'Pro Tip: Buy as soon as you book your flights for maximum coverage.'
-    ],
-    color: 'bg-emerald-50 text-emerald-600'
-  },
-  {
-    title: 'Personal Accident',
-    icon: Activity,
-    description: 'Compensation for accidental death or disability.',
-    details: [
-      'Accidental Death: Full sum assured paid to nominee.',
-      'Permanent Disability: Lump sum for loss of limbs/sight.',
-      'Temporary Disability: Weekly allowance for lost income.',
-      'Education Benefit: Fund for children\'s education after accident.',
-      'Pro Tip: Essential for those with high-risk commutes or jobs.'
-    ],
-    color: 'bg-orange-50 text-orange-600'
-  },
-  {
-    title: 'Critical Illness',
-    icon: UserCheck,
-    description: 'Lump sum payout on diagnosis of major diseases.',
-    details: [
-      'Covers 30+ illnesses like Cancer, Stroke, Kidney failure.',
-      'Lump Sum Payout: Use money for treatment or debt repayment.',
-      'No Hospitalization Required: Payout based on diagnosis.',
-      'Income Replacement: Helps when you can\'t work during recovery.',
-      'Pro Tip: Buy a standalone policy for higher coverage than riders.'
-    ],
-    color: 'bg-violet-50 text-violet-600'
   },
   {
     title: 'Home Insurance',
@@ -97,9 +60,26 @@ const insuranceTypes = [
       'Burglary and theft coverage. Protects jewelry, electronics, and furniture.',
       'Structure and content insurance. Comprehensive safety for your biggest asset.',
       'Public liability coverage. Protection if someone is injured on your property.',
-      'Terrorism Cover: Protection against damage from extremist acts.'
+      'Terrorism Cover: Protection against damage from extremist acts.',
+      'Landlord Insurance: Protection for rental properties.',
+      'Tenant Insurance: Covers personal belongings in a rented home.'
     ],
     color: 'bg-amber-50 text-amber-600'
+  },
+  {
+    title: 'Travel Insurance',
+    icon: ShieldCheck,
+    description: 'Coverage for risks during domestic or international travel.',
+    details: [
+      'Medical Emergencies: Hospitalization costs abroad.',
+      'Trip Cancellation: Reimbursement for non-refundable bookings.',
+      'Baggage Loss: Compensation for lost or delayed luggage.',
+      'Passport Loss: Assistance and cost coverage for duplicate passports.',
+      'Flight Delay: Payouts for significant airline delays.',
+      'Student Travel: Specialized plans for students studying abroad.',
+      'Senior Citizen Travel: Coverage for pre-existing conditions during travel.'
+    ],
+    color: 'bg-emerald-50 text-emerald-600'
   },
   {
     title: 'Cyber Insurance',
@@ -110,131 +90,192 @@ const insuranceTypes = [
       'Data restoration costs. Professional help to recover lost digital assets.',
       'Cyber extortion coverage. Protection against ransomware attacks.',
       'Legal and forensic support. Expert investigation of digital breaches.',
-      'Phishing Protection: Covers financial losses from fraudulent emails/sites.'
+      'Phishing Protection: Covers financial losses from fraudulent emails/sites.',
+      'Social Media Liability: Protection against defamation or libel claims.',
+      'E-reputation Cover: Costs to manage online reputation after a breach.'
     ],
     color: 'bg-indigo-50 text-indigo-600'
   },
   {
-    title: 'Pet Insurance',
-    icon: Dog,
-    description: 'Coverage for your furry family members.',
+    title: 'Personal Accident',
+    icon: Shield,
+    description: 'Lump sum payment in case of accidental death or disability.',
     details: [
-      'Medical Expenses: Covers surgeries and hospitalizations.',
-      'Accidental Injuries: Emergency care for accidents.',
-      'Third-party Liability: If your pet causes damage to others.',
-      'Mortality Benefit: Compensation in case of unfortunate death.',
-      'Pro Tip: Insure pets early (before 4 years) for better coverage.'
+      'Accidental Death: 100% sum assured paid to nominee.',
+      'Permanent Total Disability: Payout if unable to work again.',
+      'Permanent Partial Disability: Payout for loss of limbs, sight, etc.',
+      'Temporary Total Disability: Weekly payouts during recovery.',
+      'Education Benefit: Payout for children\'s education after an accident.',
+      'Ambulance Charges: Reimbursement for emergency transport.',
+      'Global Coverage: Usually valid 24/7 anywhere in the world.'
     ],
-    color: 'bg-stone-50 text-stone-600'
+    color: 'bg-orange-50 text-orange-600'
+  },
+  {
+    title: 'Business Insurance',
+    icon: Briefcase,
+    description: 'Specialized protection for commercial entities and professionals.',
+    details: [
+      'Professional Indemnity: For Doctors, Lawyers, and Architects.',
+      'Marine Insurance: Protects goods in transit via sea, air, or land.',
+      'Public Liability: Protection against third-party injury claims at business sites.',
+      'Workmen\'s Compensation: Legal liability for employee injuries at work.',
+      'Fire & Burglary (Commercial): Protects office, factory, or warehouse.',
+      'Group Health: Medical cover for employees and their families.',
+      'D&O Liability: Protects directors against personal liability claims.'
+    ],
+    color: 'bg-slate-50 text-slate-600'
+  },
+  {
+    title: 'Specialized Insurance',
+    icon: Sparkles,
+    description: 'Niche policies for specific assets and risks.',
+    details: [
+      'Pet Insurance: Veterinary bills and third-party liability for pets.',
+      'Mobile/Gadget Insurance: Protection against screen damage and theft.',
+      'Crop Insurance: Protects farmers against weather-related losses.',
+      'Wedding Insurance: Covers cancellation or damage during events.',
+      'Key Person Insurance: Protects business against loss of vital employees.',
+      'Credit Insurance: Protects businesses against non-payment of debts.',
+      'Title Insurance: Protects against defects in property titles.'
+    ],
+    color: 'bg-purple-50 text-purple-600'
   }
 ];
 
-const METRICS = [
-  { key: 'csr', label: 'CSR', tooltip: 'Claim Settlement Ratio - Higher is better', better: 'high' },
-  { key: 'premium', label: 'Premium', tooltip: 'Approximate annual cost', better: 'low' },
-  { key: 'sumAssured', label: 'Coverage', tooltip: 'Typical sum assured offered', better: 'high' }
+const topInsurers = [
+  {
+    name: 'LIC of India',
+    type: 'Life Insurance',
+    description: 'The largest and oldest state-owned insurance provider in India.',
+    policies: [
+      { name: 'Jeevan Anand', detail: 'A combination of protection and savings. Provides financial support for the family of the deceased and a lump sum for the surviving policyholder.' },
+      { name: 'Tech Term', detail: 'A pure risk premium plan which provides financial protection to the insured\'s family in case of unfortunate death.' },
+      { name: 'Jeevan Umang', detail: 'Provides for annual survival benefits from the end of the premium paying term till maturity and a lump sum amount at the time of maturity.' },
+      { name: 'Jeevan Akshay VII', detail: 'An immediate annuity plan where the policyholder pays a lump sum and receives regular pension for life.' }
+    ],
+    color: 'border-blue-500'
+  },
+  {
+    name: 'HDFC Life',
+    type: 'Life Insurance',
+    description: 'A leading long-term life insurance solutions provider.',
+    policies: [
+      { name: 'Click 2 Protect Life', detail: 'A term insurance plan that provides comprehensive protection at an affordable price, with options for return of premium.' },
+      { name: 'Sanchay Plus', detail: 'A non-participating savings insurance plan that offers guaranteed benefits for you and your family.' },
+      { name: 'Pension Guaranteed Plan', detail: 'Offers a guaranteed regular income for life to ensure a worry-free retirement.' },
+      { name: 'YoungStar Super Premium', detail: 'A unit-linked insurance plan designed to secure your child\'s future even in your absence.' }
+    ],
+    color: 'border-red-500'
+  },
+  {
+    name: 'Max Life Insurance',
+    type: 'Life Insurance',
+    description: 'Known for high claim settlement ratios and customer-centricity.',
+    policies: [
+      { name: 'Smart Secure Plus', detail: 'Highly flexible term plan with options like terminal illness cover, joint life cover, and premium break.' },
+      { name: 'Smart Wealth Plan', detail: 'A comprehensive life insurance savings plan that offers guaranteed returns and life cover.' },
+      { name: 'Platinum Wealth Plan', detail: 'A unit-linked non-participating individual life insurance plan that offers wealth creation and protection.' },
+      { name: 'Guaranteed Lifetime Income', detail: 'Ensures a steady stream of income for the rest of your life after retirement.' }
+    ],
+    color: 'border-blue-600'
+  },
+  {
+    name: 'ICICI Lombard',
+    type: 'General Insurance',
+    description: 'One of the largest private sector non-life insurers.',
+    policies: [
+      { name: 'Complete Health Insurance', detail: 'Comprehensive health cover including OPD, maternity, and wellness benefits with a wide network of hospitals.' },
+      { name: 'Car Shield', detail: 'Comprehensive car insurance with unique add-ons like zero depreciation, engine protect, and roadside assistance.' },
+      { name: 'International Travel', detail: 'Covers medical emergencies, trip cancellations, and loss of baggage during international trips.' },
+      { name: 'Home Insurance', detail: 'Protects your home and its contents against fire, theft, and natural calamities.' }
+    ],
+    color: 'border-orange-500'
+  },
+  {
+    name: 'HDFC ERGO',
+    type: 'General Insurance',
+    description: 'A joint venture offering a wide range of general insurance products.',
+    policies: [
+      { name: 'Optima Secure', detail: 'A health insurance plan that offers "Secure, Plus, Protect, and Restore" benefits, doubling your coverage automatically.' },
+      { name: 'Cyber Sachet', detail: 'Protects individuals against financial losses due to identity theft, malware attacks, and phishing.' },
+      { name: 'My:Health Suraksha', detail: 'A flexible health insurance plan with options for critical illness and hospital cash.' },
+      { name: 'Home Shield', detail: 'Comprehensive protection for your house building and its contents against various risks.' }
+    ],
+    color: 'border-red-600'
+  },
+  {
+    name: 'Bajaj Allianz',
+    type: 'General & Life',
+    description: 'A global leader in insurance and asset management.',
+    policies: [
+      { name: 'Health Guard', detail: 'A comprehensive health insurance policy with options for individual and family floater covers.' },
+      { name: 'Global Health Care', detail: 'Offers seamless access to healthcare facilities worldwide, including planned treatments abroad.' },
+      { name: 'Pet Dog Insurance', detail: 'A unique policy covering veterinary expenses, theft, and third-party liability for your pet dog.' },
+      { name: 'eTouch Online Term', detail: 'A simple and affordable online term plan that provides high life cover at low premiums.' }
+    ],
+    color: 'border-blue-700'
+  },
+  {
+    name: 'Tata AIG',
+    type: 'General Insurance',
+    description: 'A joint venture between Tata Group and AIG.',
+    policies: [
+      { name: 'Medicare Premier', detail: 'High-end health insurance with global cover, maternity benefits, and air ambulance services.' },
+      { name: 'Auto Secure', detail: 'Car insurance with a wide range of add-on covers like return to invoice and consumables cover.' },
+      { name: 'Travel Guard', detail: 'Comprehensive travel insurance for individuals, families, and students traveling abroad.' },
+      { name: 'Home Guard', detail: 'Protects your home structure and contents against fire, burglary, and natural disasters.' }
+    ],
+    color: 'border-blue-400'
+  },
+  {
+    name: 'Royal Sundaram',
+    type: 'General Insurance',
+    description: 'First private sector general insurer licensed in India.',
+    policies: [
+      { name: 'Lifeline Health', detail: 'Offers comprehensive health cover with unique features like "Reload" of sum insured and wellness rewards.' },
+      { name: 'Car Shield', detail: 'Comprehensive car insurance with 24x7 roadside assistance and quick claim settlement.' },
+      { name: 'Bike Shield', detail: 'Protects your two-wheeler against accidents, theft, and third-party liabilities.' },
+      { name: 'Home Shield', detail: 'A comprehensive policy for homeowners and tenants to protect their property and belongings.' }
+    ],
+    color: 'border-emerald-600'
+  },
+  {
+    name: 'SBI Life',
+    type: 'Life Insurance',
+    description: 'Leveraging the vast network of State Bank of India.',
+    policies: [
+      { name: 'eShield Next', detail: 'A new-age term insurance plan that adapts to your changing life stages and needs.' },
+      { name: 'Smart Platina Plus', detail: 'An individual, non-linked, non-participating life insurance savings product with guaranteed additions.' },
+      { name: 'Retire Smart', detail: 'A unit-linked pension plan that helps you build a corpus for your retirement years.' },
+      { name: 'Smart Wealth Builder', detail: 'A unit-linked insurance plan that offers life cover and market-linked returns.' }
+    ],
+    color: 'border-blue-800'
+  },
+  {
+    name: 'Star Health',
+    type: 'Health Insurance',
+    description: 'India\'s first standalone health insurance company.',
+    policies: [
+      { name: 'Family Health Optima', detail: 'A popular family floater plan that covers the entire family under a single sum insured.' },
+      { name: 'Senior Citizens Red Carpet', detail: 'Specifically designed for people aged 60 and above, covering pre-existing diseases from the second year.' },
+      { name: 'Star Diabetes Safe', detail: 'A specialized plan for people with Type 1 and Type 2 diabetes, covering complications related to diabetes.' },
+      { name: 'Star Cardiac Care', detail: 'Provides coverage for people who have undergone cardiac procedures or surgeries.' }
+    ],
+    color: 'border-blue-300'
+  }
 ];
 
 export default function InsuranceGuide() {
   const { openConsultationModal } = useModal();
-  const [plans, setPlans] = useState<InsurancePlan[]>([]);
-  const [selectedPlanIds, setSelectedPlanIds] = useState<string[]>([]);
-  const [favorites, setFavorites] = useState<string[]>(() => {
-    const saved = localStorage.getItem('bhp_insurance_favorites');
-    return saved ? JSON.parse(saved) : [];
-  });
-  const [isLoading, setIsLoading] = useState(true);
-  const [isSyncing, setIsSyncing] = useState(false);
-  const [sortConfig, setSortConfig] = useState<{ key: string; mode: 'best' | 'worst' } | null>(null);
+  const [expandedInsurers, setExpandedInsurers] = useState<number[]>([]);
 
-  // Load plans
-  useEffect(() => {
-    const loadPlans = async () => {
-      try {
-        let data = await getAllInsurancePlansFromFirestore();
-        if (data.length === 0) {
-          data = await fetchRealInsurancePlans();
-          await saveInsurancePlansToFirestore(data);
-        }
-        setPlans(data);
-      } catch (error) {
-        console.error("Error loading insurance plans:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    loadPlans();
-  }, []);
-
-  // Save favorites
-  useEffect(() => {
-    localStorage.setItem('bhp_insurance_favorites', JSON.stringify(favorites));
-  }, [favorites]);
-
-  const toggleFavorite = (id: string) => {
-    setFavorites(prev => 
-      prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id]
+  const toggleInsurer = (idx: number) => {
+    setExpandedInsurers(prev => 
+      prev.includes(idx) ? prev.filter(i => i !== idx) : [...prev, idx]
     );
   };
 
-  const togglePlan = (id: string) => {
-    setSelectedPlanIds(prev => 
-      prev.includes(id) 
-        ? prev.filter(pid => pid !== id) 
-        : prev.length < 3 ? [...prev, id] : prev
-    );
-  };
-
-  const handleSort = (key: string) => {
-    if (!key) {
-      setSortConfig(null);
-      return;
-    }
-    setSortConfig(prev => {
-      if (prev?.key === key) {
-        if (prev.mode === 'best') return { key, mode: 'worst' };
-        return null;
-      }
-      return { key, mode: 'best' };
-    });
-  };
-
-  const selectedPlans = plans.filter(p => selectedPlanIds.includes(p.id || ''));
-
-  const parseValue = (val: any) => {
-    if (typeof val === 'number') return val;
-    if (typeof val !== 'string') return 0;
-    return parseFloat(val.replace(/[^\d.-]/g, '')) || 0;
-  };
-
-  const sortedPlans = [...selectedPlans].sort((a, b) => {
-    if (!sortConfig) return 0;
-    const metric = METRICS.find(m => m.key === sortConfig.key);
-    if (!metric) return 0;
-
-    const aValue = parseValue(a[sortConfig.key as keyof typeof a]);
-    const bValue = parseValue(b[sortConfig.key as keyof typeof b]);
-    
-    const isBestMode = sortConfig.mode === 'best';
-    const isBetterLow = metric.better === 'low';
-    
-    const shouldBeAscending = (isBestMode && isBetterLow) || (!isBestMode && !isBetterLow);
-    return shouldBeAscending ? aValue - bValue : bValue - aValue;
-  });
-
-  const getIsBestInRow = (planId: string, metricKey: string) => {
-    if (selectedPlans.length < 2) return false;
-    const metric = METRICS.find(m => m.key === metricKey);
-    if (!metric) return false;
-
-    const values = selectedPlans.map(p => ({ id: p.id, val: parseValue(p[metricKey as keyof typeof p]) }));
-    const bestVal = metric.better === 'low' 
-      ? Math.min(...values.map(v => v.val)) 
-      : Math.max(...values.map(v => v.val));
-    
-    const planVal = parseValue(selectedPlans.find(p => p.id === planId)?.[metricKey as keyof typeof selectedPlans[0]] || 0);
-    return planVal === bestVal;
-  };
   return (
     <div className="bg-slate-50 min-h-screen pb-20">
       {/* Hero Section */}
@@ -283,164 +324,6 @@ export default function InsuranceGuide() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           {/* Left Column: Types */}
           <div className="lg:col-span-2 space-y-12">
-            {/* Insurance Comparison Tool */}
-            <section id="plan-comparison" className="bg-white p-10 rounded-[2.5rem] border border-slate-200 shadow-sm overflow-hidden scroll-mt-24">
-              <div className="flex items-center justify-between mb-8">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary">
-                    <Scale className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <h2 className="text-2xl font-bold text-slate-900 leading-tight">Compare Insurance Plans</h2>
-                    <p className="text-sm text-slate-500">Select up to 3 plans to compare side-by-side</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-4">
-                  {selectedPlanIds.length > 0 && (
-                    <button 
-                      onClick={() => {
-                        setSelectedPlanIds([]);
-                        setSortConfig(null);
-                      }}
-                      className="text-xs font-bold text-rose-500 hover:text-rose-600 uppercase tracking-widest whitespace-nowrap"
-                    >
-                      Clear All
-                    </button>
-                  )}
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-                {plans.map(plan => (
-                  <div key={plan.id} className="relative group">
-                    <button
-                      onClick={() => togglePlan(plan.id || '')}
-                      className={cn(
-                        "w-full p-4 rounded-2xl border-2 transition-all text-left relative",
-                        selectedPlanIds.includes(plan.id || '') 
-                          ? "border-primary bg-primary/5" 
-                          : "border-slate-100 bg-slate-50 hover:border-slate-200"
-                      )}
-                    >
-                      <div className="flex justify-between items-start mb-2">
-                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{plan.category}</span>
-                        {selectedPlanIds.includes(plan.id || '') ? (
-                          <X className="w-4 h-4 text-primary" />
-                        ) : (
-                          <Plus className="w-4 h-4 text-slate-300 group-hover:text-primary transition-colors" />
-                        )}
-                      </div>
-                      <p className="text-sm font-bold text-slate-900 leading-tight pr-6">{plan.name}</p>
-                      <p className="text-[10px] text-slate-400 font-medium mt-1">{plan.company}</p>
-                    </button>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toggleFavorite(plan.id || '');
-                      }}
-                      className={cn(
-                        "absolute bottom-4 right-4 p-1.5 rounded-lg transition-all duration-300 z-10",
-                        favorites.includes(plan.id || '') 
-                          ? "bg-amber-50 text-amber-500" 
-                          : "bg-transparent text-slate-200 hover:text-slate-400 opacity-0 group-hover:opacity-100"
-                      )}
-                    >
-                      <Star className={cn("w-3.5 h-3.5", favorites.includes(plan.id || '') && "fill-current")} />
-                    </button>
-                  </div>
-                ))}
-              </div>
-
-              <AnimatePresence mode="wait">
-                {isLoading ? (
-                  <div className="flex flex-col items-center justify-center py-20 gap-4">
-                    <Loader2 className="w-10 h-10 text-primary animate-spin" />
-                    <p className="text-slate-500 font-medium">Loading insurance plans...</p>
-                  </div>
-                ) : selectedPlanIds.length > 0 ? (
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    className="overflow-x-auto"
-                  >
-                    <table className="w-full text-left border-collapse">
-                      <thead>
-                        <tr>
-                          <th className="py-5 px-6 bg-slate-50/50 border-b border-slate-100 min-w-[200px]">
-                            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Comparison Metric</span>
-                          </th>
-                          {sortedPlans.map(plan => (
-                            <th key={plan.id} className="py-5 px-6 bg-slate-50/50 border-b border-slate-100 min-w-[250px]">
-                              <div className="flex flex-col">
-                                <span className="text-[10px] font-black text-primary uppercase tracking-widest mb-1">{plan.company}</span>
-                                <span className="text-lg font-black text-slate-900 leading-tight">{plan.name}</span>
-                              </div>
-                            </th>
-                          ))}
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-slate-50">
-                        {METRICS.map((metric) => (
-                          <tr key={metric.key} className="group hover:bg-slate-50/30 transition-colors">
-                            <td className="py-5 px-6">
-                              <div className="flex items-center gap-2">
-                                <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">{metric.label}</span>
-                                <Tooltip content={metric.tooltip}>
-                                  <Info className="w-3.5 h-3.5 text-slate-300 cursor-help" />
-                                </Tooltip>
-                              </div>
-                            </td>
-                            {sortedPlans.map(plan => {
-                              const isBest = getIsBestInRow(plan.id || '', metric.key);
-                              return (
-                                <td key={plan.id} className="py-5 px-6">
-                                  <div className="flex items-center gap-3">
-                                    <span className={cn(
-                                      "text-lg font-black tracking-tight",
-                                      isBest ? "text-emerald-600" : "text-slate-900"
-                                    )}>
-                                      {plan[metric.key as keyof InsurancePlan] as string}
-                                    </span>
-                                    {isBest && (
-                                      <span className="px-2 py-0.5 bg-emerald-100 text-emerald-700 text-[8px] font-black uppercase tracking-widest rounded-md">Best</span>
-                                    )}
-                                  </div>
-                                </td>
-                              );
-                            })}
-                          </tr>
-                        ))}
-                        <tr>
-                          <td className="py-5 px-6">
-                            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Key Features</span>
-                          </td>
-                          {sortedPlans.map(plan => (
-                            <td key={plan.id} className="py-5 px-6">
-                              <ul className="space-y-2">
-                                {plan.keyFeatures.map((feature, i) => (
-                                  <li key={i} className="flex items-start gap-2 text-xs text-slate-600">
-                                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5" />
-                                    {feature}
-                                  </li>
-                                ))}
-                              </ul>
-                            </td>
-                          ))}
-                        </tr>
-                      </tbody>
-                    </table>
-                  </motion.div>
-                ) : (
-                  <div className="bg-slate-50 rounded-[2rem] p-12 text-center border border-dashed border-slate-200">
-                    <Shield className="w-12 h-12 text-slate-200 mx-auto mb-4" />
-                    <h3 className="text-lg font-bold text-slate-900 mb-2">No Plans Selected</h3>
-                    <p className="text-sm text-slate-500 max-w-xs mx-auto">Select up to 3 insurance plans from the grid above to compare their features and premiums.</p>
-                  </div>
-                )}
-              </AnimatePresence>
-            </section>
-
             <section>
               <h2 className="text-2xl font-bold text-slate-900 mb-8 flex items-center gap-3">
                 <span className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white text-sm">01</span>
@@ -452,27 +335,106 @@ export default function InsuranceGuide() {
                 damping={0.45}
                 fadeOut={0.6}
                 ease="power3.out"
-                items={insuranceTypes.map(type => ({
-                  title: type.title,
-                  description: type.description,
-                  icon: type.icon,
-                  details: type.details,
-                  borderColor: type.color.includes('rose') ? '#F43F5E' : type.color.includes('sky') ? '#0EA5E9' : type.color.includes('blue') ? '#3B82F6' : '#F59E0B',
-                  gradient: `linear-gradient(145deg, ${type.color.includes('rose') ? '#F43F5E' : type.color.includes('sky') ? '#0EA5E9' : type.color.includes('blue') ? '#3B82F6' : '#F59E0B'}, #000)`
-                }))}
+                items={insuranceTypes.map(type => {
+                  const getColor = (colorStr: string) => {
+                    if (colorStr.includes('rose')) return '#F43F5E';
+                    if (colorStr.includes('sky')) return '#0EA5E9';
+                    if (colorStr.includes('blue')) return '#3B82F6';
+                    if (colorStr.includes('amber')) return '#F59E0B';
+                    if (colorStr.includes('emerald')) return '#10B981';
+                    if (colorStr.includes('indigo')) return '#6366F1';
+                    if (colorStr.includes('orange')) return '#F97316';
+                    if (colorStr.includes('slate')) return '#64748B';
+                    if (colorStr.includes('purple')) return '#A855F7';
+                    return '#F59E0B';
+                  };
+                  const color = getColor(type.color);
+                  return {
+                    title: type.title,
+                    description: type.description,
+                    icon: type.icon,
+                    details: type.details,
+                    borderColor: color,
+                    gradient: `linear-gradient(145deg, ${color}, #000)`
+                  };
+                })}
               />
             </section>
 
-            {/* HLV Calculator Section */}
-            <section id="hlv-calculator" className="scroll-mt-24">
-              <div className="mb-8">
-                <h2 className="text-3xl font-black text-slate-900 tracking-tight">Human Life Value Calculator</h2>
-                <p className="text-slate-500 mt-1">Determine the ideal life cover required to secure your family's future.</p>
+            <section className="bg-white p-10 rounded-[2.5rem] border border-slate-200 shadow-sm">
+              <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+                <span className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white text-sm">02</span>
+                Top Insurance Companies & Their Offerings
+              </h2>
+              <p className="text-sm text-slate-600 mb-8 leading-relaxed">
+                Choosing the right insurer is as important as choosing the right policy. Here is a breakdown of India's top insurance providers and their flagship products with detailed policy benefits.
+              </p>
+              <div className="grid grid-cols-1 gap-6">
+                {topInsurers.map((insurer, idx) => {
+                  const isExpanded = expandedInsurers.includes(idx);
+                  return (
+                    <div key={idx} className={`rounded-3xl border border-slate-200 bg-white overflow-hidden transition-all duration-300 ${isExpanded ? 'shadow-lg ring-1 ring-primary/10' : 'hover:shadow-md'}`}>
+                      <button 
+                        onClick={() => toggleInsurer(idx)}
+                        className={`w-full text-left p-6 flex flex-wrap justify-between items-center gap-4 transition-colors ${isExpanded ? 'bg-slate-50' : 'hover:bg-slate-50/50'}`}
+                      >
+                        <div className="flex items-center gap-4">
+                          <div className={`w-2 h-10 rounded-full ${insurer.color.replace('border-', 'bg-')}`} />
+                          <div>
+                            <h4 className="text-lg font-bold text-slate-900">{insurer.name}</h4>
+                            <span className="text-[10px] font-black text-primary uppercase tracking-widest bg-white px-2 py-1 rounded-md border border-slate-100 shadow-sm mt-1 inline-block">
+                              {insurer.type}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <span className="text-xs font-bold text-primary">
+                            {isExpanded ? 'Hide Details' : 'View More Details'}
+                          </span>
+                          <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                            {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                          </div>
+                        </div>
+                      </button>
+
+                      <AnimatePresence>
+                        {isExpanded && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.3, ease: 'easeInOut' }}
+                          >
+                            <div className="p-8 pt-0 border-t border-slate-100 bg-slate-50/30">
+                              <p className="text-sm text-slate-500 italic mb-8 mt-6 border-l-2 border-primary/20 pl-4">
+                                {insurer.description}
+                              </p>
+                              
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                {insurer.policies.map((policy, pIdx) => (
+                                  <div key={pIdx} className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm hover:border-primary/20 transition-all duration-300 group">
+                                    <h5 className="text-sm font-bold text-slate-900 mb-3 flex items-center gap-2 group-hover:text-primary transition-colors">
+                                      <CheckCircle2 className="w-4 h-4 text-primary shrink-0" />
+                                      {policy.name}
+                                    </h5>
+                                    <p className="text-xs text-slate-600 leading-relaxed">
+                                      {policy.detail}
+                                    </p>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  );
+                })}
               </div>
-              <HLVCalculator />
             </section>
 
             <section className="bg-white p-8 rounded-3xl border border-slate-200">
+              <h2 className="text-2xl font-bold text-slate-900 mb-6">Evaluating Insurers: CSR & ICR</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-3">
                   <h4 className="font-bold text-slate-900">Claim Settlement Ratio (CSR)</h4>
@@ -733,6 +695,54 @@ export default function InsuranceGuide() {
               </div>
             </section>
 
+            <section className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm">
+              <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+                <ShieldCheck className="w-6 h-6 text-primary" />
+                Travel Insurance: Your Global Safety Net
+              </h2>
+              <p className="text-sm text-slate-600 mb-8 leading-relaxed">
+                Whether you're traveling for business or leisure, international travel comes with its own set of risks. Travel insurance ensures that an unexpected event doesn't turn into a financial catastrophe while you're away from home.
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="p-6 bg-emerald-50/50 rounded-2xl border border-emerald-100 hover:bg-emerald-50 transition-colors">
+                  <h4 className="font-bold text-emerald-900 mb-3 text-sm">Medical Emergencies Abroad</h4>
+                  <p className="text-xs text-emerald-700 leading-relaxed">Covers expensive hospitalization and outpatient costs in foreign countries where medical care can be prohibitively high for non-residents.</p>
+                </div>
+                <div className="p-6 bg-emerald-50/50 rounded-2xl border border-emerald-100 hover:bg-emerald-50 transition-colors">
+                  <h4 className="font-bold text-emerald-900 mb-3 text-sm">Trip Cancellation</h4>
+                  <p className="text-xs text-emerald-700 leading-relaxed">Reimburses non-refundable expenses like flight tickets and hotel bookings if you have to cancel your trip due to unforeseen medical or personal reasons.</p>
+                </div>
+                <div className="p-6 bg-emerald-50/50 rounded-2xl border border-emerald-100 hover:bg-emerald-50 transition-colors">
+                  <h4 className="font-bold text-emerald-900 mb-3 text-sm">Baggage Loss</h4>
+                  <p className="text-xs text-emerald-700 leading-relaxed">Provides financial compensation for lost, stolen, or damaged baggage, ensuring you can replace essentials and continue your journey.</p>
+                </div>
+              </div>
+            </section>
+
+            <section className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm">
+              <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+                <Lock className="w-6 h-6 text-primary" />
+                Cyber Insurance: Protecting Your Digital Life
+              </h2>
+              <p className="text-sm text-slate-600 mb-8 leading-relaxed">
+                In an increasingly digital world, your online presence and data are as valuable as your physical assets. Cyber insurance provides a robust shield against the growing and evolving threat of cybercrime.
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="p-6 bg-indigo-50/50 rounded-2xl border border-indigo-100 hover:bg-indigo-50 transition-colors">
+                  <h4 className="font-bold text-indigo-900 mb-3 text-sm">Identity Theft Protection</h4>
+                  <p className="text-xs text-indigo-700 leading-relaxed">Covers legal fees, lost wages, and other expenses incurred to restore your identity and credit standing after a theft or fraudulent use of your data.</p>
+                </div>
+                <div className="p-6 bg-indigo-50/50 rounded-2xl border border-indigo-100 hover:bg-indigo-50 transition-colors">
+                  <h4 className="font-bold text-indigo-900 mb-3 text-sm">Data Breach Coverage</h4>
+                  <p className="text-xs text-indigo-700 leading-relaxed">Protects against the loss or theft of sensitive personal or business data, covering restoration costs, notification expenses, and legal liabilities.</p>
+                </div>
+                <div className="p-6 bg-indigo-50/50 rounded-2xl border border-indigo-100 hover:bg-indigo-50 transition-colors">
+                  <h4 className="font-bold text-indigo-900 mb-3 text-sm">Ransomware Protection</h4>
+                  <p className="text-xs text-indigo-700 leading-relaxed">Provides expert assistance and financial coverage for cyber extortion attempts, helping you navigate and recover from malicious ransomware attacks.</p>
+                </div>
+              </div>
+            </section>
+
             <section className="bg-primary/5 p-10 rounded-[2.5rem] border border-primary/20">
               <h2 className="text-2xl font-bold text-slate-900 mb-6">BHP's "Insurance First" Philosophy</h2>
               <div className="prose prose-slate max-w-none">
@@ -782,39 +792,6 @@ export default function InsuranceGuide() {
                   <p className="text-sm font-bold">BHP Finance Advisory</p>
                   <p className="text-xs text-slate-700">Strategic Planning Team</p>
                 </div>
-              </div>
-            </div>
-
-            <div className="bg-white p-8 rounded-3xl border border-slate-200">
-              <h3 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
-                <Calculator className="w-5 h-5 text-primary" />
-                Quick Tools
-              </h3>
-              <div className="space-y-4">
-                <a 
-                  href="#hlv-calculator"
-                  className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100 group hover:border-primary/30 transition-all"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-white rounded-lg shadow-sm group-hover:text-primary transition-colors">
-                      <Heart className="w-4 h-4" />
-                    </div>
-                    <span className="text-sm font-bold text-slate-700">HLV Calculator</span>
-                  </div>
-                  <ArrowRight className="w-4 h-4 text-slate-300 group-hover:text-primary group-hover:translate-x-1 transition-all" />
-                </a>
-                <a 
-                  href="#plan-comparison"
-                  className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100 group hover:border-primary/30 transition-all"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-white rounded-lg shadow-sm group-hover:text-primary transition-colors">
-                      <Scale className="w-4 h-4" />
-                    </div>
-                    <span className="text-sm font-bold text-slate-700">Plan Comparison</span>
-                  </div>
-                  <ArrowRight className="w-4 h-4 text-slate-300 group-hover:text-primary group-hover:translate-x-1 transition-all" />
-                </a>
               </div>
             </div>
 

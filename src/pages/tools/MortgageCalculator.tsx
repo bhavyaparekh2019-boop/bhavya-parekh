@@ -238,12 +238,12 @@ export default function MortgageCalculator() {
             </div>
           </div>
 
-          {/* AI Market Insights */}
+          {/* AI BHP Finance Insights */}
           <div className="border-t border-slate-100 p-8 md:p-12 bg-primary/5">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
                 <TrendingUp className="w-5 h-5 text-primary" />
-                <h3 className="text-xl font-black text-slate-900">India Market Insights</h3>
+                <h3 className="text-xl font-black text-slate-900">India BHP Finance Insights</h3>
               </div>
               <button
                 onClick={fetchMarketContext}

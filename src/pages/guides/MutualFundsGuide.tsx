@@ -1,15 +1,13 @@
 import React, { useState, useId, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Layers, Zap, BarChart3, ShieldCheck, Info, ArrowRight, CheckCircle2, HelpCircle, Sparkles, Target, Plus, X, Scale, ChevronUp, ChevronDown, ArrowUpDown, Star, Loader2, Calculator } from 'lucide-react';
+import { Layers, Zap, BarChart3, ShieldCheck, Info, ArrowRight, CheckCircle2, HelpCircle, Sparkles, Target, Plus, X, Scale, ChevronUp, ChevronDown, ArrowUpDown, Star } from 'lucide-react';
 import BlurText from '@/src/components/BlurText';
 import ChromaGrid from '@/src/components/ChromaGrid';
 import Tooltip from '@/src/components/Tooltip';
 import { useModal } from '@/src/context/ModalContext';
 import { cn } from '@/src/lib/utils';
-import SIPCalculator from '@/src/components/SIPCalculator';
-import { getAllMutualFundsFromFirestore, MutualFund } from '@/src/services/mutualFundService';
 
-const FALLBACK_FUNDS = [
+const COMPARISON_FUNDS = [
   {
     id: '1',
     name: 'BHP Bluechip Equity Fund',
@@ -21,9 +19,7 @@ const FALLBACK_FUNDS = [
     alpha: '2.1',
     beta: '0.85',
     sharpe: '1.4',
-    risk: 'Very High',
-    isReal: false,
-    lastUpdated: new Date().toISOString()
+    risk: 'Very High'
   },
   {
     id: '2',
@@ -36,9 +32,7 @@ const FALLBACK_FUNDS = [
     alpha: '0.5',
     beta: '0.12',
     sharpe: '0.9',
-    risk: 'Moderate',
-    isReal: false,
-    lastUpdated: new Date().toISOString()
+    risk: 'Moderate'
   },
   {
     id: '3',
@@ -51,9 +45,7 @@ const FALLBACK_FUNDS = [
     alpha: '4.5',
     beta: '1.2',
     sharpe: '1.6',
-    risk: 'Very High',
-    isReal: false,
-    lastUpdated: new Date().toISOString()
+    risk: 'Very High'
   },
   {
     id: '4',
@@ -66,9 +58,7 @@ const FALLBACK_FUNDS = [
     alpha: '1.8',
     beta: '0.65',
     sharpe: '1.2',
-    risk: 'High',
-    isReal: false,
-    lastUpdated: new Date().toISOString()
+    risk: 'High'
   }
 ];
 
@@ -77,11 +67,16 @@ const fundTypes = [
     title: 'Equity Funds',
     description: 'Invest primarily in stocks. High risk, high return potential.',
     details: [
-      'Large Cap: Investing in top 100 companies. Pro Tip: Best for stable long-term growth and core portfolio stability.',
-      'Mid Cap: High growth potential in mid-sized firms. Pro Tip: Ideal for investors with a 5-7 year horizon seeking higher alpha.',
-      'Small Cap: High risk, exponential growth potential. Pro Tip: Use SIPs to navigate high volatility; limit exposure to 10-15% of portfolio.',
-      'ELSS: Tax-saving funds with 3-year lock-in. Pro Tip: Best for combining tax saving with equity growth; has the shortest lock-in among 80C options.',
-      'Sectoral: Focused on specific industries like IT/Banking. Pro Tip: Avoid for core portfolio; use only for tactical bets if you understand the specific industry cycle.'
+      'Large Cap: Investing in top 100 companies. Pro Tip: Best for stable long-term growth.',
+      'Mid Cap: High growth potential in mid-sized firms. Pro Tip: Ideal for 5-7 year horizons.',
+      'Small Cap: High risk, exponential growth potential. Pro Tip: Use SIPs for volatility.',
+      'Multi Cap: Mandatory 25% each in Large, Mid, and Small caps. Balanced diversification.',
+      'Flexi Cap: Dynamic allocation across all market caps. Fund manager has full freedom.',
+      'ELSS: Tax-saving funds with 3-year lock-in. Best for 80C tax benefits.',
+      'Focused: Limited to 30 stocks. High conviction, high risk/reward.',
+      'Value/Contra: Investing in undervalued stocks or against market trends.',
+      'Dividend Yield: Investing in companies with high dividend payouts.',
+      'Sectoral/Thematic: Focused on specific industries like IT, Pharma, or ESG.'
     ],
     color: 'bg-blue-50 text-blue-600'
   },
@@ -89,11 +84,17 @@ const fundTypes = [
     title: 'Debt Funds',
     description: 'Invest in fixed-income securities like govt bonds and corporate debentures.',
     details: [
-      'Liquid Funds: For surplus cash, very low risk. Pro Tip: Better alternative to savings accounts.',
-      'Gilt Funds: Investing in government securities. No credit risk but high interest rate risk.',
-      'Corporate Bond Funds: High-quality corporate debt. Aim for higher yields than govt bonds.',
-      'Dynamic Bond Funds: Managing interest rate volatility by changing portfolio duration.',
-      'Short Duration Funds: Ideal for 1-3 year investment horizons.'
+      'Overnight Funds: Investing in securities with 1-day maturity. Safest debt fund.',
+      'Liquid Funds: Maturity up to 91 days. Better alternative to savings accounts.',
+      'Ultra Short Duration: Maturity between 3-6 months. Low risk, slightly higher returns.',
+      'Low Duration: Maturity between 6-12 months. Good for short-term goals.',
+      'Money Market: Investing in money market instruments with up to 1-year maturity.',
+      'Short Duration: Maturity between 1-3 years. Core debt portfolio component.',
+      'Corporate Bond: Minimum 80% in highest-rated corporate bonds.',
+      'Banking & PSU: Investing in debt of banks and public sector undertakings.',
+      'Gilt Funds: Minimum 80% in government securities. No credit risk.',
+      'Floater Funds: Minimum 65% in floating rate instruments. Good for rising rate cycles.',
+      'Credit Risk: Minimum 65% in below-highest rated corporate bonds. High risk/return.'
     ],
     color: 'bg-sky-50 text-sky-600'
   },
@@ -101,23 +102,28 @@ const fundTypes = [
     title: 'Hybrid Funds',
     description: 'A mix of equity and debt to balance risk and reward.',
     details: [
-      'Aggressive Hybrid: 65-80% equity exposure. Pro Tip: Great for first-time equity investors.',
-      'Balanced Advantage: Dynamic asset allocation based on market valuations.',
-      'Multi Asset: Equity, debt, and gold in one fund. True diversification in a single product.',
-      'Arbitrage: Low-risk equity-taxed returns. Ideal for parking money for 3-6 months.',
-      'Equity Savings: Mix of equity, debt, and arbitrage for conservative growth.'
+      'Conservative Hybrid: 10-25% equity, rest in debt. For conservative investors.',
+      'Balanced Hybrid: 40-60% equity, no arbitrage. Moderate risk.',
+      'Aggressive Hybrid: 65-80% equity exposure. Taxed as equity funds.',
+      'Dynamic Asset Allocation: Changes equity/debt mix based on market conditions.',
+      'Multi Asset Allocation: Minimum 10% each in 3 asset classes (Equity, Debt, Gold).',
+      'Arbitrage: Low-risk equity-taxed returns. Exploits price differences in markets.',
+      'Equity Savings: Mix of equity, debt, and arbitrage for stable growth.'
     ],
     color: 'bg-amber-50 text-amber-600'
   },
   {
-    title: 'Index / Passive Funds',
-    description: 'Mimic a market index like Nifty 50. Low cost and transparent.',
+    title: 'Solution Oriented & Others',
+    description: 'Funds designed for specific goals or unique strategies.',
     details: [
-      'Nifty 50 Index: Top 50 Indian companies. Pro Tip: The simplest way to invest in India.',
-      'Nifty Next 50: The next 50 potential blue-chips. Higher growth potential than Nifty 50.',
-      'Target Maturity Funds: Debt index funds with fixed dates. Predictable returns if held to maturity.',
-      'ETFs: Traded on stock exchanges like shares. Requires a demat account.',
-      'Factor Funds: Rules-based indexing like Value, Momentum, or Low Volatility.'
+      'Retirement Fund: Minimum 5-year lock-in or till retirement age.',
+      'Children\'s Fund: Minimum 5-year lock-in or till child attains majority.',
+      'Index Funds: Mimic a market index like Nifty 50. Low cost.',
+      'ETFs: Traded on exchanges. Requires a demat account.',
+      'Fund of Funds: Investing in other mutual funds instead of direct securities.',
+      'International/Overseas: Investing in stocks of foreign companies.',
+      'Gold Funds: Investing in gold ETFs. Digital way to own gold.',
+      'Real Estate Funds: Investing in real estate securities and REITs.'
     ],
     color: 'bg-indigo-50 text-indigo-600'
   }
@@ -254,36 +260,143 @@ const getRiskBgColor = (risk: string) => {
   return 'bg-slate-50/30';
 };
 
+const topAMCs = [
+  {
+    name: 'SBI Mutual Fund',
+    type: 'Bank-Sponsored',
+    description: 'India\'s largest AMC, a joint venture between State Bank of India and Amundi.',
+    benefits: [
+      { name: 'Vast Reach', detail: 'Leverages SBI\'s massive network, making it accessible even in rural India.' },
+      { name: 'Diverse Offerings', detail: 'Offers over 60 schemes across equity, debt, and hybrid categories.' },
+      { name: 'Consistent Performance', detail: 'Known for stable long-term returns in flagship funds like SBI Bluechip.' },
+      { name: 'Professional Management', detail: 'Access to global investment expertise through Amundi partnership.' }
+    ],
+    color: 'border-blue-600'
+  },
+  {
+    name: 'ICICI Prudential Mutual Fund',
+    type: 'Bank-Sponsored',
+    description: 'A leading AMC known for its innovative products and risk management.',
+    benefits: [
+      { name: 'Innovative Products', detail: 'Pioneer in introducing unique concepts like Balanced Advantage Funds.' },
+      { name: 'Strong Risk Management', detail: 'Focuses on protecting downside while participating in market upside.' },
+      { name: 'Technology Driven', detail: 'Offers a seamless digital experience for investors and partners.' },
+      { name: 'Expert Fund Managers', detail: 'Boasts some of the most experienced fund managers in the industry.' }
+    ],
+    color: 'border-blue-800'
+  },
+  {
+    name: 'HDFC Mutual Fund',
+    type: 'Bank-Sponsored',
+    description: 'One of the most trusted names in the Indian mutual fund industry.',
+    benefits: [
+      { name: 'Long-Term Track Record', detail: 'Flagship funds have a history of over 25 years of wealth creation.' },
+      { name: 'Value Investing Philosophy', detail: 'Known for its disciplined value-oriented investment approach.' },
+      { name: 'High Trust Factor', detail: 'Strong brand equity and trust among retail and institutional investors.' },
+      { name: 'Robust Research', detail: 'Backed by one of the largest in-house research teams in India.' }
+    ],
+    color: 'border-red-600'
+  },
+  {
+    name: 'Nippon India Mutual Fund',
+    type: 'Private Sector',
+    description: 'One of the largest private sector AMCs, formerly Reliance Mutual Fund.',
+    benefits: [
+      { name: 'ETF Leadership', detail: 'The largest player in the Indian ETF market with high liquidity.' },
+      { name: 'Small/Mid Cap Expertise', detail: 'Strong performance history in the small and mid-cap segments.' },
+      { name: 'Global Parentage', detail: 'Benefits from the global expertise of Nippon Life Insurance, Japan.' },
+      { name: 'Wide Distribution', detail: 'Strong presence across 270+ locations in India.' }
+    ],
+    color: 'border-red-700'
+  },
+  {
+    name: 'Kotak Mahindra Mutual Fund',
+    type: 'Bank-Sponsored',
+    description: 'Known for its focus on quality and disciplined investment processes.',
+    benefits: [
+      { name: 'Quality Focus', detail: 'Investment philosophy centered around "Quality" companies with high ROE.' },
+      { name: 'Strong Debt Management', detail: 'Highly regarded for its conservative and safe debt fund management.' },
+      { name: 'Customer Centric', detail: 'Focuses on simplifying investing for the common man.' },
+      { name: 'Experienced Leadership', detail: 'Led by industry veterans with deep market insights.' }
+    ],
+    color: 'border-red-800'
+  },
+  {
+    name: 'Aditya Birla Sun Life Mutual Fund',
+    type: 'Private Sector',
+    description: 'A joint venture between Aditya Birla Group and Sun Life Financial, Canada.',
+    benefits: [
+      { name: 'Solution Oriented', detail: 'Offers specialized funds for retirement, children\'s education, etc.' },
+      { name: 'Strong Research', detail: 'Utilizes a robust proprietary research framework for stock selection.' },
+      { name: 'Digital Innovation', detail: 'Pioneer in using AI and data analytics for investment decisions.' },
+      { name: 'Global Best Practices', detail: 'Adopts global investment standards from Sun Life Financial.' }
+    ],
+    color: 'border-amber-500'
+  },
+  {
+    name: 'Axis Mutual Fund',
+    type: 'Bank-Sponsored',
+    description: 'Known for its "Growth" style of investing and high-conviction portfolios.',
+    benefits: [
+      { name: 'Growth Philosophy', detail: 'Focuses on high-growth companies with strong earnings potential.' },
+      { name: 'High Conviction', detail: 'Portfolios are often concentrated in top-quality businesses.' },
+      { name: 'Risk Mitigation', detail: 'Uses advanced risk models to manage portfolio volatility.' },
+      { name: 'Transparent Processes', detail: 'Known for clear communication and transparent investment logic.' }
+    ],
+    color: 'border-rose-600'
+  },
+  {
+    name: 'UTI Mutual Fund',
+    type: 'Public Sector',
+    description: 'The oldest mutual fund in India, with a legacy spanning decades.',
+    benefits: [
+      { name: 'Legacy of Trust', detail: 'The pioneer of mutual funds in India with over 50 years of history.' },
+      { name: 'Broad Product Suite', detail: 'Offers a wide range of index funds and active strategies.' },
+      { name: 'Institutional Strength', detail: 'Strong processes and institutional-grade investment management.' },
+      { name: 'Pan-India Presence', detail: 'One of the widest reaches across the country.' }
+    ],
+    color: 'border-orange-500'
+  },
+  {
+    name: 'Mirae Asset Mutual Fund',
+    type: 'Foreign AMC',
+    description: 'A global investment manager that has seen rapid growth in India.',
+    benefits: [
+      { name: 'Performance Consistency', detail: 'Known for top-tier performance in Large and Emerging Bluechip categories.' },
+      { name: 'Bottom-up Research', detail: 'Focuses on fundamental, bottom-up stock picking.' },
+      { name: 'Global Expertise', detail: 'Leverages investment insights from Mirae Asset\'s global network.' },
+      { name: 'Cost Efficiency', detail: 'Often offers competitive expense ratios for its schemes.' }
+    ],
+    color: 'border-blue-400'
+  },
+  {
+    name: 'DSP Mutual Fund',
+    type: 'Private Sector',
+    description: 'A premier AMC with a focus on disciplined and science-based investing.',
+    benefits: [
+      { name: 'Science-Based Investing', detail: 'Uses data and rules-based frameworks to avoid human biases.' },
+      { name: 'Strong Value Focus', detail: 'Known for its expertise in value and contrarian investing.' },
+      { name: 'Investor Education', detail: 'Highly active in simplifying complex financial concepts for users.' },
+      { name: 'Independent Thinking', detail: 'Encourages fund managers to have high-conviction, independent views.' }
+    ],
+    color: 'border-slate-800'
+  }
+];
+
 export default function MutualFundsGuide() {
   const { openConsultationModal } = useModal();
-  const [funds, setFunds] = useState<MutualFund[]>([]);
   const [selectedFundIds, setSelectedFundIds] = useState<string[]>([]);
   const [sortConfig, setSortConfig] = useState<{ key: string; mode: 'best' | 'worst' } | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isSyncing, setIsSyncing] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
   const [favorites, setFavorites] = useState<string[]>([]);
+  const [expandedAMCs, setExpandedAMCs] = useState<number[]>([]);
 
-  // Load funds from Firestore
-  useEffect(() => {
-    const loadFunds = async () => {
-      try {
-        setIsLoading(true);
-        const data = await getAllMutualFundsFromFirestore();
-        if (data.length > 0) {
-          setFunds(data);
-        } else {
-          setFunds(FALLBACK_FUNDS as MutualFund[]);
-        }
-      } catch (error) {
-        console.error('Error loading funds:', error);
-        setFunds(FALLBACK_FUNDS as MutualFund[]);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    loadFunds();
-  }, []);
+  const toggleAMC = (idx: number) => {
+    setExpandedAMCs(prev => 
+      prev.includes(idx) ? prev.filter(i => i !== idx) : [...prev, idx]
+    );
+  };
 
   // Load favorites from localStorage
   useEffect(() => {
@@ -314,13 +427,13 @@ export default function MutualFundsGuide() {
     );
   };
 
-  // Simulate loading when funds are selected (for UI feedback)
+  // Simulate loading when funds are selected
   useEffect(() => {
     if (selectedFundIds.length > 0) {
-      setIsSyncing(true);
+      setIsLoading(true);
       const timer = setTimeout(() => {
-        setIsSyncing(false);
-      }, 500);
+        setIsLoading(false);
+      }, 800); // 800ms simulation
       return () => clearTimeout(timer);
     }
   }, [selectedFundIds]);
@@ -347,11 +460,10 @@ export default function MutualFundsGuide() {
     });
   };
 
-  const selectedFunds = funds.filter(f => selectedFundIds.includes(f.id || ''));
+  const selectedFunds = COMPARISON_FUNDS.filter(f => selectedFundIds.includes(f.id));
 
-  const parseValue = (val: any) => {
+  const parseValue = (val: string | number) => {
     if (typeof val === 'number') return val;
-    if (typeof val !== 'string') return 0;
     const riskLevels: Record<string, number> = { 'Low': 1, 'Moderate': 2, 'High': 3, 'Very High': 4 };
     if (riskLevels[val]) return riskLevels[val];
     return parseFloat(val.replace(/[^\d.-]/g, '')) || 0;
@@ -519,52 +631,32 @@ export default function MutualFundsGuide() {
               )}
 
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-                {funds.map(fund => (
-                  <div key={fund.id} className="relative group">
-                    <button
-                      onClick={() => toggleFund(fund.id || '')}
-                      className={cn(
-                        "w-full p-4 rounded-2xl border-2 transition-all text-left relative",
-                        selectedFundIds.includes(fund.id || '') 
-                          ? "border-primary bg-primary/5" 
-                          : "border-slate-100 bg-slate-50 hover:border-slate-200"
+                {COMPARISON_FUNDS.map(fund => (
+                  <button
+                    key={fund.id}
+                    onClick={() => toggleFund(fund.id)}
+                    className={cn(
+                      "p-4 rounded-2xl border-2 transition-all text-left group relative",
+                      selectedFundIds.includes(fund.id) 
+                        ? "border-primary bg-primary/5" 
+                        : "border-slate-100 bg-slate-50 hover:border-slate-200"
+                    )}
+                  >
+                    <div className="flex justify-between items-start mb-2">
+                      <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{fund.category}</span>
+                      {selectedFundIds.includes(fund.id) ? (
+                        <X className="w-4 h-4 text-primary" />
+                      ) : (
+                        <Plus className="w-4 h-4 text-slate-300 group-hover:text-primary transition-colors" />
                       )}
-                    >
-                      <div className="flex justify-between items-start mb-2">
-                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{fund.category}</span>
-                        {selectedFundIds.includes(fund.id || '') ? (
-                          <X className="w-4 h-4 text-primary" />
-                        ) : (
-                          <Plus className="w-4 h-4 text-slate-300 group-hover:text-primary transition-colors" />
-                        )}
-                      </div>
-                      <p className="text-sm font-bold text-slate-900 leading-tight pr-6">{fund.name}</p>
-                    </button>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toggleFavorite(fund.id || '');
-                      }}
-                      className={cn(
-                        "absolute bottom-4 right-4 p-1.5 rounded-lg transition-all duration-300 z-10",
-                        favorites.includes(fund.id || '') 
-                          ? "bg-amber-50 text-amber-500" 
-                          : "bg-transparent text-slate-200 hover:text-slate-400 opacity-0 group-hover:opacity-100"
-                      )}
-                    >
-                      <Star className={cn("w-3.5 h-3.5", favorites.includes(fund.id || '') && "fill-current")} />
-                    </button>
-                  </div>
+                    </div>
+                    <p className="text-sm font-bold text-slate-900 leading-tight">{fund.name}</p>
+                  </button>
                 ))}
               </div>
 
               <AnimatePresence mode="wait">
                 {isLoading ? (
-                  <div className="flex flex-col items-center justify-center py-20 gap-4">
-                    <Loader2 className="w-10 h-10 text-primary animate-spin" />
-                    <p className="text-slate-500 font-medium">Loading mutual funds...</p>
-                  </div>
-                ) : isSyncing ? (
                   <motion.div
                     key="skeleton-loader"
                     initial={{ opacity: 0 }}
@@ -1097,19 +1189,10 @@ export default function MutualFundsGuide() {
               </div>
             </section>
 
-            {/* SIP Calculator Section */}
-            <section id="sip-calculator">
-              <div className="mb-8">
-                <h2 className="text-3xl font-black text-slate-900 tracking-tight">Plan Your SIP</h2>
-                <p className="text-slate-500 mt-1">Calculate how much your monthly investments can grow over time.</p>
-              </div>
-              <SIPCalculator />
-            </section>
-
             {/* Fund Types Grid */}
             <section>
               <h2 className="text-2xl font-bold text-slate-900 mb-8 flex items-center gap-3">
-                <Layers className="w-6 h-6 text-primary" />
+                <span className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white text-sm">01</span>
                 Categories of Mutual Funds
               </h2>
             <ChromaGrid 
@@ -1118,15 +1201,25 @@ export default function MutualFundsGuide() {
               damping={0.45}
               fadeOut={0.6}
               ease="power3.out"
-              items={fundTypes.map(fund => ({
-                title: fund.title,
-                tooltip: `Learn more about ${fund.title} strategies`,
-                description: fund.description,
-                icon: BarChart3,
-                details: fund.details,
-                borderColor: fund.color.includes('blue') ? '#3B82F6' : fund.color.includes('sky') ? '#0EA5E9' : fund.color.includes('amber') ? '#F59E0B' : '#6366F1',
-                gradient: `linear-gradient(145deg, ${fund.color.includes('blue') ? '#3B82F6' : fund.color.includes('sky') ? '#0EA5E9' : fund.color.includes('amber') ? '#F59E0B' : '#6366F1'}, #000)`
-              }))}
+              items={fundTypes.map(fund => {
+                const getColor = (colorStr: string) => {
+                  if (colorStr.includes('blue')) return '#3B82F6';
+                  if (colorStr.includes('sky')) return '#0EA5E9';
+                  if (colorStr.includes('amber')) return '#F59E0B';
+                  if (colorStr.includes('indigo')) return '#6366F1';
+                  return '#6366F1';
+                };
+                const color = getColor(fund.color);
+                return {
+                  title: fund.title,
+                  tooltip: `Learn more about ${fund.title} strategies`,
+                  description: fund.description,
+                  icon: BarChart3,
+                  details: fund.details,
+                  borderColor: color,
+                  gradient: `linear-gradient(145deg, ${color}, #000)`
+                };
+              })}
             />
               <div className="mt-8 bg-white p-8 rounded-3xl border border-slate-200">
                 <h4 className="font-bold text-slate-900 mb-6">How to Read a Fund Factsheet</h4>
@@ -1148,9 +1241,82 @@ export default function MutualFundsGuide() {
               </div>
             </section>
 
+            {/* Top AMCs Section */}
             <section className="bg-white p-10 rounded-[2.5rem] border border-slate-200 shadow-sm">
               <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-3">
-                <BarChart3 className="w-6 h-6 text-primary" />
+                <span className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white text-sm">02</span>
+                Top 10 Mutual Fund Companies in India
+              </h2>
+              <p className="text-sm text-slate-600 mb-8 leading-relaxed">
+                Choosing the right Asset Management Company (AMC) is crucial for long-term wealth creation. Here are India's top 10 mutual fund houses and their key benefits.
+              </p>
+              <div className="grid grid-cols-1 gap-6">
+                {topAMCs.map((amc, idx) => {
+                  const isExpanded = expandedAMCs.includes(idx);
+                  return (
+                    <div key={idx} className={`rounded-3xl border border-slate-200 bg-white overflow-hidden transition-all duration-300 ${isExpanded ? 'shadow-lg ring-1 ring-primary/10' : 'hover:shadow-md'}`}>
+                      <button 
+                        onClick={() => toggleAMC(idx)}
+                        className={`w-full text-left p-6 flex flex-wrap justify-between items-center gap-4 transition-colors ${isExpanded ? 'bg-slate-50' : 'hover:bg-slate-50/50'}`}
+                      >
+                        <div className="flex items-center gap-4">
+                          <div className={`w-2 h-10 rounded-full ${amc.color.replace('border-', 'bg-')}`} />
+                          <div>
+                            <h4 className="text-lg font-bold text-slate-900">{amc.name}</h4>
+                            <span className="text-[10px] font-black text-primary uppercase tracking-widest bg-white px-2 py-1 rounded-md border border-slate-100 shadow-sm mt-1 inline-block">
+                              {amc.type}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <span className="text-xs font-bold text-primary">
+                            {isExpanded ? 'Hide Benefits' : 'View Main Benefits'}
+                          </span>
+                          <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                            {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                          </div>
+                        </div>
+                      </button>
+
+                      <AnimatePresence>
+                        {isExpanded && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.3, ease: 'easeInOut' }}
+                          >
+                            <div className="p-8 pt-0 border-t border-slate-100 bg-slate-50/30">
+                              <p className="text-sm text-slate-500 italic mb-8 mt-6 border-l-2 border-primary/20 pl-4">
+                                {amc.description}
+                              </p>
+                              
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                {amc.benefits.map((benefit, bIdx) => (
+                                  <div key={bIdx} className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm hover:border-primary/20 transition-all duration-300 group">
+                                    <h5 className="text-sm font-bold text-slate-900 mb-3 flex items-center gap-2 group-hover:text-primary transition-colors">
+                                      <CheckCircle2 className="w-4 h-4 text-primary shrink-0" />
+                                      {benefit.name}
+                                    </h5>
+                                    <p className="text-xs text-slate-600 leading-relaxed">
+                                      {benefit.detail}
+                                    </p>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
+
+            <section className="bg-white p-10 rounded-[2.5rem] border border-slate-200 shadow-sm">
+              <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+                <span className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white text-sm">03</span>
                 Understanding Risk Ratios
               </h2>
               <div className="space-y-6">
@@ -1173,7 +1339,7 @@ export default function MutualFundsGuide() {
 
             <section className="bg-white p-10 rounded-[2.5rem] border border-slate-200 shadow-sm">
               <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-3">
-                <Sparkles className="w-6 h-6 text-primary" />
+                <span className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white text-sm">04</span>
                 Advanced Mutual Fund Categories
               </h2>
               <ChromaGrid 
@@ -1241,7 +1407,7 @@ export default function MutualFundsGuide() {
 
             <section className="bg-primary/10 p-10 rounded-[2.5rem] border border-primary/20">
               <h2 className="text-2xl font-bold text-slate-900 mb-8 flex items-center gap-3">
-                <Target className="w-6 h-6 text-primary" />
+                <span className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white text-sm">05</span>
                 BHP's 5-Step Fund Selection Process
               </h2>
               <div className="space-y-6">
@@ -1312,7 +1478,7 @@ export default function MutualFundsGuide() {
             {/* Taxation Section */}
             <section className="bg-white p-10 rounded-[2.5rem] border border-slate-200 shadow-sm">
               <h2 className="text-2xl font-bold text-slate-900 mb-8 flex items-center gap-3">
-                <BarChart3 className="w-6 h-6 text-primary" />
+                <span className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white text-sm">06</span>
                 Taxation on Mutual Funds (India)
               </h2>
               <ChromaGrid 
@@ -1355,7 +1521,7 @@ export default function MutualFundsGuide() {
             {/* Common Mistakes */}
             <section className="bg-rose-50 p-10 rounded-[2.5rem] border border-rose-100">
               <h2 className="text-2xl font-bold text-rose-900 mb-8 flex items-center gap-3">
-                <Info className="w-6 h-6 text-rose-600" />
+                <span className="w-8 h-8 bg-rose-600 rounded-lg flex items-center justify-center text-white text-sm">07</span>
                 Common Investing Mistakes
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -1377,10 +1543,10 @@ export default function MutualFundsGuide() {
 
             {/* Direct vs Regular */}
             <section className="bg-primary/20 p-10 rounded-[2.5rem] border border-primary/30">
-              <div className="flex items-center gap-4 mb-6">
-                <ShieldCheck className="w-8 h-8 text-primary" />
-                <h2 className="text-2xl font-bold text-slate-900">Direct vs. Regular Plans</h2>
-              </div>
+              <h2 className="text-2xl font-bold text-slate-900 mb-8 flex items-center gap-3">
+                <span className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white text-sm">08</span>
+                Direct vs. Regular Plans
+              </h2>
               <p className="text-slate-700 mb-8 leading-relaxed">
                 Every mutual fund has two versions. Choosing the right one can save you lakhs of rupees over 20 years.
               </p>
@@ -1444,22 +1610,6 @@ export default function MutualFundsGuide() {
 
           {/* Sidebar */}
           <div className="space-y-8">
-            <div className="bg-white p-8 rounded-[2rem] border border-slate-200 shadow-sm">
-              <h3 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
-                <Calculator className="w-5 h-5 text-primary" />
-                Quick Tools
-              </h3>
-              <div className="space-y-4">
-                <button 
-                  onClick={() => document.getElementById('sip-calculator')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="w-full flex items-center justify-between p-4 bg-slate-50 rounded-2xl hover:bg-primary/5 transition-colors group"
-                >
-                  <span className="text-sm font-bold text-slate-700">SIP Calculator</span>
-                  <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-primary group-hover:translate-x-1 transition-all" />
-                </button>
-              </div>
-            </div>
-
             <div className="bg-white p-8 rounded-[2rem] border border-slate-200 shadow-sm">
               <h3 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
                 <Info className="w-5 h-5 text-primary" />

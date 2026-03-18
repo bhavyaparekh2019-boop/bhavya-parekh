@@ -154,7 +154,7 @@ export default function Footer() {
 
         <div className="pt-8 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-xs text-slate-400">
-            © {new Date().getFullYear()} Market Insights. All rights reserved. Registered Investment Advisor.
+            © {new Date().getFullYear()} BHP Finance. All rights reserved. Registered Investment Advisor.
           </p>
           <div className="flex items-center gap-2 text-xs font-bold text-slate-500">
             <MapPin className="w-3 h-3 text-primary" />

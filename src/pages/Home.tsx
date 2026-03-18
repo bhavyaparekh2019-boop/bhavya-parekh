@@ -237,7 +237,7 @@ export default function Home() {
             concise: `For "${searchQuery}", the general financial consensus suggests careful planning and diversification.`,
             full: `Regarding your query about "${searchQuery}", it's important to consider your risk appetite and long-term goals. In the Indian context, this often involves looking at tax-saving instruments under Section 80C, balanced mutual funds, and maintaining an emergency fund. (Note: This is a demo response as no API key is configured).`,
             sources: [
-              { title: "Market Insights Guides", uri: "/guides/investment" },
+              { title: "BHP Finance Guides", uri: "/guides/investment" },
               { title: "Market Analysis", uri: "/market-analysis" }
             ],
             relatedGuides,

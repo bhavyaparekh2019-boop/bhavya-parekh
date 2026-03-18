@@ -319,7 +319,7 @@ export default function ArticleDetail() {
             </div>
             <div>
               <h4 className="text-xl font-black text-slate-900 mb-2">{article.author}</h4>
-              <p className="text-slate-500 text-sm mb-4 font-medium uppercase tracking-wider">Senior Financial Analyst at Market Insights</p>
+              <p className="text-slate-500 text-sm mb-4 font-medium uppercase tracking-wider">Senior Financial Analyst at BHP Finance</p>
               <p className="text-slate-600 leading-relaxed">
                 Expert in global market trends and wealth management strategies. With over 15 years of experience in the financial sector, providing actionable insights for high-net-worth individuals and institutional investors.
               </p>

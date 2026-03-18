@@ -86,7 +86,7 @@ async function startServer() {
             <p style="margin: 0; font-size: 14px; color: #64748b; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Subscriber Email</p>
             <p style="margin: 5px 0 0 0; font-size: 18px; color: #0f172a; font-weight: bold;">${email}</p>
           </div>
-          <p style="margin-top: 30px; font-size: 12px; color: #94a3b8;">This is an automated notification from your Market Insights website.</p>
+          <p style="margin-top: 30px; font-size: 12px; color: #94a3b8;">This is an automated notification from your BHP Finance website.</p>
         </div>
       `,
     };
@@ -103,7 +103,7 @@ async function startServer() {
           <p style="font-size: 16px; color: #475569;">Thank you for subscribing to <strong>The Weekly Insight</strong>. You'll now receive expert market insights and financial tips in your inbox every Monday.</p>
           <p style="font-size: 16px; color: #475569;">We're excited to have you with us on your journey to financial wisdom.</p>
           <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
-            <p style="margin: 0; font-size: 14px; color: #0f172a; font-weight: bold;">Market Insights Team</p>
+            <p style="margin: 0; font-size: 14px; color: #0f172a; font-weight: bold;">BHP Finance Team</p>
             <p style="margin: 5px 0 0 0; font-size: 12px; color: #94a3b8;">Expert Market Analysis & Professional Guidance</p>
           </div>
         </div>
@@ -163,7 +163,7 @@ async function startServer() {
       html: `
         <div style="font-family: sans-serif; padding: 20px; border: 1px solid #eee; border-radius: 10px; max-width: 600px;">
           <h2 style="color: #1e293b; border-bottom: 2px solid #fbbf24; padding-bottom: 10px;">New Consultation Request</h2>
-          <p style="font-size: 16px; color: #475569;">A potential client has requested a consultation through the Market Insights website.</p>
+          <p style="font-size: 16px; color: #475569;">A potential client has requested a consultation through the BHP Finance website.</p>
           
           <div style="background: #f8fafc; padding: 20px; border-radius: 12px; margin-top: 20px; display: grid; gap: 15px;">
             <div>
@@ -184,7 +184,7 @@ async function startServer() {
             </div>
           </div>
           
-          <p style="margin-top: 30px; font-size: 12px; color: #94a3b8; text-align: center;">This is an automated notification from your Market Insights website.</p>
+          <p style="margin-top: 30px; font-size: 12px; color: #94a3b8; text-align: center;">This is an automated notification from your BHP Finance website.</p>
         </div>
       `,
     };
@@ -193,15 +193,15 @@ async function startServer() {
     const clientMailOptions = {
       from: user,
       to: email,
-      subject: "We've Received Your Consultation Request - Market Insights",
+      subject: "We've Received Your Consultation Request - BHP Finance",
       html: `
         <div style="font-family: sans-serif; padding: 20px; border: 1px solid #eee; border-radius: 10px; max-width: 600px;">
           <h2 style="color: #1e293b; border-bottom: 2px solid #fbbf24; padding-bottom: 10px;">Request Received</h2>
           <p style="font-size: 16px; color: #475569;">Hello ${name},</p>
-          <p style="font-size: 16px; color: #475569;">Thank you for reaching out to Market Insights. We have received your request for a consultation regarding <strong>${service}</strong>.</p>
+          <p style="font-size: 16px; color: #475569;">Thank you for reaching out to BHP Finance. We have received your request for a consultation regarding <strong>${service}</strong>.</p>
           <p style="font-size: 16px; color: #475569;">One of our expert advisors will review your details and get back to you at <strong>${phone}</strong> or via email shortly.</p>
           <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
-            <p style="margin: 0; font-size: 14px; color: #0f172a; font-weight: bold;">Market Insights Team</p>
+            <p style="margin: 0; font-size: 14px; color: #0f172a; font-weight: bold;">BHP Finance Team</p>
             <p style="margin: 5px 0 0 0; font-size: 12px; color: #94a3b8;">Expert Market Analysis & Professional Guidance</p>
           </div>
         </div>
