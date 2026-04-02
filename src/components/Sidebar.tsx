@@ -46,10 +46,10 @@ export default function Sidebar() {
         body: JSON.stringify({ email }),
       });
 
-      if (response.ok) {
-        const contentType = response.headers.get("content-type");
-        if (contentType && contentType.includes("application/json")) {
-          const data = await response.json();
+      const contentType = response.headers.get("content-type");
+      if (contentType && contentType.includes("application/json")) {
+        const data = await response.json();
+        if (response.ok) {
           setSubscribeStatus('success');
           setSubscribeNote(data.note || null);
           setEmail('');
@@ -58,11 +58,12 @@ export default function Sidebar() {
             setSubscribeNote(null);
           }, 8000);
         } else {
-          const text = await response.text();
-          console.error('Non-JSON response from /api/subscribe:', text.substring(0, 100));
+          console.error('Subscription failed:', data.error);
           setSubscribeStatus('error');
         }
       } else {
+        const text = await response.text();
+        console.error('Non-JSON response from /api/subscribe:', text.substring(0, 500));
         setSubscribeStatus('error');
       }
     } catch (error) {

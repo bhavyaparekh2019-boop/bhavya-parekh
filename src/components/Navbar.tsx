@@ -48,7 +48,80 @@ export default function Navbar() {
       isPositive: boolean;
     };
   } | null>(null);
+
+  // Live search results
+  const [liveResults, setLiveResults] = useState<{
+    articles: Article[];
+    guides: Guide[];
+  }>({ articles: [], guides: [] });
+
   const location = useLocation();
+
+  // Memoized filtered articles
+  const filteredArticles = React.useMemo(() => {
+    let result = [...ARTICLES];
+    if (filters.category) {
+      result = result.filter(a => a.category === filters.category);
+    }
+    if (filters.author) {
+      result = result.filter(a => a.author === filters.author);
+    }
+    if (filters.startDate || filters.endDate) {
+      result = result.filter(a => {
+        const articleDate = new Date(a.date);
+        if (filters.startDate && articleDate < new Date(filters.startDate)) return false;
+        if (filters.endDate && articleDate > new Date(filters.endDate)) return false;
+        return true;
+      });
+    }
+    return result;
+  }, [filters]);
+
+  // Memoized Fuse instances for efficiency
+  const articleFuse = React.useMemo(() => {
+    return new Fuse(filteredArticles, {
+      keys: [
+        { name: 'title', weight: 0.7 },
+        { name: 'keywords', weight: 0.5 },
+        { name: 'excerpt', weight: 0.3 },
+        { name: 'category', weight: 0.2 },
+        { name: 'author', weight: 0.1 }
+      ],
+      threshold: 0.35,
+      distance: 100,
+      ignoreLocation: true,
+      useExtendedSearch: true
+    });
+  }, [filteredArticles]);
+
+  const guideFuse = React.useMemo(() => {
+    return new Fuse(GUIDES, {
+      keys: [
+        { name: 'title', weight: 0.7 },
+        { name: 'excerpt', weight: 0.3 },
+        { name: 'category', weight: 0.2 }
+      ],
+      threshold: 0.35,
+      distance: 100,
+      ignoreLocation: true
+    });
+  }, []);
+
+  // Handle live search as user types
+  useEffect(() => {
+    if (!searchQuery.trim()) {
+      setLiveResults({ articles: [], guides: [] });
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      const articles = articleFuse.search(searchQuery).map(r => r.item).slice(0, 4);
+      const guides = guideFuse.search(searchQuery).map(r => r.item).slice(0, 2);
+      setLiveResults({ articles, guides });
+    }, 150); // Small debounce
+
+    return () => clearTimeout(timer);
+  }, [searchQuery, articleFuse, guideFuse]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (u) => {
@@ -83,45 +156,9 @@ export default function Navbar() {
     setAiResponse(null);
     if (!overrideQuery) setSearchQuery(query);
 
-    // Local search for articles using fuzzy search
-    let filteredArticles = [...ARTICLES];
-
-    // Apply filters
-    if (filters.category) {
-      filteredArticles = filteredArticles.filter(a => a.category === filters.category);
-    }
-    if (filters.author) {
-      filteredArticles = filteredArticles.filter(a => a.author === filters.author);
-    }
-    if (filters.startDate || filters.endDate) {
-      filteredArticles = filteredArticles.filter(a => {
-        const articleDate = new Date(a.date);
-        if (filters.startDate && articleDate < new Date(filters.startDate)) return false;
-        if (filters.endDate && articleDate > new Date(filters.endDate)) return false;
-        return true;
-      });
-    }
-
-    const fuse = new Fuse(filteredArticles, {
-      keys: ['title', 'excerpt', 'keywords', 'category', 'author'],
-      threshold: 0.4,
-      distance: 100,
-    });
-    
-    const localResults = query.trim() 
-      ? fuse.search(query).map(result => result.item).slice(0, 3)
-      : filteredArticles.slice(0, 3);
-
-    // Local search for guides
-    const guideFuse = new Fuse(GUIDES, {
-      keys: ['title', 'excerpt', 'category'],
-      threshold: 0.4,
-      distance: 100,
-    });
-
-    const localGuides = query.trim()
-      ? guideFuse.search(query).map(result => result.item).slice(0, 2)
-      : [];
+    // Use memoized Fuse for local results
+    const localResults = articleFuse.search(query).map(r => r.item).slice(0, 3);
+    const localGuides = guideFuse.search(query).map(r => r.item).slice(0, 2);
 
     try {
       const apiKey = process.env.GEMINI_API_KEY;
@@ -674,6 +711,78 @@ export default function Navbar() {
                         Disclaimer: AI insights are for informational purposes and not financial advice. Consult a professional before investing.
                       </p>
                     </div>
+                  </motion.div>
+                ) : searchQuery.trim() ? (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="space-y-8 pb-20"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <Zap className="w-5 h-5 text-primary" />
+                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Instant Results</span>
+                      </div>
+                      <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Press Enter for AI Analysis</p>
+                    </div>
+
+                    {liveResults.articles.length > 0 ? (
+                      <div className="grid grid-cols-1 gap-4">
+                        {liveResults.articles.map((article) => (
+                          <Link 
+                            key={article.id}
+                            to={`/article/${article.id}`}
+                            onClick={() => setIsSearchOpen(false)}
+                            className="flex flex-col md:flex-row gap-6 p-6 bg-white/5 border border-white/10 rounded-[2rem] hover:bg-white/10 transition-all group"
+                          >
+                            <div className="md:w-32 h-24 rounded-2xl overflow-hidden shrink-0">
+                              <img src={article.image} alt={article.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" referrerPolicy="no-referrer" />
+                            </div>
+                            <div className="flex flex-col justify-center">
+                              <div className="flex items-center gap-3 mb-2">
+                                <span className="text-[8px] font-black text-primary uppercase tracking-widest px-2 py-0.5 bg-primary/10 rounded-full">{article.category}</span>
+                                <span className="text-[8px] font-bold text-slate-500 uppercase tracking-widest">{article.readTime}</span>
+                              </div>
+                              <h4 className="text-lg font-bold text-white group-hover:text-primary transition-colors line-clamp-1">{article.title}</h4>
+                              <p className="text-sm text-slate-400 line-clamp-2 mt-1">{article.excerpt}</p>
+                            </div>
+                          </Link>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="py-20 text-center">
+                        <p className="text-slate-500 font-bold uppercase tracking-widest text-xs mb-2">No local matches found</p>
+                        <p className="text-slate-400 text-sm">Press Enter to perform a deep AI search across the web.</p>
+                      </div>
+                    )}
+
+                    {liveResults.guides.length > 0 && (
+                      <div className="space-y-4">
+                        <div className="flex items-center gap-3">
+                          <Shield className="w-4 h-4 text-primary" />
+                          <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Related Guides</span>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {liveResults.guides.map((guide) => (
+                            <Link 
+                              key={guide.id}
+                              to={guide.path}
+                              onClick={() => setIsSearchOpen(false)}
+                              className="flex gap-4 p-4 bg-white/5 border border-white/10 rounded-3xl hover:bg-white/10 transition-all group"
+                            >
+                              <div className="w-20 h-20 rounded-2xl overflow-hidden shrink-0">
+                                <img src={guide.image} alt={guide.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" referrerPolicy="no-referrer" />
+                              </div>
+                              <div className="flex flex-col justify-center overflow-hidden">
+                                <span className="text-[8px] font-black text-primary uppercase tracking-widest mb-1">{guide.category}</span>
+                                <h4 className="text-sm font-bold text-white group-hover:text-primary transition-colors line-clamp-1">{guide.title}</h4>
+                                <p className="text-[10px] text-slate-400 line-clamp-2 mt-0.5 leading-tight">{guide.excerpt}</p>
+                              </div>
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </motion.div>
                 ) : (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

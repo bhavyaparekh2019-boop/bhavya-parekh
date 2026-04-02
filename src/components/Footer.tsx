@@ -35,8 +35,8 @@ export default function Footer() {
         }
       } else {
         const text = await response.text();
-        console.error('Non-JSON response from /api/subscribe:', text.substring(0, 100));
-        throw new Error('Server returned an unexpected response format. Please try again later.');
+        console.error('Non-JSON response from /api/subscribe:', text.substring(0, 500));
+        throw new Error(`Server returned an unexpected response format (${response.status}). Please try again later.`);
       }
     } catch (error) {
       setStatus('error');

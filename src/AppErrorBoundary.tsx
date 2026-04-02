@@ -43,9 +43,11 @@ export default class AppErrorBoundary extends Component<Props, State> {
             <p className="text-slate-400 text-sm leading-relaxed">
               The application encountered an unexpected error. We've been notified and are working to fix it.
             </p>
-            <div className="p-4 bg-black/40 rounded-2xl text-left overflow-auto max-h-40">
-              <code className="text-rose-400 text-[10px] break-all">
+            <div className="p-4 bg-black/40 rounded-2xl text-left overflow-auto max-h-60">
+              <code className="text-rose-400 text-[10px] break-all whitespace-pre-wrap">
                 {this.state.error?.toString()}
+                {"\n\n"}
+                {this.state.error?.stack}
               </code>
             </div>
             <button 

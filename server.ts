@@ -17,15 +17,26 @@ async function startServer() {
   // Request logging middleware
   app.use((req, res, next) => {
     const start = Date.now();
+    console.log(`[REQ] ${new Date().toISOString()} - ${req.method} ${req.url} - Start`);
     res.on('finish', () => {
       const duration = Date.now() - start;
-      console.log(`${new Date().toISOString()} - ${req.method} ${req.url} - ${res.statusCode} (${duration}ms)`);
+      console.log(`[RES] ${new Date().toISOString()} - ${req.method} ${req.url} - ${res.statusCode} (${duration}ms)`);
     });
+    next();
+  });
+
+  // JSON parsing error handler
+  app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+    if (err instanceof SyntaxError && 'status' in err && err.status === 400 && 'body' in err) {
+      console.error(`[API] JSON Syntax Error: ${err.message}`);
+      return res.status(400).json({ error: "Invalid JSON payload" });
+    }
     next();
   });
 
   // Helper function to get email transporter
   const getTransporter = () => {
+    console.log("[API] getTransporter called");
     // Using provided credentials as fallbacks if environment variables are not set
     let user = process.env.EMAIL_USER || "bhadresh.parekh13@gmail.com";
     let pass = process.env.EMAIL_PASS || "hkwcnartoqcivwcd";
@@ -87,69 +98,74 @@ async function startServer() {
     res.json(db_mock);
   });
 
+  app.get("/api/subscribe", (req, res) => {
+    res.status(405).json({ error: "Method Not Allowed", message: "Use POST to subscribe" });
+  });
+
   app.post("/api/subscribe", async (req, res) => {
-    const { email } = req.body;
-
-    if (!email) {
-      return res.status(400).json({ error: "Email is required" });
-    }
-
-    console.log(`New subscription request: ${email}`);
-    const subData = { email, date: new Date().toISOString() };
-    db_mock.subscriptions.push(subData);
-
-    // Save to Firestore if available
-    if (db) {
-      try {
-        const { collection, addDoc } = await import("firebase/firestore");
-        await addDoc(collection(db, "subscriptions"), subData);
-        console.log("Subscription saved to Firestore");
-      } catch (err) {
-        console.error("Failed to save subscription to Firestore:", err);
-      }
-    }
-
-    const { transporter, user, pass, adminEmail } = getTransporter();
-
-    // 1. Admin Notification
-    const adminMailOptions = {
-      from: user,
-      to: adminEmail,
-      subject: "New Weekly Insight Subscription",
-      text: `You have a new subscriber for Weekly Insight: ${email}`,
-      html: `
-        <div style="font-family: sans-serif; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
-          <h2 style="color: #1e293b;">New Subscription!</h2>
-          <p style="font-size: 16px; color: #475569;">A new user has subscribed to <strong>The Weekly Insight</strong> newsletter.</p>
-          <div style="background: #f8fafc; padding: 15px; border-radius: 8px; margin-top: 20px;">
-            <p style="margin: 0; font-size: 14px; color: #64748b; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Subscriber Email</p>
-            <p style="margin: 5px 0 0 0; font-size: 18px; color: #0f172a; font-weight: bold;">${email}</p>
-          </div>
-          <p style="margin-top: 30px; font-size: 12px; color: #94a3b8;">This is an automated notification from your BHP Finance website.</p>
-        </div>
-      `,
-    };
-
-    // 2. Client Confirmation
-    const clientMailOptions = {
-      from: user,
-      to: email,
-      subject: "Welcome to The Weekly Insight!",
-      html: `
-        <div style="font-family: sans-serif; padding: 20px; border: 1px solid #eee; border-radius: 10px; max-width: 600px;">
-          <h2 style="color: #1e293b; border-bottom: 2px solid #fbbf24; padding-bottom: 10px;">Welcome Aboard!</h2>
-          <p style="font-size: 16px; color: #475569;">Hello,</p>
-          <p style="font-size: 16px; color: #475569;">Thank you for subscribing to <strong>The Weekly Insight</strong>. You'll now receive expert market insights and financial tips in your inbox every Monday.</p>
-          <p style="font-size: 16px; color: #475569;">We're excited to have you with us on your journey to financial wisdom.</p>
-          <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
-            <p style="margin: 0; font-size: 14px; color: #0f172a; font-weight: bold;">BHP Finance Team</p>
-            <p style="margin: 5px 0 0 0; font-size: 12px; color: #94a3b8;">Expert Market Analysis & Professional Guidance</p>
-          </div>
-        </div>
-      `,
-    };
-
+    console.log(`[API] POST /api/subscribe - Start - Body: ${JSON.stringify(req.body)}`);
     try {
+      const { email } = req.body;
+
+      if (!email) {
+        return res.status(400).json({ error: "Email is required" });
+      }
+
+      console.log(`New subscription request: ${email}`);
+      const subData = { email, date: new Date().toISOString() };
+      db_mock.subscriptions.push(subData);
+
+      // Save to Firestore if available
+      if (db) {
+        try {
+          const { collection, addDoc } = await import("firebase/firestore");
+          await addDoc(collection(db, "subscriptions"), subData);
+          console.log("Subscription saved to Firestore");
+        } catch (err) {
+          console.error("Failed to save subscription to Firestore:", err);
+        }
+      }
+
+      const { transporter, user, pass, adminEmail } = getTransporter();
+
+      // 1. Admin Notification
+      const adminMailOptions = {
+        from: user,
+        to: adminEmail,
+        subject: "New Weekly Insight Subscription",
+        text: `You have a new subscriber for Weekly Insight: ${email}`,
+        html: `
+          <div style="font-family: sans-serif; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+            <h2 style="color: #1e293b;">New Subscription!</h2>
+            <p style="font-size: 16px; color: #475569;">A new user has subscribed to <strong>The Weekly Insight</strong> newsletter.</p>
+            <div style="background: #f8fafc; padding: 15px; border-radius: 8px; margin-top: 20px;">
+              <p style="margin: 0; font-size: 14px; color: #64748b; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Subscriber Email</p>
+              <p style="margin: 5px 0 0 0; font-size: 18px; color: #0f172a; font-weight: bold;">${email}</p>
+            </div>
+            <p style="margin-top: 30px; font-size: 12px; color: #94a3b8;">This is an automated notification from your BHP Finance website.</p>
+          </div>
+        `,
+      };
+
+      // 2. Client Confirmation
+      const clientMailOptions = {
+        from: user,
+        to: email,
+        subject: "Welcome to The Weekly Insight!",
+        html: `
+          <div style="font-family: sans-serif; padding: 20px; border: 1px solid #eee; border-radius: 10px; max-width: 600px;">
+            <h2 style="color: #1e293b; border-bottom: 2px solid #fbbf24; padding-bottom: 10px;">Welcome Aboard!</h2>
+            <p style="font-size: 16px; color: #475569;">Hello,</p>
+            <p style="font-size: 16px; color: #475569;">Thank you for subscribing to <strong>The Weekly Insight</strong>. You'll now receive expert market insights and financial tips in your inbox every Monday.</p>
+            <p style="font-size: 16px; color: #475569;">We're excited to have you with us on your journey to financial wisdom.</p>
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
+              <p style="margin: 0; font-size: 14px; color: #0f172a; font-weight: bold;">BHP Finance Team</p>
+              <p style="margin: 5px 0 0 0; font-size: 12px; color: #94a3b8;">Expert Market Analysis & Professional Guidance</p>
+            </div>
+          </div>
+        `,
+      };
+
       if (user && pass && !user.includes("TODO")) {
         try {
           await transporter.sendMail(adminMailOptions);
@@ -174,7 +190,7 @@ async function startServer() {
       }
     } catch (error: any) {
       console.error("Critical error in subscription route:", error);
-      res.status(500).json({ 
+      return res.status(500).json({ 
         error: "Internal server error", 
         details: error.message || "Unknown error" 
       });
@@ -294,6 +310,7 @@ async function startServer() {
 
   // Ensure all API routes that aren't matched return a JSON 404 instead of falling through to Vite/SPA
   app.all("/api/*", (req, res) => {
+    console.warn(`[API] 404 - Unmatched API route: ${req.method} ${req.originalUrl}`);
     res.status(404).json({ 
       error: "API route not found", 
       message: `The requested API endpoint ${req.originalUrl} does not exist on this server.` 
