@@ -22,15 +22,21 @@ export default function Footer() {
         body: JSON.stringify({ email }),
       });
 
-      const data = await response.json();
-
-      if (response.ok) {
-        setStatus('success');
-        setMessage('Thank you for subscribing!');
-        setSubscribeNote(data.note || '');
-        setEmail('');
+      const contentType = response.headers.get("content-type");
+      if (contentType && contentType.includes("application/json")) {
+        const data = await response.json();
+        if (response.ok) {
+          setStatus('success');
+          setMessage('Thank you for subscribing!');
+          setSubscribeNote(data.note || '');
+          setEmail('');
+        } else {
+          throw new Error(data.error || 'Subscription failed');
+        }
       } else {
-        throw new Error(data.error || 'Subscription failed');
+        const text = await response.text();
+        console.error('Non-JSON response from /api/subscribe:', text.substring(0, 100));
+        throw new Error('Server returned an unexpected response format. Please try again later.');
       }
     } catch (error) {
       setStatus('error');

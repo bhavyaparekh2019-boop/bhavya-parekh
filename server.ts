@@ -12,6 +12,7 @@ async function startServer() {
   const PORT = 3000;
 
   app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
 
   // Request logging middleware
   app.use((req, res, next) => {
@@ -291,6 +292,14 @@ async function startServer() {
     }
   });
 
+  // Ensure all API routes that aren't matched return a JSON 404 instead of falling through to Vite/SPA
+  app.all("/api/*", (req, res) => {
+    res.status(404).json({ 
+      error: "API route not found", 
+      message: `The requested API endpoint ${req.originalUrl} does not exist on this server.` 
+    });
+  });
+
   // Vite middleware for development
   // In AI Studio, we prefer development mode (Vite) if the source exists,
   // even if NODE_ENV is set to production by the platform.
@@ -322,14 +331,6 @@ async function startServer() {
 
     // Serve static files from dist
     app.use(express.static("dist", { index: false }));
-
-    // Handle API 404s explicitly to avoid returning index.html for API calls
-    app.all("/api/*", (req, res) => {
-      res.status(404).json({ 
-        error: "API route not found", 
-        message: `The requested API endpoint ${req.originalUrl} does not exist on this server.` 
-      });
-    });
 
     // Catch-all for SPA routing
     app.get("*", (req, res) => {
