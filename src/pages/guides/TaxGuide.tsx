@@ -1,9 +1,9 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { FileText, Calculator, Landmark, Shield, Briefcase, ArrowRight, CheckCircle2, Info, Home } from 'lucide-react';
-import BlurText from '@/src/components/BlurText';
-import ChromaGrid from '@/src/components/ChromaGrid';
-import { useModal } from '@/src/context/ModalContext';
+import BlurText from '@/components/BlurText';
+import ChromaGrid from '@/components/ChromaGrid';
+import { useModal } from '@/context/ModalContext';
 
 const taxSections = [
   {

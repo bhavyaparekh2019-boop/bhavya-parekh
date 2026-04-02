@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { Users, Mail, Phone, Calendar, Briefcase, Shield, ArrowLeft, Loader2, RefreshCcw, Database, Sparkles, CheckCircle2, AlertCircle, LogIn } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { auth, signInWithPopup, googleProvider, signOut, onAuthStateChanged } from '../lib/firebase';
+import { auth, signInWithPopup, googleProvider, signOut, onAuthStateChanged, db, collection, getDocs, deleteDoc, doc } from '../lib/firebase';
 import { 
   fetchRealMutualFunds, 
   saveMutualFundsToFirestore, 
@@ -23,6 +23,7 @@ import {
 import { Search, Trash2, CheckCircle, XCircle, Info, Heart } from 'lucide-react';
 
 interface Consultation {
+  id?: string;
   name: string;
   email: string;
   phone: string;
@@ -31,6 +32,7 @@ interface Consultation {
 }
 
 interface Subscription {
+  id?: string;
   email: string;
   date: string;
 }
@@ -49,12 +51,14 @@ export default function Admin() {
   const [syncStatus, setSyncStatus] = useState<{ type: 'success' | 'error' | null; message: string }>({ type: null, message: '' });
   const [mutualFunds, setMutualFunds] = useState<MutualFund[]>([]);
   const [insurancePlans, setInsurancePlans] = useState<InsurancePlan[]>([]);
-  const [activeTab, setActiveTab] = useState<'mutual-funds' | 'insurance'>('mutual-funds');
+  const [activeTab, setActiveTab] = useState<'mutual-funds' | 'insurance' | 'consultations' | 'subscriptions'>('mutual-funds');
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);
   const [verifyingId, setVerifyingId] = useState<string | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState<{ id: string; type: 'fund' | 'plan' | 'consultation' | 'subscription' } | null>(null);
 
-  const isAdmin = user?.email === "bhavya.parekh2019@gmail.com";
+  const ADMIN_EMAIL = "bhavya.parekh2019@gmail.com";
+  const isAdmin = user?.email === ADMIN_EMAIL;
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (u) => {
@@ -62,7 +66,12 @@ export default function Admin() {
       if (u) {
         fetchData();
         fetchMutualFunds();
-        fetchInsurancePlans();
+        fetchInsurancePlans().then((plans) => {
+          // Auto-seed if empty and user is admin
+          if (plans && plans.length === 0 && u.email === ADMIN_EMAIL) {
+            handleSyncInsurancePlans();
+          }
+        });
       } else {
         setIsLoading(false);
       }
@@ -90,13 +99,42 @@ export default function Admin() {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch('/api/admin/data');
-      if (!response.ok) throw new Error('Failed to fetch admin data');
-      const jsonData = await response.json();
-      setData(jsonData);
+      // Try to fetch from Firestore first
+      const consultationsCol = collection(db, "consultations");
+      const subscriptionsCol = collection(db, "subscriptions");
+      
+      const [consultationsSnap, subscriptionsSnap] = await Promise.all([
+        getDocs(consultationsCol),
+        getDocs(subscriptionsCol)
+      ]);
+      
+      const consultations = consultationsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() } as Consultation));
+      const subscriptions = subscriptionsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() } as Subscription));
+
+      if (consultations.length > 0 || subscriptions.length > 0) {
+        setData({ consultations, subscriptions });
+      } else {
+        // Fallback to API if Firestore is empty (might be using db_mock)
+        const response = await fetch('/api/admin/data');
+        if (response.ok) {
+          const jsonData = await response.json();
+          setData(jsonData);
+        }
+      }
     } catch (err: any) {
       console.error('Admin Fetch Error:', err);
-      setError(err.message);
+      // Fallback to API on error
+      try {
+        const response = await fetch('/api/admin/data');
+        if (response.ok) {
+          const jsonData = await response.json();
+          setData(jsonData);
+        } else {
+          setError(err.message);
+        }
+      } catch (apiErr) {
+        setError(err.message);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -115,8 +153,10 @@ export default function Admin() {
     try {
       const plans = await getAllInsurancePlansFromFirestore();
       setInsurancePlans(plans);
+      return plans;
     } catch (err) {
       console.error("Fetch Insurance Plans Error:", err);
+      return [];
     }
   };
 
@@ -174,15 +214,30 @@ export default function Admin() {
     }
   };
 
-  const handleDeleteInsurancePlan = async (id: string) => {
-    if (!window.confirm("Are you sure you want to delete this insurance plan?")) return;
+  const handleConfirmDelete = async () => {
+    if (!confirmDelete) return;
+    
     try {
-      await deleteInsurancePlanFromFirestore(id);
-      await fetchInsurancePlans();
-      setSyncStatus({ type: 'success', message: "Plan deleted successfully." });
+      if (confirmDelete.type === 'fund') {
+        await deleteMutualFundFromFirestore(confirmDelete.id);
+        await fetchMutualFunds();
+      } else if (confirmDelete.type === 'plan') {
+        await deleteInsurancePlanFromFirestore(confirmDelete.id);
+        await fetchInsurancePlans();
+      } else if (confirmDelete.type === 'consultation') {
+        await deleteDoc(doc(db, 'consultations', confirmDelete.id));
+        setData(prev => prev ? { ...prev, consultations: prev.consultations.filter(c => c.id !== confirmDelete.id) } : null);
+      } else if (confirmDelete.type === 'subscription') {
+        await deleteDoc(doc(db, 'subscriptions', confirmDelete.id));
+        setData(prev => prev ? { ...prev, subscriptions: prev.subscriptions.filter(s => s.id !== confirmDelete.id) } : null);
+      }
+      
+      setSyncStatus({ type: 'success', message: "Deleted successfully." });
     } catch (err: any) {
       console.error("Delete Error:", err);
       setSyncStatus({ type: 'error', message: `Failed to delete: ${err.message}` });
+    } finally {
+      setConfirmDelete(null);
     }
   };
 
@@ -227,17 +282,6 @@ export default function Admin() {
     }
   };
 
-  const handleDeleteFund = async (id: string) => {
-    if (!window.confirm("Are you sure you want to delete this mutual fund?")) return;
-    try {
-      await deleteMutualFundFromFirestore(id);
-      await fetchMutualFunds();
-      setSyncStatus({ type: 'success', message: "Fund deleted successfully." });
-    } catch (err: any) {
-      console.error("Delete Error:", err);
-      setSyncStatus({ type: 'error', message: `Failed to delete: ${err.message}` });
-    }
-  };
 
   if (!user) {
     return (
@@ -340,6 +384,36 @@ export default function Admin() {
                 </div>
               </div>
               <div className="flex flex-wrap gap-4">
+                <button 
+                  onClick={async () => {
+                    setIsSyncing(true);
+                    setSyncStatus({ type: null, message: '' });
+                    try {
+                      const [funds, plans] = await Promise.all([
+                        fetchRealMutualFunds(20),
+                        fetchRealInsurancePlans(15)
+                      ]);
+                      await Promise.all([
+                        saveMutualFundsToFirestore(funds),
+                        saveInsurancePlansToFirestore(plans)
+                      ]);
+                      await Promise.all([
+                        fetchMutualFunds(),
+                        fetchInsurancePlans()
+                      ]);
+                      setSyncStatus({ type: 'success', message: `Successfully seeded ${funds.length} funds and ${plans.length} plans.` });
+                    } catch (err: any) {
+                      setSyncStatus({ type: 'error', message: `Seed failed: ${err.message}` });
+                    } finally {
+                      setIsSyncing(false);
+                    }
+                  }}
+                  disabled={isSyncing}
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-amber-500 text-white rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-amber-600 transition-all shadow-lg shadow-amber-200 disabled:opacity-50"
+                >
+                  {isSyncing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Database className="w-4 h-4" />}
+                  {isSyncing ? 'Seeding...' : 'Seed All Data'}
+                </button>
                 <div className="flex bg-slate-100 p-1 rounded-2xl">
                   <button 
                     onClick={() => setActiveTab('mutual-funds')}
@@ -358,6 +432,24 @@ export default function Admin() {
                     )}
                   >
                     Insurance
+                  </button>
+                  <button 
+                    onClick={() => setActiveTab('consultations')}
+                    className={cn(
+                      "px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all md:hidden",
+                      activeTab === 'consultations' ? "bg-white text-primary shadow-sm" : "text-slate-500 hover:text-slate-700"
+                    )}
+                  >
+                    Requests
+                  </button>
+                  <button 
+                    onClick={() => setActiveTab('subscriptions')}
+                    className={cn(
+                      "px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all md:hidden",
+                      activeTab === 'subscriptions' ? "bg-white text-primary shadow-sm" : "text-slate-500 hover:text-slate-700"
+                    )}
+                  >
+                    Subs
                   </button>
                 </div>
                 {activeTab === 'mutual-funds' ? (
@@ -426,7 +518,7 @@ export default function Admin() {
                             {verifyingId === fund.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle className="w-3.5 h-3.5" />}
                           </button>
                           <button 
-                            onClick={() => fund.id && handleDeleteFund(fund.id)}
+                            onClick={() => fund.id && setConfirmDelete({ id: fund.id, type: 'fund' })}
                             title="Delete Fund"
                             className="p-2 bg-white border border-slate-200 rounded-xl text-rose-500 hover:bg-rose-50 transition-colors"
                           >
@@ -488,7 +580,7 @@ export default function Admin() {
                             {verifyingId === plan.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle className="w-3.5 h-3.5" />}
                           </button>
                           <button 
-                            onClick={() => plan.id && handleDeleteInsurancePlan(plan.id)}
+                            onClick={() => plan.id && setConfirmDelete({ id: plan.id, type: 'plan' })}
                             title="Delete Plan"
                             className="p-2 bg-white border border-slate-200 rounded-xl text-rose-500 hover:bg-rose-50 transition-colors"
                           >
@@ -534,7 +626,11 @@ export default function Admin() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Consultation Requests */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className={cn(
+            "lg:col-span-2 space-y-6",
+            activeTab !== 'consultations' && activeTab !== 'mutual-funds' && activeTab !== 'insurance' && "hidden lg:block",
+            activeTab === 'consultations' ? "block" : "hidden lg:block"
+          )}>
             <div className="flex items-center gap-3 mb-2">
               <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
                 <Briefcase className="w-5 h-5" />
@@ -574,9 +670,18 @@ export default function Admin() {
                         </div>
                       </div>
                       <div className="flex flex-col items-end gap-2">
-                        <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-[10px] font-black uppercase tracking-widest">
-                          {item.service}
-                        </span>
+                        <div className="flex items-center gap-2">
+                          <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-[10px] font-black uppercase tracking-widest">
+                            {item.service}
+                          </span>
+                          <button 
+                            onClick={() => item.id && setConfirmDelete({ id: item.id, type: 'consultation' })}
+                            className="p-1.5 text-rose-500 hover:bg-rose-50 rounded-lg transition-colors"
+                            title="Delete Request"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
                         <span className="flex items-center gap-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                           <Calendar className="w-3 h-3" />
                           {new Date(item.date).toLocaleDateString()}
@@ -590,7 +695,10 @@ export default function Admin() {
           </div>
 
           {/* Newsletter Subscriptions */}
-          <div className="space-y-6">
+          <div className={cn(
+            "space-y-6",
+            activeTab === 'subscriptions' ? "block" : "hidden lg:block"
+          )}>
             <div className="flex items-center gap-3 mb-2">
               <div className="w-10 h-10 rounded-xl bg-sky-100 flex items-center justify-center text-sky-600">
                 <Mail className="w-5 h-5" />
@@ -616,7 +724,16 @@ export default function Admin() {
                           {new Date(item.date).toLocaleDateString()}
                         </p>
                       </div>
-                      <Shield className="w-4 h-4 text-sky-500 shrink-0" />
+                      <div className="flex items-center gap-2">
+                        <Shield className="w-4 h-4 text-sky-500 shrink-0" />
+                        <button 
+                          onClick={() => item.id && setConfirmDelete({ id: item.id, type: 'subscription' })}
+                          className="p-1.5 text-rose-500 hover:bg-rose-50 rounded-lg transition-colors"
+                          title="Delete Subscriber"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
                     </div>
                   )).reverse()
                 )}
@@ -625,6 +742,40 @@ export default function Admin() {
           </div>
         </div>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      <AnimatePresence>
+        {confirmDelete && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-2xl max-w-sm w-full text-center"
+            >
+              <div className="w-16 h-16 bg-rose-100 rounded-2xl flex items-center justify-center text-rose-600 mx-auto mb-6">
+                <Trash2 className="w-8 h-8" />
+              </div>
+              <h3 className="text-2xl font-black text-slate-900 mb-2">Are you sure?</h3>
+              <p className="text-slate-500 mb-8">This action cannot be undone. This will permanently delete the {confirmDelete.type}.</p>
+              <div className="flex gap-4">
+                <button
+                  onClick={() => setConfirmDelete(null)}
+                  className="flex-1 px-6 py-3 bg-slate-100 text-slate-600 rounded-2xl font-bold hover:bg-slate-200 transition-all"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleConfirmDelete}
+                  className="flex-1 px-6 py-3 bg-rose-600 text-white rounded-2xl font-bold hover:bg-rose-700 transition-all shadow-lg shadow-rose-200"
+                >
+                  Delete
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </main>
   );
 }

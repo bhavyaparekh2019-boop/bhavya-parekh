@@ -1,10 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, TrendingUp, Info, BarChart3, DollarSign } from 'lucide-react';
+import { ArrowLeft, TrendingUp, Info, BarChart3, DollarSign, PieChart as PieChartIcon, LineChart as LineChartIcon } from 'lucide-react';
 import { motion } from 'motion/react';
-import BlurText from '@/src/components/BlurText';
+import BlurText from '@/components/BlurText';
 import { GoogleGenAI } from "@google/genai";
-import { cn } from '@/src/lib/utils';
+import { cn } from '@/lib/utils';
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Legend
+} from 'recharts';
 
 export default function InvestmentROI() {
   const [initialInvestment, setInitialInvestment] = useState<number>(100000);
@@ -12,40 +22,46 @@ export default function InvestmentROI() {
   const [timePeriod, setTimePeriod] = useState<number>(10);
   const [returnRate, setReturnRate] = useState<number>(12);
   const [stepUpPercent, setStepUpPercent] = useState<number>(10);
-  const [finalValue, setFinalValue] = useState<number>(0);
-  const [totalInvested, setTotalInvested] = useState<number>(0);
   const [marketContext, setMarketContext] = useState<string>('');
   const [isLoadingContext, setIsLoadingContext] = useState(false);
 
-  useEffect(() => {
-    calculateROI();
-  }, [initialInvestment, monthlyContribution, timePeriod, returnRate, stepUpPercent]);
-
-  const calculateROI = () => {
+  const { chartData, finalValue, totalInvested } = useMemo(() => {
     const monthlyRate = returnRate / 100 / 12;
     const months = timePeriod * 12;
+    const data = [];
     
     let currentBalance = initialInvestment;
     let currentMonthlyContribution = monthlyContribution;
     let invested = initialInvestment;
 
+    // Initial state
+    data.push({
+      year: 0,
+      value: Math.round(currentBalance),
+      invested: Math.round(invested)
+    });
+
     for (let month = 1; month <= months; month++) {
-      // Add interest to current balance
       currentBalance = currentBalance * (1 + monthlyRate);
-      
-      // Add contribution
       currentBalance += currentMonthlyContribution;
       invested += currentMonthlyContribution;
 
-      // Annual step-up
-      if (month % 12 === 0 && month < months) {
+      if (month % 12 === 0) {
+        data.push({
+          year: month / 12,
+          value: Math.round(currentBalance),
+          invested: Math.round(invested)
+        });
         currentMonthlyContribution = currentMonthlyContribution * (1 + (stepUpPercent / 100));
       }
     }
-    
-    setFinalValue(currentBalance);
-    setTotalInvested(invested);
-  };
+
+    return {
+      chartData: data,
+      finalValue: currentBalance,
+      totalInvested: invested
+    };
+  }, [initialInvestment, monthlyContribution, timePeriod, returnRate, stepUpPercent]);
 
   const fetchMarketContext = async () => {
     setIsLoadingContext(true);
@@ -69,160 +85,222 @@ export default function InvestmentROI() {
 
   return (
     <main className="min-h-screen bg-slate-50 py-12 md:py-20">
-      <div className="max-w-4xl mx-auto px-4">
+      <div className="max-w-6xl mx-auto px-4">
         <Link
           to="/"
           className="inline-flex items-center gap-2 text-slate-500 hover:text-primary transition-colors mb-8 font-medium"
         >
-          <ArrowLeft className="w-4 h-4" /> Back to Insights
+          <ArrowLeft className="w-4 h-4" /> Back to Home
         </Link>
 
-        <div className="bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden">
-          <div className="bg-primary p-8 md:p-12 text-slate-900">
-            <div className="flex items-center gap-4 mb-6">
-              <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-primary shadow-sm">
-                <BarChart3 className="w-6 h-6" />
-              </div>
-              <BlurText 
-                text="Investment ROI Calculator"
-                centered={false}
-                className="text-3xl font-black"
-              />
-            </div>
-            <p className="text-slate-700 max-w-2xl leading-relaxed font-medium">
-              Project your wealth growth in India. Calculate the potential return on your investments based on initial capital, recurring SIPs, and market performance.
-            </p>
-          </div>
-
-          <div className="p-8 md:p-12 grid grid-cols-1 lg:grid-cols-2 gap-12">
-            <div className="space-y-6">
-              <div>
-                <label className="block text-[10px] font-black text-slate-900 uppercase tracking-widest mb-2">
-                  Initial Investment (₹)
-                </label>
-                <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">₹</span>
-                  <input
-                    type="number"
-                    value={initialInvestment}
-                    onChange={(e) => setInitialInvestment(Number(e.target.value))}
-                    className="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 bg-slate-50 font-bold focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-                  />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Left Column: Inputs */}
+          <div className="lg:col-span-1 space-y-8">
+            <div className="bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden">
+              <div className="bg-primary p-6 text-slate-900">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-primary shadow-sm">
+                    <BarChart3 className="w-5 h-5" />
+                  </div>
+                  <h1 className="text-xl font-black tracking-tight">ROI Calculator</h1>
                 </div>
-              </div>
-
-              <div>
-                <label className="block text-[10px] font-black text-slate-900 uppercase tracking-widest mb-2">
-                  Monthly SIP (₹)
-                </label>
-                <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">₹</span>
-                  <input
-                    type="number"
-                    value={monthlyContribution}
-                    onChange={(e) => setMonthlyContribution(Number(e.target.value))}
-                    className="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 bg-slate-50 font-bold focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-[10px] font-black text-slate-900 uppercase tracking-widest mb-2">
-                    Years
-                  </label>
-                  <input
-                    type="number"
-                    value={timePeriod}
-                    onChange={(e) => setTimePeriod(Number(e.target.value))}
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 font-bold focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-                  />
-                </div>
-                <div>
-                  <label className="block text-[10px] font-black text-slate-900 uppercase tracking-widest mb-2">
-                    Rate (%)
-                  </label>
-                  <input
-                    type="number"
-                    step="0.1"
-                    value={returnRate}
-                    onChange={(e) => setReturnRate(Number(e.target.value))}
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 font-bold focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-[10px] font-black text-slate-900 uppercase tracking-widest mb-2">
-                  Annual SIP Step-up (%)
-                </label>
-                <div className="relative">
-                  <input
-                    type="number"
-                    value={stepUpPercent}
-                    onChange={(e) => setStepUpPercent(Number(e.target.value))}
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 font-bold focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-                  />
-                  <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">%</span>
-                </div>
-                <p className="mt-2 text-[10px] text-slate-500 font-medium italic">
-                  Increasing your SIP amount every year as your income grows is the fastest way to build wealth.
+                <p className="text-slate-700 text-xs font-medium leading-relaxed">
+                  Project your wealth growth in India based on SIPs and market returns.
                 </p>
               </div>
-            </div>
 
-            <div className="flex flex-col justify-center items-center bg-slate-50 rounded-3xl p-8 text-center text-slate-900 border border-slate-100">
-              <p className="text-slate-500 font-bold uppercase tracking-widest text-[10px] mb-2">Projected Portfolio Value</p>
-              <motion.p
-                key={finalValue}
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                className="text-4xl md:text-5xl font-black text-primary mb-6"
-              >
-                ₹{finalValue.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
-              </motion.p>
-              <div className="w-full h-px bg-slate-200 mb-6" />
-              <div className="space-y-3 w-full text-xs font-bold uppercase tracking-wider">
-                <div className="flex justify-between text-slate-500">
-                  <span>Total Invested</span>
-                  <span className="text-slate-900">₹{totalInvested.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</span>
+              <div className="p-6 space-y-6">
+                <div>
+                  <label className="block text-[10px] font-black text-slate-900 uppercase tracking-widest mb-2">
+                    Initial Investment (₹)
+                  </label>
+                  <div className="relative">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">₹</span>
+                    <input
+                      type="number"
+                      value={initialInvestment}
+                      onChange={(e) => setInitialInvestment(Number(e.target.value))}
+                      className="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 bg-slate-50 font-bold focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                    />
+                  </div>
                 </div>
-                <div className="flex justify-between text-slate-500">
-                  <span>Total Gain</span>
-                  <span className="text-sky-600">
-                    +₹{(finalValue - totalInvested).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
-                  </span>
+
+                <div>
+                  <label className="block text-[10px] font-black text-slate-900 uppercase tracking-widest mb-2">
+                    Monthly SIP (₹)
+                  </label>
+                  <div className="relative">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">₹</span>
+                    <input
+                      type="number"
+                      value={monthlyContribution}
+                      onChange={(e) => setMonthlyContribution(Number(e.target.value))}
+                      className="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 bg-slate-50 font-bold focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-[10px] font-black text-slate-900 uppercase tracking-widest mb-2">
+                      Years
+                    </label>
+                    <input
+                      type="number"
+                      value={timePeriod}
+                      onChange={(e) => setTimePeriod(Number(e.target.value))}
+                      className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 font-bold focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-black text-slate-900 uppercase tracking-widest mb-2">
+                      Rate (%)
+                    </label>
+                    <input
+                      type="number"
+                      step="0.1"
+                      value={returnRate}
+                      onChange={(e) => setReturnRate(Number(e.target.value))}
+                      className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 font-bold focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-[10px] font-black text-slate-900 uppercase tracking-widest mb-2">
+                    Annual SIP Step-up (%)
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="number"
+                      value={stepUpPercent}
+                      onChange={(e) => setStepUpPercent(Number(e.target.value))}
+                      className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 font-bold focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                    />
+                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">%</span>
+                  </div>
                 </div>
               </div>
+            </div>
+
+            {/* AI Insights */}
+            <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-xl">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <TrendingUp className="w-4 h-4 text-primary" />
+                  <h3 className="text-xs font-black text-slate-900 uppercase tracking-widest">Market Context</h3>
+                </div>
+                <button
+                  onClick={fetchMarketContext}
+                  disabled={isLoadingContext}
+                  className="text-[10px] font-black uppercase tracking-widest bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-lg hover:bg-slate-100 transition-all disabled:opacity-50"
+                >
+                  {isLoadingContext ? '...' : 'Refresh'}
+                </button>
+              </div>
+              
+              {marketContext ? (
+                <p className="text-xs text-slate-600 leading-relaxed italic">
+                  {marketContext}
+                </p>
+              ) : (
+                <p className="text-xs text-slate-400 italic">
+                  Click refresh to get real-time Nifty 50 data and Indian market forecasts.
+                </p>
+              )}
             </div>
           </div>
 
-          {/* AI BHP Finance Insights */}
-          <div className="border-t border-slate-100 p-8 md:p-12 bg-primary/5">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-3">
-                <TrendingUp className="w-5 h-5 text-primary" />
-                <h3 className="text-xl font-black text-slate-900">Indian Market Performance</h3>
+          {/* Right Column: Visualization & Results */}
+          <div className="lg:col-span-2 space-y-8">
+            {/* Results Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-xl">
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Projected Value</p>
+                <h3 className="text-2xl font-black text-primary">₹{finalValue.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</h3>
               </div>
-              <button
-                onClick={fetchMarketContext}
-                disabled={isLoadingContext}
-                className="text-xs font-black uppercase tracking-widest bg-white border border-slate-200 px-4 py-2 rounded-lg hover:bg-slate-50 transition-all disabled:opacity-50"
-              >
-                {isLoadingContext ? 'Fetching...' : 'Get Nifty 50 Data'}
-              </button>
+              <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-xl">
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Total Invested</p>
+                <h3 className="text-2xl font-black text-slate-900">₹{totalInvested.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</h3>
+              </div>
+              <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-xl">
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Total Gain</p>
+                <h3 className="text-2xl font-black text-emerald-600">+₹{(finalValue - totalInvested).toLocaleString('en-IN', { maximumFractionDigits: 0 })}</h3>
+              </div>
             </div>
-            
-            {marketContext ? (
-              <div className="bg-white p-6 rounded-2xl border border-slate-100 text-slate-600 leading-relaxed text-sm shadow-sm">
-                {marketContext}
+
+            {/* Chart */}
+            <div className="bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-xl h-[450px]">
+              <div className="flex items-center gap-3 mb-8">
+                <LineChartIcon className="w-5 h-5 text-primary" />
+                <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest">Growth Projection</h3>
               </div>
-            ) : (
-              <div className="flex items-center gap-3 text-slate-500 text-sm italic">
-                <Info className="w-4 h-4" />
-                Get real-time Nifty 50 data and Indian market forecasts powered by Google Search.
+              
+              <div className="w-full h-[320px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                    <defs>
+                      <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#fbbf24" stopOpacity={0.3}/>
+                        <stop offset="95%" stopColor="#fbbf24" stopOpacity={0}/>
+                      </linearGradient>
+                      <linearGradient id="colorInvested" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#94a3b8" stopOpacity={0.3}/>
+                        <stop offset="95%" stopColor="#94a3b8" stopOpacity={0}/>
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                    <XAxis 
+                      dataKey="year" 
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fontSize: 10, fontWeight: 700, fill: '#94a3b8' }}
+                      label={{ value: 'Years', position: 'insideBottom', offset: -5, fontSize: 10, fontWeight: 900, fill: '#94a3b8' }}
+                    />
+                    <YAxis 
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fontSize: 10, fontWeight: 700, fill: '#94a3b8' }}
+                      tickFormatter={(value) => `₹${(value / 100000).toFixed(1)}L`}
+                    />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: '#fff', 
+                        borderRadius: '16px', 
+                        border: '1px solid #f1f5f9',
+                        boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)',
+                        fontSize: '12px',
+                        fontWeight: '700'
+                      }}
+                      formatter={(value: number) => [`₹${value.toLocaleString('en-IN')}`, '']}
+                    />
+                    <Legend verticalAlign="top" height={36}/>
+                    <Area 
+                      name="Total Value"
+                      type="monotone" 
+                      dataKey="value" 
+                      stroke="#fbbf24" 
+                      strokeWidth={3}
+                      fillOpacity={1} 
+                      fill="url(#colorValue)" 
+                    />
+                    <Area 
+                      name="Invested Amount"
+                      type="monotone" 
+                      dataKey="invested" 
+                      stroke="#94a3b8" 
+                      strokeWidth={2}
+                      strokeDasharray="5 5"
+                      fillOpacity={1} 
+                      fill="url(#colorInvested)" 
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
               </div>
-            )}
+              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest text-center mt-4">
+                * Projections are based on historical market averages and do not guarantee future returns.
+              </p>
+            </div>
           </div>
         </div>
       </div>

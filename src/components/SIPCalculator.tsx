@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { motion } from 'motion/react';
 import { Calculator, TrendingUp, Calendar, IndianRupee, Info } from 'lucide-react';
-import { cn } from '@/src/lib/utils';
+import { cn } from '@/lib/utils';
 
 export default function SIPCalculator() {
   const [monthlyInvestment, setMonthlyInvestment] = useState<number>(5000);

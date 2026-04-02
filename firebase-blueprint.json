@@ -80,12 +80,33 @@
         "date": { "type": "string", "format": "date-time" }
       },
       "required": ["email", "date"]
+    },
+    "InsurancePlan": {
+      "title": "Insurance Plan",
+      "description": "Details of an insurance plan including company, category, and coverage.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "company": { "type": "string" },
+        "category": { "type": "string" },
+        "sumAssured": { "type": "string" },
+        "premium": { "type": "string" },
+        "csr": { "type": "string" },
+        "keyFeatures": { "type": "array", "items": { "type": "string" } },
+        "lastUpdated": { "type": "string", "format": "date-time" },
+        "isReal": { "type": "boolean" }
+      },
+      "required": ["name", "company", "category", "csr"]
     }
   },
   "firestore": {
     "/mutual-funds": {
       "schema": "MutualFund",
       "description": "Collection of mutual funds."
+    },
+    "/insurance-plans": {
+      "schema": "InsurancePlan",
+      "description": "Collection of insurance plans."
     },
     "/consultations": {
       "schema": "Consultation",

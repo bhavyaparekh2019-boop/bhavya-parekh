@@ -1427,6 +1427,66 @@ export const ARTICLES: Article[] = [
   },
 ];
 
+export interface Guide {
+  id: string;
+  title: string;
+  excerpt: string;
+  path: string;
+  image: string;
+  category: string;
+}
+
+export const GUIDES: Guide[] = [
+  {
+    id: 'g1',
+    title: 'Comprehensive Insurance Guide',
+    excerpt: 'Master the fundamentals of life, health, and general insurance to protect your family and assets.',
+    path: '/guides/insurance',
+    image: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&q=80&w=800&h=600',
+    category: 'Insurance'
+  },
+  {
+    id: 'g2',
+    title: 'Investment Strategy Guide',
+    excerpt: 'Learn how to build a robust investment portfolio tailored to your financial goals and risk tolerance.',
+    path: '/guides/investment',
+    image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800&h=600',
+    category: 'Investment'
+  },
+  {
+    id: 'g3',
+    title: 'Retirement Planning Guide',
+    excerpt: 'A step-by-step roadmap to achieving financial independence and a comfortable retirement in India.',
+    path: '/guides/retirement',
+    image: 'https://images.unsplash.com/photo-1473186578172-c141e6798ee4?auto=format&fit=crop&q=80&w=800&h=600',
+    category: 'Retirement'
+  },
+  {
+    id: 'g4',
+    title: 'Indian Tax Planning Guide',
+    excerpt: 'Navigate the complexities of the Indian tax system and maximize your savings through smart planning.',
+    path: '/guides/tax',
+    image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&q=80&w=800&h=600',
+    category: 'Tax'
+  },
+  {
+    id: 'g5',
+    title: 'Mutual Funds Masterclass',
+    excerpt: 'Everything you need to know about investing in mutual funds, from SIPs to lumpsum investments.',
+    path: '/guides/mutual-funds',
+    image: 'https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&q=80&w=800&h=600',
+    category: 'Mutual Funds'
+  },
+  {
+    id: 'g6',
+    title: 'Stock Market Essentials',
+    excerpt: 'A comprehensive guide for beginners and intermediate investors looking to master the stock market.',
+    path: '/guides/stocks',
+    image: 'https://images.unsplash.com/photo-1611974714024-4607a50d6c25?auto=format&fit=crop&q=80&w=800&h=600',
+    category: 'Stocks'
+  }
+];
+
 export const CATEGORIES = [
   'All Topics',
   'Wealth Management',

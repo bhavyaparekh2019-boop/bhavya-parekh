@@ -1,34 +1,34 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbar from '@/src/components/Navbar';
-import Footer from '@/src/components/Footer';
-import ChatBot from '@/src/components/ChatBot';
-import ConsultationModal from '@/src/components/ConsultationModal';
-import { ModalProvider } from '@/src/context/ModalContext';
-import Home from '@/src/pages/Home';
-import ArticleDetail from '@/src/pages/ArticleDetail';
-import MortgageCalculator from '@/src/pages/tools/MortgageCalculator';
-import RetirementPlanner from '@/src/pages/tools/RetirementPlanner';
-import InvestmentROI from '@/src/pages/tools/InvestmentROI';
-import InsuranceCalculator from '@/src/pages/tools/InsuranceCalculator';
-import SIPCalculator from '@/src/pages/tools/SIPCalculator';
-import LumpsumCalculator from '@/src/pages/tools/LumpsumCalculator';
-import InsuranceGuide from '@/src/pages/guides/InsuranceGuide';
-import InvestmentGuide from '@/src/pages/guides/InvestmentGuide';
-import RetirementGuide from '@/src/pages/guides/RetirementGuide';
-import TaxGuide from '@/src/pages/guides/TaxGuide';
-import MutualFundsGuide from '@/src/pages/guides/MutualFundsGuide';
-import StockMarketGuide from '@/src/pages/guides/StockMarketGuide';
-import MarketAnalysis from '@/src/pages/MarketAnalysis';
-import Insights from '@/src/pages/Insights';
-import About from '@/src/pages/About';
-import Admin from '@/src/pages/Admin';
-import Portfolio from '@/src/pages/Portfolio';
-import ErrorBoundary from '@/src/components/ErrorBoundary';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
+import ChatBot from '@/components/ChatBot';
+import ConsultationModal from '@/components/ConsultationModal';
+import { ModalProvider } from '@/context/ModalContext';
+import Home from '@/pages/Home';
+import ArticleDetail from '@/pages/ArticleDetail';
+import MortgageCalculator from '@/pages/tools/MortgageCalculator';
+import RetirementPlanner from '@/pages/tools/RetirementPlanner';
+import InvestmentROI from '@/pages/tools/InvestmentROI';
+import InsuranceCalculator from '@/pages/tools/InsuranceCalculator';
+import SIPCalculator from '@/pages/tools/SIPCalculator';
+import LumpsumCalculator from '@/pages/tools/LumpsumCalculator';
+import InsuranceGuide from '@/pages/guides/InsuranceGuide';
+import InvestmentGuide from '@/pages/guides/InvestmentGuide';
+import RetirementGuide from '@/pages/guides/RetirementGuide';
+import TaxGuide from '@/pages/guides/TaxGuide';
+import MutualFundsGuide from '@/pages/guides/MutualFundsGuide';
+import StockMarketGuide from '@/pages/guides/StockMarketGuide';
+import MarketAnalysis from '@/pages/MarketAnalysis';
+import About from '@/pages/About';
+import Admin from '@/pages/Admin';
+import Portfolio from '@/pages/Portfolio';
+import AppErrorBoundary from './AppErrorBoundary';
 
+// Force re-transformation of App.tsx v4
 export default function App() {
   return (
-    <ErrorBoundary>
+    <AppErrorBoundary>
       <ModalProvider>
         <Router>
           <div className="flex flex-col min-h-screen">
@@ -50,7 +50,6 @@ export default function App() {
                 <Route path="/guides/mutual-funds" element={<MutualFundsGuide />} />
                 <Route path="/guides/stocks" element={<StockMarketGuide />} />
                 <Route path="/market-analysis" element={<MarketAnalysis />} />
-                <Route path="/insights" element={<Insights />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/portfolio" element={<Portfolio />} />
                 <Route path="/admin" element={<Admin />} />
@@ -63,6 +62,6 @@ export default function App() {
           </div>
         </Router>
       </ModalProvider>
-    </ErrorBoundary>
+    </AppErrorBoundary>
   );
 }

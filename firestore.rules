@@ -52,6 +52,11 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    match /insurance-plans/{planId} {
+      allow read: if true; // Publicly readable
+      allow write: if isAdmin();
+    }
+
     match /consultations/{id} {
       allow read: if isAdmin();
       allow create: if true; // Anyone can request a consultation

@@ -1,11 +1,11 @@
 import React, { useState, useId, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Layers, Zap, BarChart3, ShieldCheck, Info, ArrowRight, CheckCircle2, HelpCircle, Sparkles, Target, Plus, X, Scale, ChevronUp, ChevronDown, ArrowUpDown, Star } from 'lucide-react';
-import BlurText from '@/src/components/BlurText';
-import ChromaGrid from '@/src/components/ChromaGrid';
-import Tooltip from '@/src/components/Tooltip';
-import { useModal } from '@/src/context/ModalContext';
-import { cn } from '@/src/lib/utils';
+import BlurText from '@/components/BlurText';
+import ChromaGrid from '@/components/ChromaGrid';
+import Tooltip from '@/components/Tooltip';
+import { useModal } from '@/context/ModalContext';
+import { cn } from '@/lib/utils';
 
 const COMPARISON_FUNDS = [
   {
@@ -59,6 +59,58 @@ const COMPARISON_FUNDS = [
     beta: '0.65',
     sharpe: '1.2',
     risk: 'High'
+  },
+  {
+    id: '5',
+    name: 'BHP Small Cap Fund',
+    category: 'Small Cap',
+    expenseRatio: '0.75%',
+    returns1Y: '32.4%',
+    returns3Y: '24.1%',
+    returns5Y: '21.5%',
+    alpha: '6.2',
+    beta: '1.45',
+    sharpe: '1.8',
+    risk: 'Very High'
+  },
+  {
+    id: '6',
+    name: 'BHP Tax Saver (ELSS)',
+    category: 'ELSS',
+    expenseRatio: '0.50%',
+    returns1Y: '19.2%',
+    returns3Y: '16.8%',
+    returns5Y: '15.5%',
+    alpha: '2.8',
+    beta: '0.95',
+    sharpe: '1.5',
+    risk: 'Very High'
+  },
+  {
+    id: '7',
+    name: 'BHP Liquid Fund',
+    category: 'Debt',
+    expenseRatio: '0.15%',
+    returns1Y: '6.4%',
+    returns3Y: '5.2%',
+    returns5Y: '5.5%',
+    alpha: '0.2',
+    beta: '0.05',
+    sharpe: '0.7',
+    risk: 'Low'
+  },
+  {
+    id: '8',
+    name: 'BHP Multi Asset Fund',
+    category: 'Hybrid',
+    expenseRatio: '0.60%',
+    returns1Y: '12.8%',
+    returns3Y: '11.5%',
+    returns5Y: '10.2%',
+    alpha: '1.2',
+    beta: '0.55',
+    sharpe: '1.1',
+    risk: 'Moderate'
   }
 ];
 
@@ -193,6 +245,12 @@ const METRICS = [
     tooltip: 'Average annual compounded growth over the last 3 years. Helps identify medium-term consistency.' 
   },
   { 
+    label: 'Risk Profile', 
+    key: 'risk', 
+    better: 'low',
+    tooltip: 'An assessment of the potential for capital loss and price volatility, ranging from Low to Very High.' 
+  },
+  { 
     label: '5Y Returns', 
     key: 'returns5Y', 
     better: 'high',
@@ -215,12 +273,6 @@ const METRICS = [
     key: 'sharpe', 
     better: 'high',
     tooltip: 'Measures risk-adjusted performance. It tells you if the returns are due to smart investment decisions or excessive risk-taking.' 
-  },
-  { 
-    label: 'Risk Profile', 
-    key: 'risk', 
-    better: 'low',
-    tooltip: 'An assessment of the potential for capital loss and price volatility, ranging from Low to Very High.' 
   },
 ];
 
@@ -630,7 +682,7 @@ export default function MutualFundsGuide() {
                 </div>
               )}
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mb-10">
                 {COMPARISON_FUNDS.map(fund => (
                   <button
                     key={fund.id}
@@ -645,12 +697,14 @@ export default function MutualFundsGuide() {
                     <div className="flex justify-between items-start mb-2">
                       <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{fund.category}</span>
                       {selectedFundIds.includes(fund.id) ? (
-                        <X className="w-4 h-4 text-primary" />
+                        <div className="w-5 h-5 bg-primary text-white rounded-full flex items-center justify-center">
+                          <CheckCircle2 className="w-3 h-3" />
+                        </div>
                       ) : (
                         <Plus className="w-4 h-4 text-slate-300 group-hover:text-primary transition-colors" />
                       )}
                     </div>
-                    <p className="text-sm font-bold text-slate-900 leading-tight">{fund.name}</p>
+                    <p className="text-xs sm:text-sm font-bold text-slate-900 leading-tight">{fund.name}</p>
                   </button>
                 ))}
               </div>

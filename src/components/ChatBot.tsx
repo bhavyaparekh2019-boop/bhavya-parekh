@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { MessageCircle, X, Send, Loader2, Bot, User, Minimize2, Maximize2, AlertCircle, RefreshCw } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { GoogleGenAI } from "@google/genai";
-import { cn } from '@/src/lib/utils';
+import { cn } from '@/lib/utils';
 import Markdown from 'react-markdown';
 
 interface Message {
@@ -18,8 +18,30 @@ export default function ChatBot() {
     { role: 'model', text: 'Hello! I am your AI financial assistant. How can I help you with your financial planning today?' }
   ]);
   const [isLoading, setIsLoading] = useState(false);
+  const [streamingText, setStreamingText] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatRef = useRef<any>(null);
+  const cacheRef = useRef<Map<string, string>>(new Map());
+
+  // Load cache from localStorage on mount
+  useEffect(() => {
+    const savedCache = localStorage.getItem('chatbot_cache');
+    if (savedCache) {
+      try {
+        const parsed = JSON.parse(savedCache);
+        cacheRef.current = new Map(Object.entries(parsed));
+      } catch (e) {
+        console.error('Failed to parse chatbot cache', e);
+      }
+    }
+  }, []);
+
+  // Save cache to localStorage when it changes
+  const updateCache = (key: string, value: string) => {
+    cacheRef.current.set(key, value);
+    const obj = Object.fromEntries(cacheRef.current);
+    localStorage.setItem('chatbot_cache', JSON.stringify(obj));
+  };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -27,16 +49,30 @@ export default function ChatBot() {
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+  }, [messages, streamingText]);
 
   const handleSend = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     if (!input.trim() || isLoading) return;
 
     const userMessage = input.trim();
+    const cacheKey = userMessage.toLowerCase().trim();
+    
     setInput('');
     setMessages(prev => [...prev, { role: 'user', text: userMessage }]);
     setIsLoading(true);
+    setStreamingText('');
+
+    // Check cache first
+    if (cacheRef.current.has(cacheKey)) {
+      const cachedResponse = cacheRef.current.get(cacheKey)!;
+      // Simulate a small delay for natural feel even with cache
+      setTimeout(() => {
+        setMessages(prev => [...prev, { role: 'model', text: cachedResponse }]);
+        setIsLoading(false);
+      }, 300);
+      return;
+    }
 
     try {
       const apiKey = process.env.GEMINI_API_KEY;
@@ -63,7 +99,9 @@ export default function ChatBot() {
 
           setMessages(prev => [...prev, { role: 'model', text: responseText }]);
           setIsLoading(false);
-        }, 1000);
+          // Cache the mock response too
+          updateCache(cacheKey, responseText);
+        }, 800);
         return;
       }
 
@@ -84,10 +122,23 @@ export default function ChatBot() {
         });
       }
 
-      const response = await chatRef.current.sendMessage({ message: userMessage });
-      const modelText = response.text || "I'm sorry, I couldn't process that request.";
+      const streamResponse = await chatRef.current.sendMessageStream({ message: userMessage });
+      let fullText = '';
       
-      setMessages(prev => [...prev, { role: 'model', text: modelText }]);
+      for await (const chunk of streamResponse) {
+        const chunkText = chunk.text || '';
+        fullText += chunkText;
+        setStreamingText(fullText);
+      }
+      
+      if (fullText) {
+        setMessages(prev => [...prev, { role: 'model', text: fullText }]);
+        updateCache(cacheKey, fullText);
+      } else {
+        setMessages(prev => [...prev, { role: 'model', text: "I'm sorry, I couldn't generate a response." }]);
+      }
+      
+      setStreamingText('');
     } catch (error: any) {
       console.error('Chat Error:', error);
       let errorMessage = "Sorry, I'm having trouble connecting right now. Please check your internet connection.";
@@ -229,7 +280,19 @@ export default function ChatBot() {
                       )}
                     </motion.div>
                   ))}
-                  {isLoading && (
+                  {streamingText && (
+                    <div className="flex gap-3 mr-auto max-w-[85%]">
+                      <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-slate-900 shrink-0">
+                        <Bot className="w-4 h-4" />
+                      </div>
+                      <div className="bg-white p-4 rounded-2xl rounded-tl-none border border-slate-100 shadow-sm text-sm leading-relaxed text-slate-700">
+                        <div className="markdown-body">
+                          <Markdown>{streamingText}</Markdown>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  {isLoading && !streamingText && (
                     <div className="flex gap-3 mr-auto">
                       <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-slate-900 shrink-0">
                         <Bot className="w-4 h-4" />

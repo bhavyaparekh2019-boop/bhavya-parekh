@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Calculator, TrendingUp, PieChart, ArrowRight, Info, RefreshCcw, Zap, Target, Coins } from 'lucide-react';
-import BlurText from '@/src/components/BlurText';
-import ChromaGrid from '@/src/components/ChromaGrid';
-import { cn } from '@/src/lib/utils';
+import BlurText from '@/components/BlurText';
+import ChromaGrid from '@/components/ChromaGrid';
+import { cn } from '@/lib/utils';
 
 export default function LumpsumCalculator() {
   const [totalInvestment, setTotalInvestment] = useState(100000);

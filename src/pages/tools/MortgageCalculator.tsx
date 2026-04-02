@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Calculator, Info, TrendingUp } from 'lucide-react';
 import { motion } from 'motion/react';
-import BlurText from '@/src/components/BlurText';
+import BlurText from '@/components/BlurText';
 import { GoogleGenAI } from "@google/genai";
-import { cn } from '@/src/lib/utils';
+import { cn } from '@/lib/utils';
 
 export default function MortgageCalculator() {
   const [loanAmount, setLoanAmount] = useState<number>(5000000);
@@ -28,14 +28,15 @@ export default function MortgageCalculator() {
       (loanAmount * monthlyRate * Math.pow(1 + monthlyRate, numberOfPayments)) /
       (Math.pow(1 + monthlyRate, numberOfPayments) - 1);
     
-    setMonthlyPayment(isNaN(emi) ? 0 : emi);
+    const calculatedEmi = isNaN(emi) ? 0 : emi;
+    setMonthlyPayment(calculatedEmi);
 
     // Calculate savings with prepayment
-    if (prepayment > 0 && emi > 0) {
+    if (prepayment > 0 && calculatedEmi > 0) {
       let balance = loanAmount;
       let totalInterestWithPrepayment = 0;
       let monthCount = 0;
-      const totalMonthlyPayment = emi + prepayment;
+      const totalMonthlyPayment = calculatedEmi + prepayment;
 
       while (balance > 0 && monthCount < numberOfPayments) {
         const interest = balance * monthlyRate;
@@ -45,7 +46,7 @@ export default function MortgageCalculator() {
         monthCount++;
       }
 
-      const originalTotalInterest = (emi * numberOfPayments) - loanAmount;
+      const originalTotalInterest = (calculatedEmi * numberOfPayments) - loanAmount;
       setTotalInterestSaved(Math.max(0, originalTotalInterest - totalInterestWithPrepayment));
       setMonthsSaved(Math.max(0, numberOfPayments - monthCount));
     } else {
@@ -81,7 +82,7 @@ export default function MortgageCalculator() {
           to="/"
           className="inline-flex items-center gap-2 text-slate-500 hover:text-primary transition-colors mb-8 font-medium"
         >
-          <ArrowLeft className="w-4 h-4" /> Back to Insights
+          <ArrowLeft className="w-4 h-4" /> Back to Home
         </Link>
 
         <div className="bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden">
@@ -187,7 +188,7 @@ export default function MortgageCalculator() {
             </div>
 
             <div className="flex flex-col justify-center items-center bg-slate-50 rounded-3xl p-8 border border-slate-100 text-center">
-              <p className="text-slate-500 font-bold uppercase tracking-widest text-xs mb-4">Estimated Monthly EMI</p>
+              <p className="text-slate-500 font-bold uppercase tracking-widest text-[10px] mb-4">Estimated Monthly EMI</p>
               <motion.p
                 key={monthlyPayment}
                 initial={{ scale: 0.9, opacity: 0 }}
@@ -196,21 +197,23 @@ export default function MortgageCalculator() {
               >
                 ₹{monthlyPayment.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
               </motion.p>
+              
               <div className="w-full h-px bg-slate-200 mb-6" />
-              <div className="space-y-3 w-full text-sm font-medium text-slate-600">
-                <div className="flex justify-between">
-                  <span>Total Principal</span>
-                  <span className="text-slate-900 font-bold">₹{loanAmount.toLocaleString('en-IN')}</span>
+              
+              <div className="space-y-4 w-full text-sm font-medium text-slate-600">
+                <div className="flex justify-between items-center">
+                  <span className="text-slate-500">Total Principal</span>
+                  <span className="text-slate-900 font-black">₹{loanAmount.toLocaleString('en-IN')}</span>
                 </div>
-                <div className="flex justify-between">
-                  <span>Total Interest</span>
-                  <span className="text-slate-900 font-bold">
+                <div className="flex justify-between items-center">
+                  <span className="text-slate-500">Total Interest Paid</span>
+                  <span className="text-slate-900 font-black">
                     ₹{((monthlyPayment * loanTermMonths) - loanAmount).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
                   </span>
                 </div>
-                <div className="flex justify-between">
-                  <span>Total Cost</span>
-                  <span className="text-slate-900 font-bold">
+                <div className="flex justify-between items-center p-3 bg-white rounded-xl border border-slate-100 shadow-sm">
+                  <span className="text-slate-900 font-black">Total Amount Paid</span>
+                  <span className="text-primary font-black text-lg">
                     ₹{(monthlyPayment * loanTermMonths).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
                   </span>
                 </div>
@@ -222,17 +225,27 @@ export default function MortgageCalculator() {
                   animate={{ opacity: 1, y: 0 }}
                   className="mt-8 w-full bg-sky-50 rounded-2xl p-6 border border-sky-100"
                 >
-                  <p className="text-sky-800 font-black uppercase tracking-widest text-[10px] mb-4">Prepayment Savings</p>
-                  <div className="grid grid-cols-2 gap-4 text-center">
-                    <div>
-                      <p className="text-xs text-sky-600 font-bold uppercase mb-1">Interest Saved</p>
-                      <p className="text-xl font-black text-sky-900">₹{totalInterestSaved.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</p>
+                  <div className="flex items-center gap-2 mb-4">
+                    <TrendingUp className="w-4 h-4 text-sky-600" />
+                    <p className="text-sky-800 font-black uppercase tracking-widest text-[10px]">Prepayment Benefits</p>
+                  </div>
+                  <div className="grid grid-cols-1 gap-4 text-left">
+                    <div className="flex justify-between items-center">
+                      <p className="text-xs text-sky-600 font-bold uppercase">Interest Saved</p>
+                      <p className="text-lg font-black text-sky-900">₹{totalInterestSaved.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</p>
                     </div>
-                    <div>
-                      <p className="text-xs text-sky-600 font-bold uppercase mb-1">Time Saved</p>
-                      <p className="text-xl font-black text-sky-900">{Math.floor(monthsSaved / 12)}y {monthsSaved % 12}m</p>
+                    <div className="flex justify-between items-center">
+                      <p className="text-xs text-sky-600 font-bold uppercase">Time Saved</p>
+                      <p className="text-lg font-black text-sky-900">{Math.floor(monthsSaved / 12)}y {monthsSaved % 12}m</p>
+                    </div>
+                    <div className="flex justify-between items-center pt-3 border-t border-sky-200/50">
+                      <p className="text-xs text-sky-600 font-bold uppercase">Total EMI Savings</p>
+                      <p className="text-lg font-black text-emerald-600">₹{(monthsSaved * monthlyPayment).toLocaleString('en-IN', { maximumFractionDigits: 0 })}</p>
                     </div>
                   </div>
+                  <p className="mt-4 text-[9px] text-sky-600/70 font-bold uppercase tracking-widest text-center">
+                    *Based on constant interest rate
+                  </p>
                 </motion.div>
               )}
             </div>

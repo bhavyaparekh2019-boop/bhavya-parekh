@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Search, Menu, X, User, ChevronDown, Loader2, Info, ArrowRight, Globe, Sparkles, Sun, Moon, BookOpen, Filter, Calendar, TrendingUp, TrendingDown, Activity, Shield } from 'lucide-react';
+import { Search, Menu, X, User, ChevronDown, Loader2, Info, ArrowRight, Globe, Sparkles, Sun, Moon, BookOpen, Filter, Calendar, TrendingUp, TrendingDown, Activity, Shield, Zap } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { cn } from '@/src/lib/utils';
-import { useModal } from '@/src/context/ModalContext';
-import { GoogleGenAI } from "@google/genai";
-import { ARTICLES, Article } from '@/src/constants';
+import { cn } from '@/lib/utils';
+import { useModal } from '@/context/ModalContext';
+import { GoogleGenAI, Type } from "@google/genai";
+import { ARTICLES, Article, GUIDES, Guide } from '@/constants';
 import Fuse from 'fuse.js';
 
 import Logo from './Logo';
@@ -39,6 +39,7 @@ export default function Navbar() {
     full: string; 
     sources?: { uri: string; title: string }[];
     relevantArticles?: Article[];
+    relevantGuides?: Guide[];
     stockData?: {
       symbol: string;
       price: string;
@@ -111,8 +112,23 @@ export default function Navbar() {
       ? fuse.search(query).map(result => result.item).slice(0, 3)
       : filteredArticles.slice(0, 3);
 
+    // Local search for guides
+    const guideFuse = new Fuse(GUIDES, {
+      keys: ['title', 'excerpt', 'category'],
+      threshold: 0.4,
+      distance: 100,
+    });
+
+    const localGuides = query.trim()
+      ? guideFuse.search(query).map(result => result.item).slice(0, 2)
+      : [];
+
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+      const apiKey = process.env.GEMINI_API_KEY;
+      if (!apiKey || apiKey === 'MY_GEMINI_API_KEY' || apiKey === 'undefined' || apiKey === '') {
+        throw new Error('API key not valid');
+      }
+      const ai = new GoogleGenAI({ apiKey });
       const response = await ai.models.generateContent({
         model: "gemini-3-flash-preview",
         contents: `The user is asking: "${query}". 
@@ -132,18 +148,18 @@ export default function Navbar() {
           tools: [{ googleSearch: {} }],
           responseMimeType: "application/json",
           responseSchema: {
-            type: "OBJECT",
+            type: Type.OBJECT,
             properties: {
-              concise: { type: "STRING" },
-              full: { type: "STRING" },
+              concise: { type: Type.STRING },
+              full: { type: Type.STRING },
               stockData: {
-                type: "OBJECT",
+                type: Type.OBJECT,
                 properties: {
-                  symbol: { type: "STRING" },
-                  price: { type: "STRING" },
-                  change: { type: "STRING" },
-                  changePercent: { type: "STRING" },
-                  isPositive: { type: "BOOLEAN" }
+                  symbol: { type: Type.STRING },
+                  price: { type: Type.STRING },
+                  change: { type: Type.STRING },
+                  changePercent: { type: Type.STRING },
+                  isPositive: { type: Type.BOOLEAN }
                 },
                 required: ["symbol", "price", "change", "changePercent", "isPositive"]
               }
@@ -162,7 +178,7 @@ export default function Navbar() {
         title: chunk.web?.title
       })).filter((s: any) => s.uri && s.title);
 
-      setAiResponse({ ...data, sources, relevantArticles: localResults });
+      setAiResponse({ ...data, sources, relevantArticles: localResults, relevantGuides: localGuides });
     } catch (error: any) {
       console.error('Global Search Error:', error);
       let concise = "I encountered an error while searching.";
@@ -176,7 +192,7 @@ export default function Navbar() {
         full = "The Gemini API key is invalid or missing. Please check your environment configuration in the settings menu.";
       }
       
-      setAiResponse({ concise, full, relevantArticles: localResults });
+      setAiResponse({ concise, full, relevantArticles: localResults, relevantGuides: localGuides });
     } finally {
       setIsSearching(false);
     }
@@ -190,7 +206,6 @@ export default function Navbar() {
     { name: 'Mutual Funds', href: '/guides/mutual-funds' },
     { name: 'Stock Market Basics', href: '/guides/stocks' },
     { name: 'Market Analysis', href: '/market-analysis' },
-    { name: 'Blogs', href: '/insights' },
   ];
 
   const toolLinks = [
@@ -209,7 +224,7 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 w-full bg-white border-b border-slate-200 transition-colors">
-      {/* Top Row: Logo & Knowledge Center & Insights */}
+      {/* Top Row: Logo & Knowledge Center */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="flex justify-between items-center">
           <Link to="/">
@@ -261,6 +276,55 @@ export default function Navbar() {
             >
               <Search className="w-6 h-6" />
             </button>
+            
+            {user ? (
+              <div className="relative group">
+                <button className="flex items-center gap-2 p-1 rounded-full hover:bg-slate-100 transition-colors">
+                  {user.photoURL ? (
+                    <img src={user.photoURL} alt={user.displayName} className="w-8 h-8 rounded-full border border-slate-200" referrerPolicy="no-referrer" />
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">
+                      {user.displayName?.charAt(0) || user.email?.charAt(0)}
+                    </div>
+                  )}
+                </button>
+                <div className="absolute top-full right-0 mt-2 w-48 bg-white border border-slate-200 rounded-2xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 py-2">
+                  <div className="px-4 py-2 border-b border-slate-100 mb-2">
+                    <p className="text-xs font-black text-slate-900 truncate">{user.displayName || 'User'}</p>
+                    <p className="text-[10px] text-slate-500 truncate">{user.email}</p>
+                  </div>
+                  {isAdmin && (
+                    <Link
+                      to="/admin"
+                      className="block px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors"
+                    >
+                      Admin Dashboard
+                    </Link>
+                  )}
+                  <Link
+                    to="/portfolio"
+                    className="block px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors"
+                  >
+                    My Portfolio
+                  </Link>
+                  <button
+                    onClick={() => auth.signOut()}
+                    className="w-full text-left px-4 py-2 text-xs font-bold text-rose-500 hover:bg-rose-50 transition-colors"
+                  >
+                    Sign Out
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <Link 
+                to="/portfolio"
+                className="hidden sm:flex items-center gap-2 text-xs font-black uppercase tracking-widest text-slate-600 hover:text-primary transition-colors"
+              >
+                <User className="w-4 h-4" />
+                Sign In
+              </Link>
+            )}
+
             <button
               className="lg:hidden p-2 text-slate-500"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -491,49 +555,90 @@ export default function Navbar() {
                       </div>
                     )}
 
-                    <div className="bg-white/5 border border-white/10 p-8 rounded-[2.5rem]">
-                      <div className="flex items-center justify-between mb-6">
-                        <div className="flex items-center gap-3">
-                          <Info className="w-5 h-5 text-primary" />
-                          <span className="text-[10px] font-black text-primary uppercase tracking-widest">AI Summary</span>
+                    <div className="bg-white/5 border border-white/10 p-8 rounded-[2.5rem] relative overflow-hidden">
+                      <div className="absolute top-0 right-0 p-4">
+                        <div className="flex items-center gap-2 bg-primary/10 border border-primary/20 px-3 py-1 rounded-full">
+                          <Sparkles className="w-3 h-3 text-primary animate-pulse" />
+                          <span className="text-[8px] font-black text-primary uppercase tracking-widest">AI Generated</span>
                         </div>
-                        <div className="bg-primary/20 text-primary px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest border border-primary/20">
-                          Quick Answer
-                        </div>
+                      </div>
+                      <div className="flex items-center gap-3 mb-6">
+                        <Info className="w-5 h-5 text-primary" />
+                        <span className="text-[10px] font-black text-primary uppercase tracking-widest">AI Summary</span>
                       </div>
                       <p className="text-2xl font-bold text-white leading-tight mb-6">{aiResponse.concise}</p>
                       <div className="h-px bg-white/10 mb-6" />
                       <p className="text-slate-300 leading-relaxed text-lg">{aiResponse.full}</p>
                     </div>
 
-                    {aiResponse.relevantArticles && aiResponse.relevantArticles.length > 0 && (
-                      <div className="space-y-4">
-                        <div className="flex items-center gap-3">
-                          <BookOpen className="w-5 h-5 text-primary" />
-                          <span className="text-[10px] font-black text-primary uppercase tracking-widest">Relevant Articles from BHP Finance</span>
+                    {(aiResponse.relevantArticles?.length > 0 || aiResponse.relevantGuides?.length > 0) && (
+                      <div className="bg-slate-900/50 border border-white/5 p-8 rounded-[2.5rem] space-y-8">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <Zap className="w-5 h-5 text-sky-400" />
+                            <span className="text-[10px] font-black text-sky-400 uppercase tracking-widest">BHP Finance Discovery</span>
+                          </div>
+                          <span className="text-[8px] font-bold text-slate-500 uppercase tracking-widest px-3 py-1 bg-white/5 rounded-full border border-white/5">Curated Results</span>
                         </div>
-                        <div className="grid grid-cols-1 gap-4">
-                          {aiResponse.relevantArticles.map((article) => (
-                            <Link 
-                              key={article.id}
-                              to={`/article/${article.id}`}
-                              onClick={() => setIsSearchOpen(false)}
-                              className="flex flex-col md:flex-row gap-6 p-6 bg-white/5 border border-white/10 rounded-[2rem] hover:bg-white/10 transition-all group"
-                            >
-                              <div className="md:w-32 h-24 rounded-2xl overflow-hidden shrink-0">
-                                <img src={article.image} alt={article.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                              </div>
-                              <div className="flex flex-col justify-center">
-                                <div className="flex items-center gap-3 mb-2">
-                                  <span className="text-[8px] font-black text-primary uppercase tracking-widest px-2 py-0.5 bg-primary/10 rounded-full">{article.category}</span>
-                                  <span className="text-[8px] font-bold text-slate-500 uppercase tracking-widest">{article.readTime}</span>
-                                </div>
-                                <h4 className="text-lg font-bold text-white group-hover:text-primary transition-colors line-clamp-1">{article.title}</h4>
-                                <p className="text-sm text-slate-400 line-clamp-2 mt-1">{article.excerpt}</p>
-                              </div>
-                            </Link>
-                          ))}
-                        </div>
+
+                        {aiResponse.relevantArticles && aiResponse.relevantArticles.length > 0 && (
+                          <div className="space-y-4">
+                            <div className="flex items-center gap-3">
+                              <BookOpen className="w-4 h-4 text-primary" />
+                              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Relevant Articles</span>
+                            </div>
+                            <div className="grid grid-cols-1 gap-4">
+                              {aiResponse.relevantArticles.map((article) => (
+                                <Link 
+                                  key={article.id}
+                                  to={`/article/${article.id}`}
+                                  onClick={() => setIsSearchOpen(false)}
+                                  className="flex flex-col md:flex-row gap-6 p-6 bg-white/5 border border-white/10 rounded-[2rem] hover:bg-white/10 transition-all group"
+                                >
+                                  <div className="md:w-32 h-24 rounded-2xl overflow-hidden shrink-0">
+                                    <img src={article.image} alt={article.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" referrerPolicy="no-referrer" />
+                                  </div>
+                                  <div className="flex flex-col justify-center">
+                                    <div className="flex items-center gap-3 mb-2">
+                                      <span className="text-[8px] font-black text-primary uppercase tracking-widest px-2 py-0.5 bg-primary/10 rounded-full">{article.category}</span>
+                                      <span className="text-[8px] font-bold text-slate-500 uppercase tracking-widest">{article.readTime}</span>
+                                    </div>
+                                    <h4 className="text-lg font-bold text-white group-hover:text-primary transition-colors line-clamp-1">{article.title}</h4>
+                                    <p className="text-sm text-slate-400 line-clamp-2 mt-1">{article.excerpt}</p>
+                                  </div>
+                                </Link>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {aiResponse.relevantGuides && aiResponse.relevantGuides.length > 0 && (
+                          <div className="space-y-4">
+                            <div className="flex items-center gap-3">
+                              <Shield className="w-4 h-4 text-primary" />
+                              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Financial Guides</span>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              {aiResponse.relevantGuides.map((guide) => (
+                                <Link 
+                                  key={guide.id}
+                                  to={guide.path}
+                                  onClick={() => setIsSearchOpen(false)}
+                                  className="flex gap-4 p-4 bg-white/5 border border-white/10 rounded-3xl hover:bg-white/10 transition-all group"
+                                >
+                                  <div className="w-20 h-20 rounded-2xl overflow-hidden shrink-0">
+                                    <img src={guide.image} alt={guide.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" referrerPolicy="no-referrer" />
+                                  </div>
+                                  <div className="flex flex-col justify-center overflow-hidden">
+                                    <span className="text-[8px] font-black text-primary uppercase tracking-widest mb-1">{guide.category}</span>
+                                    <h4 className="text-sm font-bold text-white group-hover:text-primary transition-colors line-clamp-1">{guide.title}</h4>
+                                    <p className="text-[10px] text-slate-400 line-clamp-2 mt-0.5 leading-tight">{guide.excerpt}</p>
+                                  </div>
+                                </Link>
+                              ))}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     )}
 
@@ -601,7 +706,7 @@ export default function Navbar() {
       {isMobileMenuOpen && (
         <div className="lg:hidden bg-white border-t border-slate-200 px-4 py-8 space-y-8 max-h-[85vh] overflow-y-auto shadow-2xl transition-colors">
           <div>
-            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-6">Knowledge & Insights</p>
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-6">Knowledge Center</p>
             <div className="grid grid-cols-1 gap-y-4">
               {knowledgeLinks.map((link) => (
                 <Link

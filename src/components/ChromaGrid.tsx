@@ -2,8 +2,9 @@ import React, { useRef, useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Info, ArrowRight, Loader2, Sparkles } from 'lucide-react';
 import gsap from 'gsap';
-import { useSmartImage } from '@/src/lib/hooks';
-import Tooltip from '@/src/components/Tooltip';
+import { useSmartImage } from '@/lib/hooks';
+import Tooltip from '@/components/Tooltip';
+import { cn } from '@/lib/utils';
 
 interface ChromaItem {
   image?: string;
@@ -249,9 +250,11 @@ function ChromaCard({
         className="chroma-glow absolute -inset-px rounded-[2.5rem] opacity-0 pointer-events-none z-0"
       />
 
-      <div className="relative bg-white rounded-[2.5rem] p-8 border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-500 h-full flex flex-col z-10 overflow-hidden">
+      <div className={cn(
+        "relative bg-white rounded-2xl p-4 border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-500 h-full flex flex-col z-10 overflow-hidden"
+      )}>
         {item.image && (
-          <div className={isArticle ? "h-48 -mx-8 -mt-8 mb-6 overflow-hidden relative bg-slate-100" : "w-16 h-16 rounded-2xl overflow-hidden mb-6 border-2 relative bg-slate-100"} style={!isArticle ? { borderColor: item.borderColor || '#3B82F6' } : {}}>
+          <div className={isArticle ? "aspect-video w-full -mx-4 -mt-4 mb-4 overflow-hidden relative bg-slate-100 shrink-0" : "w-10 h-10 rounded-lg overflow-hidden mb-2 border-2 relative bg-slate-100"} style={!isArticle ? { borderColor: item.borderColor || '#3B82F6' } : {}}>
             {isLoading ? (
               <div className="absolute inset-0 flex items-center justify-center text-primary">
                 <Loader2 className="w-6 h-6 animate-spin" />
@@ -260,8 +263,8 @@ function ChromaCard({
               <>
                 <img src={src} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" referrerPolicy="no-referrer" />
                 {src.startsWith('data:image') && (
-                  <div className="absolute top-2 right-2 bg-white/80 backdrop-blur-md p-1 rounded-lg shadow-sm z-10">
-                    <Sparkles className="w-3 h-3 text-primary" />
+                  <div className="absolute top-3 right-3 bg-white/80 backdrop-blur-md p-1.5 rounded-lg shadow-sm z-10">
+                    <Sparkles className="w-4 h-4 text-primary" />
                   </div>
                 )}
               </>
@@ -270,61 +273,61 @@ function ChromaCard({
         )}
         
         {!item.image && Icon && (
-          <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center mb-6 transition-colors group-hover:bg-primary/10">
+          <div className="w-14 h-14 bg-slate-50 rounded-2xl flex items-center justify-center mb-6 transition-colors group-hover:bg-primary/10">
             {item.tooltip ? (
               <Tooltip content={item.tooltip}>
-                <Icon className="w-8 h-8 text-slate-600 group-hover:text-primary transition-colors" />
+                <Icon className="w-7 h-7 text-slate-600 group-hover:text-primary transition-colors" />
               </Tooltip>
             ) : (
-              <Icon className="w-8 h-8 text-slate-600 group-hover:text-primary transition-colors" />
+              <Icon className="w-7 h-7 text-slate-600 group-hover:text-primary transition-colors" />
             )}
           </div>
         )}
 
         <div className="flex-1">
-          {isArticle && (
-            <div className="flex items-center gap-4 mb-4">
-              <span className="bg-primary/10 text-primary text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-[0.2em]">
-                {item.category}
-              </span>
-              <span className="text-slate-400 text-xs font-bold uppercase tracking-widest">{item.readTime}</span>
-            </div>
-          )}
-
           {item.tooltip ? (
             <Tooltip content={item.tooltip}>
-              <h3 className={isArticle ? "text-2xl font-black text-slate-900 mb-4 leading-tight group-hover:text-primary transition-colors" : "text-xl font-bold text-slate-900 mb-1"}>
+              <h3 className={isArticle ? "text-lg font-black text-slate-900 mb-2 leading-tight group-hover:text-primary transition-colors uppercase tracking-tight" : "text-sm font-bold text-slate-900 mb-0.5"}>
                 {item.title}
               </h3>
             </Tooltip>
           ) : (
-            <h3 className={isArticle ? "text-2xl font-black text-slate-900 mb-4 leading-tight group-hover:text-primary transition-colors" : "text-xl font-bold text-slate-900 mb-1"}>
+            <h3 className={isArticle ? "text-lg font-black text-slate-900 mb-2 leading-tight group-hover:text-primary transition-colors uppercase tracking-tight" : "text-sm font-bold text-slate-900 mb-0.5"}>
               {item.title}
             </h3>
           )}
+
+          {isArticle && (
+            <div className="flex items-center gap-3 mb-3">
+              <span className="bg-primary/10 text-primary text-[8px] font-black px-2 py-1 rounded-full uppercase tracking-[0.2em]">
+                {item.category}
+              </span>
+              <span className="text-slate-400 text-[9px] font-bold uppercase tracking-widest">{item.readTime}</span>
+            </div>
+          )}
           
-          {item.subtitle && <p className="text-sm font-medium text-primary mb-2">{item.subtitle}</p>}
-          {item.handle && <p className="text-xs text-slate-400 font-mono mb-4">{item.handle}</p>}
-          {item.description && <p className="text-slate-600 text-sm leading-relaxed line-clamp-3">{item.description}</p>}
+          {item.subtitle && <p className="text-sm font-medium text-primary mb-1">{item.subtitle}</p>}
+          {item.handle && <p className="text-xs text-slate-400 font-mono mb-2">{item.handle}</p>}
+          {item.description && <p className="text-slate-600 text-sm leading-relaxed line-clamp-3 font-medium">{item.description}</p>}
         </div>
 
         {isArticle ? (
-          <div className="mt-8 pt-6 border-t border-slate-100 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-slate-100 overflow-hidden border border-slate-200">
+          <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-xl bg-slate-100 overflow-hidden border border-slate-200 shadow-sm">
                 <img src={`https://i.pravatar.cc/100?u=${item.author}`} alt={item.author} className="w-full h-full object-cover" />
               </div>
               <div className="flex flex-col">
-                <span className="text-xs font-black text-slate-900 uppercase">{item.author}</span>
-                <span className="text-[10px] text-slate-400 font-bold uppercase">{item.date}</span>
+                <span className="text-[10px] font-black text-slate-900 uppercase tracking-tight">{item.author}</span>
+                <span className="text-[8px] text-slate-400 font-bold uppercase tracking-widest">{item.date}</span>
               </div>
             </div>
-            <div className="text-primary font-black text-xs uppercase tracking-widest flex items-center gap-2 group-hover:gap-3 transition-all">
-              Read <span className="hidden sm:inline">More</span> →
+            <div className="text-primary font-black text-[10px] uppercase tracking-widest flex items-center gap-1.5 group-hover:gap-2 transition-all">
+              Read <span className="hidden sm:inline">Full Insight</span> →
             </div>
           </div>
         ) : (
-          <div className="mt-6 pt-6 border-t border-slate-100 flex items-center justify-between">
+          <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
             <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 group-hover:text-primary transition-colors">
               View Details
             </span>

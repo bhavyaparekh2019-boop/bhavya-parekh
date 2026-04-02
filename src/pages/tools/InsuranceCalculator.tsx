@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Shield, Info, AlertCircle, CheckCircle2, ArrowRight, TrendingUp, Sparkles, Plus, Trash2, Scale, RefreshCcw, Loader2 } from 'lucide-react';
-import BlurText from '@/src/components/BlurText';
-import { cn } from '@/src/lib/utils';
+import BlurText from '@/components/BlurText';
+import { cn } from '@/lib/utils';
 import { GoogleGenAI } from "@google/genai";
 
 interface PolicyComparison {

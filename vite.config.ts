@@ -13,9 +13,12 @@ export default defineConfig(({mode}) => {
       'process.env.GEMINI_API_KEY': JSON.stringify(apiKey),
       'import.meta.env.GEMINI_API_KEY': JSON.stringify(apiKey),
     },
+    build: {
+      sourcemap: false,
+    },
     resolve: {
       alias: {
-        '@': path.resolve(__dirname, '.'),
+        '@': path.resolve(__dirname, 'src'),
       },
     },
     server: {

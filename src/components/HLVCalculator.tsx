@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { motion } from 'motion/react';
 import { Calculator, Shield, Heart, IndianRupee, Info, TrendingUp, Briefcase } from 'lucide-react';
-import { cn } from '@/src/lib/utils';
+import { cn } from '@/lib/utils';
 
 export default function HLVCalculator() {
   const [annualIncome, setAnnualIncome] = useState<number>(1000000);

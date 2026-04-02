@@ -52,7 +52,6 @@ export default function Footer() {
       title: 'Company',
       links: [
         { name: 'About Us', href: '/about' },
-        { name: 'Insights', href: '/insights' },
         { name: 'Admin Dashboard', href: '/admin' }
       ],
     },

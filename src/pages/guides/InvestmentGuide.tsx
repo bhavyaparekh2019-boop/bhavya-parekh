@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { TrendingUp, PieChart, Landmark, Coins, Building2, ArrowUpRight, Target, Zap, ArrowRight, CheckCircle2, HelpCircle, Sparkles, Trophy, RotateCcw, Info, X, Home, GraduationCap, Umbrella, Palmtree, Wallet } from 'lucide-react';
-import BlurText from '@/src/components/BlurText';
-import ChromaGrid from '@/src/components/ChromaGrid';
-import { useModal } from '@/src/context/ModalContext';
-import { cn } from '@/src/lib/utils';
+import { TrendingUp, PieChart, Landmark, Coins, Building2, ArrowUpRight, Target, Zap, ArrowRight, CheckCircle2, HelpCircle, Sparkles, Trophy, RotateCcw, Info, X, Home, GraduationCap, Umbrella, Palmtree, Wallet, Activity, BarChart3, Loader2 } from 'lucide-react';
+import BlurText from '@/components/BlurText';
+import ChromaGrid from '@/components/ChromaGrid';
+import { useModal } from '@/context/ModalContext';
+import { cn } from '@/lib/utils';
+import { getETFData, type ETFData } from '@/lib/gemini';
 
 const QUIZ_QUESTIONS = [
   {
@@ -123,12 +124,48 @@ const assetClasses = [
 ];
 
 const INVESTMENT_GOALS = [
-  { id: 'retirement', label: 'Retirement', icon: Landmark, description: 'Building a corpus for post-work life.' },
-  { id: 'education', label: 'Child Education', icon: GraduationCap, description: 'Saving for your child\'s future studies.' },
-  { id: 'wealth', label: 'Wealth Creation', icon: Trophy, description: 'Long-term growth and financial freedom.' },
-  { id: 'home', label: 'Home Purchase', icon: Home, description: 'Saving for a down payment or full purchase.' },
-  { id: 'emergency', label: 'Emergency Fund', icon: Umbrella, description: 'Safety net for unexpected expenses.' },
-  { id: 'vacation', label: 'Dream Vacation', icon: Palmtree, description: 'Saving for that special trip.' },
+  { 
+    id: 'retirement', 
+    label: 'Retirement', 
+    icon: Landmark, 
+    description: 'Building a corpus for post-work life.',
+    recommendation: { equity: 70, debt: 20, gold: 10, realestate: 0, horizon: '15+ Years', risk: 'Moderate-Aggressive', strategy: 'Focus on long-term compounding and inflation-beating growth.' }
+  },
+  { 
+    id: 'education', 
+    label: 'Child Education', 
+    icon: GraduationCap, 
+    description: 'Saving for your child\'s future studies.',
+    recommendation: { equity: 60, debt: 30, gold: 10, realestate: 0, horizon: '10-15 Years', risk: 'Moderate', strategy: 'Balanced growth with a shift to debt as the goal approaches.' }
+  },
+  { 
+    id: 'wealth', 
+    label: 'Wealth Creation', 
+    icon: Trophy, 
+    description: 'Long-term growth and financial freedom.',
+    recommendation: { equity: 80, debt: 10, gold: 5, realestate: 5, horizon: '10+ Years', risk: 'Aggressive', strategy: 'Maximize equity exposure to capture market alpha.' }
+  },
+  { 
+    id: 'home', 
+    label: 'Home Purchase', 
+    icon: Home, 
+    description: 'Saving for a down payment or full purchase.',
+    recommendation: { equity: 30, debt: 60, gold: 10, realestate: 0, horizon: '3-7 Years', risk: 'Conservative-Moderate', strategy: 'Capital protection is key; use debt for stability.' }
+  },
+  { 
+    id: 'emergency', 
+    label: 'Emergency Fund', 
+    icon: Umbrella, 
+    description: 'Safety net for unexpected expenses.',
+    recommendation: { equity: 0, debt: 100, gold: 0, realestate: 0, horizon: 'Immediate', risk: 'Very Conservative', strategy: 'High liquidity and zero capital risk.' }
+  },
+  { 
+    id: 'vacation', 
+    label: 'Dream Vacation', 
+    icon: Palmtree, 
+    description: 'Saving for that special trip.',
+    recommendation: { equity: 10, debt: 90, gold: 0, realestate: 0, horizon: '1-3 Years', risk: 'Conservative', strategy: 'Short-term debt funds or FDs for guaranteed availability.' }
+  },
 ];
 
 const ASSET_OPTIONS = [
@@ -147,6 +184,18 @@ export default function InvestmentGuide() {
   const [quizComplete, setQuizComplete] = useState(false);
   const [selectedGoals, setSelectedGoals] = useState<string[]>([]);
   const [selectedAssets, setSelectedAssets] = useState<string[]>([]);
+  const [etfData, setEtfData] = useState<ETFData[]>([]);
+  const [loadingETFs, setLoadingETFs] = useState(true);
+
+  useEffect(() => {
+    const fetchETFs = async () => {
+      setLoadingETFs(true);
+      const data = await getETFData();
+      setEtfData(data);
+      setLoadingETFs(false);
+    };
+    fetchETFs();
+  }, []);
 
   const toggleGoal = (id: string) => {
     setSelectedGoals(prev => 
@@ -241,14 +290,14 @@ export default function InvestmentGuide() {
                 </div>
                 <div>
                   <h2 className="text-2xl font-bold text-slate-900 leading-tight">Investment Goal Planner</h2>
-                  <p className="text-sm text-slate-500">Define your goals and interests to personalize your strategy</p>
+                  <p className="text-sm text-slate-500">Select your goals to see our recommended asset allocation</p>
                 </div>
               </div>
 
               <div className="space-y-10">
                 {/* Goals Selection */}
                 <div>
-                  <h3 className="text-sm font-black text-slate-400 uppercase tracking-widest mb-6">1. Select Your Investment Goals</h3>
+                  <h3 className="text-sm font-black text-slate-400 uppercase tracking-widest mb-6">1. Select Your Financial Goals</h3>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                     {INVESTMENT_GOALS.map((goal) => {
                       const Icon = goal.icon;
@@ -283,60 +332,150 @@ export default function InvestmentGuide() {
                   </div>
                 </div>
 
-                {/* Asset Class Selection */}
-                <div>
-                  <h3 className="text-sm font-black text-slate-400 uppercase tracking-widest mb-6">2. Asset Classes of Interest</h3>
-                  <div className="flex flex-wrap gap-3">
-                    {ASSET_OPTIONS.map((asset) => {
-                      const Icon = asset.icon;
-                      const isSelected = selectedAssets.includes(asset.id);
-                      return (
-                        <button
-                          key={asset.id}
-                          onClick={() => toggleAsset(asset.id)}
-                          className={cn(
-                            "flex items-center gap-3 px-6 py-4 rounded-2xl border-2 transition-all font-bold text-sm",
-                            isSelected 
-                              ? "border-primary bg-primary/5 text-slate-900" 
-                              : "border-slate-100 bg-slate-50 text-slate-500 hover:border-slate-200"
-                          )}
-                        >
-                          <Icon className={cn("w-5 h-5", isSelected ? "text-primary" : asset.color)} />
-                          {asset.label}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
+                {/* Suggested Asset Allocation */}
+                <AnimatePresence>
+                  {selectedGoals.length > 0 && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      className="space-y-8 pt-6 border-t border-slate-100"
+                    >
+                      <h3 className="text-sm font-black text-slate-400 uppercase tracking-widest">2. Recommended Asset Allocation</h3>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {selectedGoals.map(goalId => {
+                          const goal = INVESTMENT_GOALS.find(g => g.id === goalId);
+                          if (!goal) return null;
+                          const rec = goal.recommendation;
+                          
+                          return (
+                            <motion.div 
+                              key={goalId}
+                              initial={{ opacity: 0, scale: 0.95 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              className="bg-slate-50 rounded-3xl p-6 border border-slate-100"
+                            >
+                              <div className="flex items-center gap-3 mb-4">
+                                <div className="p-2 bg-white rounded-lg text-primary shadow-sm">
+                                  <goal.icon className="w-4 h-4" />
+                                </div>
+                                <h4 className="font-bold text-slate-900">{goal.label}</h4>
+                              </div>
 
-                {/* Summary / Call to Action */}
-                {(selectedGoals.length > 0 || selectedAssets.length > 0) && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="p-8 rounded-[2rem] bg-slate-900 text-white"
-                  >
-                    <div className="flex items-start gap-6">
-                      <div className="w-14 h-14 bg-primary rounded-2xl flex items-center justify-center text-slate-900 shrink-0">
-                        <Sparkles className="w-7 h-7" />
+                              <div className="space-y-4 mb-6">
+                                {/* Allocation Bars */}
+                                <div className="space-y-3">
+                                  {rec.equity > 0 && (
+                                    <div className="space-y-1">
+                                      <div className="flex justify-between text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                                        <span>Equity</span>
+                                        <span>{rec.equity}%</span>
+                                      </div>
+                                      <div className="h-1.5 bg-slate-200 rounded-full overflow-hidden">
+                                        <motion.div 
+                                          initial={{ width: 0 }}
+                                          animate={{ width: `${rec.equity}%` }}
+                                          className="h-full bg-blue-500" 
+                                        />
+                                      </div>
+                                    </div>
+                                  )}
+                                  {rec.debt > 0 && (
+                                    <div className="space-y-1">
+                                      <div className="flex justify-between text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                                        <span>Debt</span>
+                                        <span>{rec.debt}%</span>
+                                      </div>
+                                      <div className="h-1.5 bg-slate-200 rounded-full overflow-hidden">
+                                        <motion.div 
+                                          initial={{ width: 0 }}
+                                          animate={{ width: `${rec.debt}%` }}
+                                          className="h-full bg-sky-400" 
+                                        />
+                                      </div>
+                                    </div>
+                                  )}
+                                  {rec.gold > 0 && (
+                                    <div className="space-y-1">
+                                      <div className="flex justify-between text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                                        <span>Gold</span>
+                                        <span>{rec.gold}%</span>
+                                      </div>
+                                      <div className="h-1.5 bg-slate-200 rounded-full overflow-hidden">
+                                        <motion.div 
+                                          initial={{ width: 0 }}
+                                          animate={{ width: `${rec.gold}%` }}
+                                          className="h-full bg-amber-400" 
+                                        />
+                                      </div>
+                                    </div>
+                                  )}
+                                  {rec.realestate > 0 && (
+                                    <div className="space-y-1">
+                                      <div className="flex justify-between text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                                        <span>Real Estate</span>
+                                        <span>{rec.realestate}%</span>
+                                      </div>
+                                      <div className="h-1.5 bg-slate-200 rounded-full overflow-hidden">
+                                        <motion.div 
+                                          initial={{ width: 0 }}
+                                          animate={{ width: `${rec.realestate}%` }}
+                                          className="h-full bg-indigo-500" 
+                                        />
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+
+                              <div className="grid grid-cols-2 gap-3 mb-4">
+                                <div className="p-3 bg-white rounded-xl border border-slate-100">
+                                  <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1">Horizon</p>
+                                  <p className="text-xs font-bold text-slate-900">{rec.horizon}</p>
+                                </div>
+                                <div className="p-3 bg-white rounded-xl border border-slate-100">
+                                  <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1">Risk</p>
+                                  <p className="text-xs font-bold text-slate-900">{rec.risk}</p>
+                                </div>
+                              </div>
+
+                              <p className="text-[11px] text-slate-500 leading-relaxed italic">
+                                <span className="font-bold text-slate-700 not-italic">Strategy: </span>
+                                {rec.strategy}
+                              </p>
+                            </motion.div>
+                          );
+                        })}
                       </div>
-                      <div className="flex-1">
-                        <h4 className="text-lg font-bold mb-2">Personalized Strategy Insight</h4>
-                        <p className="text-slate-400 text-sm leading-relaxed mb-6">
-                          Based on your interest in {selectedGoals.map(id => INVESTMENT_GOALS.find(g => g.id === id)?.label).join(', ')} 
-                          {selectedAssets.length > 0 && ` and ${selectedAssets.map(id => ASSET_OPTIONS.find(a => a.id === id)?.label).join(', ')}`}, 
-                          we recommend a diversified approach focusing on {selectedGoals.includes('retirement') || selectedGoals.includes('wealth') ? 'long-term compounding' : 'balanced growth'}.
-                        </p>
-                        <button 
-                          onClick={() => openConsultationModal('Goal-Based Planning')}
-                          className="bg-primary text-slate-900 px-8 py-3 rounded-xl font-bold text-sm hover:brightness-105 transition-all inline-flex items-center gap-2"
-                        >
-                          Discuss My Plan <ArrowRight className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
+
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="p-8 rounded-[2rem] bg-slate-900 text-white mt-8"
+                      >
+                        <div className="flex items-start gap-6">
+                          <div className="w-14 h-14 bg-primary rounded-2xl flex items-center justify-center text-slate-900 shrink-0">
+                            <Sparkles className="w-7 h-7" />
+                          </div>
+                          <div className="flex-1">
+                            <h4 className="text-lg font-bold mb-2">Personalized Strategy Insight</h4>
+                            <p className="text-slate-400 text-sm leading-relaxed mb-6">
+                              Based on your selected goals, we recommend a diversified approach focusing on {selectedGoals.includes('retirement') || selectedGoals.includes('wealth') ? 'long-term compounding' : 'balanced growth'}. 
+                              Asset allocation is the single most important factor in determining your long-term returns.
+                            </p>
+                            <button 
+                              onClick={() => openConsultationModal('Goal-Based Planning')}
+                              className="bg-primary text-slate-900 px-8 py-3 rounded-xl font-bold text-sm hover:brightness-105 transition-all inline-flex items-center gap-2"
+                            >
+                              Discuss My Plan <ArrowRight className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </div>
+                      </motion.div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             </section>
 
@@ -528,6 +667,113 @@ export default function InvestmentGuide() {
                   }
                 ]}
               />
+            </section>
+
+            <section className="bg-white p-8 rounded-3xl border border-slate-200 overflow-hidden">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+                <h2 className="text-2xl font-bold text-slate-900 flex items-center gap-3">
+                  <Activity className="w-6 h-6 text-primary" />
+                  Exchange Traded Funds (ETFs)
+                </h2>
+                <div className="flex items-center gap-2 px-3 py-1 bg-primary/10 text-primary text-[10px] font-bold rounded-full uppercase tracking-wider">
+                  <Sparkles className="w-3 h-3" />
+                  Live Insights by Gemini
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div className="space-y-4">
+                  <h3 className="text-lg font-bold text-slate-900">What are ETFs?</h3>
+                  <p className="text-slate-600 text-sm leading-relaxed">
+                    ETFs are investment funds traded on stock exchanges, much like individual stocks. They hold assets such as stocks, commodities, or bonds and generally operate with an arbitrage mechanism designed to keep them trading close to their net asset value.
+                  </p>
+                  <ul className="space-y-2">
+                    {[
+                      'Traded like stocks on the exchange',
+                      'High liquidity and transparency',
+                      'Lower expense ratios than mutual funds',
+                      'Real-time price discovery'
+                    ].map((item, i) => (
+                      <li key={i} className="flex items-center gap-2 text-sm text-slate-600">
+                        <CheckCircle2 className="w-4 h-4 text-primary shrink-0" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                  <h3 className="text-lg font-bold text-slate-900 mb-4">ETFs vs. Mutual Funds</h3>
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4 text-xs font-bold text-slate-400 uppercase tracking-widest pb-2 border-b border-slate-200">
+                      <span>Feature</span>
+                      <span>ETF Advantage</span>
+                    </div>
+                    {[
+                      { f: 'Trading', a: 'Real-time during market hours' },
+                      { f: 'Costs', a: 'Generally lower expense ratios' },
+                      { f: 'Minimum', a: 'Can buy as little as 1 unit' },
+                      { f: 'Liquidity', a: 'Instant exit on exchange' }
+                    ].map((item, i) => (
+                      <div key={i} className="grid grid-cols-2 gap-4 py-1">
+                        <span className="text-sm font-medium text-slate-500">{item.f}</span>
+                        <span className="text-sm font-bold text-slate-900">{item.a}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+                    <BarChart3 className="w-5 h-5 text-primary" />
+                    Top Performing ETFs in India
+                  </h3>
+                </div>
+
+                {loadingETFs ? (
+                  <div className="flex flex-col items-center justify-center py-12 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
+                    <Loader2 className="w-8 h-8 text-primary animate-spin mb-4" />
+                    <p className="text-sm text-slate-500 font-medium">Fetching latest ETF data from Gemini...</p>
+                  </div>
+                ) : (
+                  <div className="overflow-x-auto -mx-8 px-8">
+                    <table className="w-full text-left border-collapse">
+                      <thead>
+                        <tr className="border-b border-slate-100">
+                          <th className="py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">ETF Name</th>
+                          <th className="py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Ticker</th>
+                          <th className="py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Category</th>
+                          <th className="py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">1Y Return</th>
+                          <th className="py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">Exp. Ratio</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {etfData.map((etf, i) => (
+                          <tr key={i} className="border-b border-slate-50 hover:bg-slate-50/50 transition-colors group">
+                            <td className="py-4">
+                              <div className="font-bold text-slate-900 group-hover:text-primary transition-colors">{etf.name}</div>
+                              <div className="text-[10px] text-slate-400">AUM: {etf.aum}</div>
+                            </td>
+                            <td className="py-4">
+                              <span className="px-2 py-1 bg-slate-100 text-slate-600 text-[10px] font-bold rounded uppercase">{etf.ticker}</span>
+                            </td>
+                            <td className="py-4 text-sm text-slate-600">{etf.category}</td>
+                            <td className="py-4 text-right">
+                              <div className="font-bold text-emerald-600">{etf.returns1Y}</div>
+                              <div className="text-[10px] text-slate-400">3Y: {etf.returns3Y}</div>
+                            </td>
+                            <td className="py-4 text-right font-mono text-xs text-slate-500">{etf.expenseRatio}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+                <p className="text-[10px] text-slate-400 italic">
+                  * Data fetched via Gemini AI. Performance figures are historical and not indicative of future results. Expense ratios are subject to change by the AMC.
+                </p>
+              </div>
             </section>
 
             <section className="bg-amber-50 p-8 rounded-3xl border border-amber-100">

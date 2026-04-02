@@ -2,6 +2,8 @@ import express from "express";
 import { createServer as createViteServer } from "vite";
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
+import fs from "fs";
+import path from "path";
 
 dotenv.config();
 
@@ -10,6 +12,16 @@ async function startServer() {
   const PORT = 3000;
 
   app.use(express.json());
+
+  // Request logging middleware
+  app.use((req, res, next) => {
+    const start = Date.now();
+    res.on('finish', () => {
+      const duration = Date.now() - start;
+      console.log(`${new Date().toISOString()} - ${req.method} ${req.url} - ${res.statusCode} (${duration}ms)`);
+    });
+    next();
+  });
 
   // Helper function to get email transporter
   const getTransporter = () => {
@@ -39,15 +51,21 @@ async function startServer() {
     };
   };
 
-  // Verify transporter on startup
-  const { transporter: testTransporter, user: testUser } = getTransporter();
-  testTransporter.verify((error, success) => {
-    if (error) {
-      console.error("Email Transporter Error:", error);
-    } else {
-      console.log("Email Transporter is ready to send messages from:", testUser);
+  // Initialize Firebase for server-side use
+  let db: any = null;
+  try {
+    const firebaseConfigPath = path.join(process.cwd(), "firebase-applet-config.json");
+    if (fs.existsSync(firebaseConfigPath)) {
+      const { initializeApp } = await import("firebase/app");
+      const { getFirestore, collection, addDoc } = await import("firebase/firestore");
+      const firebaseConfig = JSON.parse(fs.readFileSync(firebaseConfigPath, "utf-8"));
+      const firebaseApp = initializeApp(firebaseConfig);
+      db = getFirestore(firebaseApp, firebaseConfig.firestoreDatabaseId);
+      console.log("Firebase initialized in server.ts");
     }
-  });
+  } catch (err) {
+    console.error("Failed to initialize Firebase in server.ts:", err);
+  }
 
   // In-memory storage for demo purposes (since we don't have a database yet)
   const db_mock = {
@@ -56,6 +74,14 @@ async function startServer() {
   };
 
   // API Routes
+  app.get("/api/health", (req, res) => {
+    res.json({ 
+      status: "ok", 
+      timestamp: new Date().toISOString(),
+      env: process.env.NODE_ENV || 'development'
+    });
+  });
+
   app.get("/api/admin/data", (req, res) => {
     res.json(db_mock);
   });
@@ -68,7 +94,19 @@ async function startServer() {
     }
 
     console.log(`New subscription request: ${email}`);
-    db_mock.subscriptions.push({ email, date: new Date().toISOString() });
+    const subData = { email, date: new Date().toISOString() };
+    db_mock.subscriptions.push(subData);
+
+    // Save to Firestore if available
+    if (db) {
+      try {
+        const { collection, addDoc } = await import("firebase/firestore");
+        await addDoc(collection(db, "subscriptions"), subData);
+        console.log("Subscription saved to Firestore");
+      } catch (err) {
+        console.error("Failed to save subscription to Firestore:", err);
+      }
+    }
 
     const { transporter, user, pass, adminEmail } = getTransporter();
 
@@ -150,7 +188,19 @@ async function startServer() {
     }
 
     console.log(`New consultation request from ${name} (${email}) for ${service}`);
-    db_mock.consultations.push({ name, email, phone, service, date: new Date().toISOString() });
+    const consultationData = { name, email, phone, service, date: new Date().toISOString() };
+    db_mock.consultations.push(consultationData);
+
+    // Save to Firestore if available
+    if (db) {
+      try {
+        const { collection, addDoc } = await import("firebase/firestore");
+        await addDoc(collection(db, "consultations"), consultationData);
+        console.log("Consultation saved to Firestore");
+      } catch (err) {
+        console.error("Failed to save consultation to Firestore:", err);
+      }
+    }
 
     const { transporter, user, pass, adminEmail } = getTransporter();
 
@@ -242,16 +292,85 @@ async function startServer() {
   });
 
   // Vite middleware for development
-  if (process.env.NODE_ENV !== "production") {
+  // In AI Studio, we prefer development mode (Vite) if the source exists,
+  // even if NODE_ENV is set to production by the platform.
+  const hasBuild = fs.existsSync(path.join(process.cwd(), "dist", "index.html"));
+  const hasSource = fs.existsSync(path.join(process.cwd(), "src"));
+  
+  // Only use production mode if we have a build AND we don't want to be in dev mode
+  // or if we are explicitly told to be in production and source is missing.
+  const isProduction = hasBuild && !hasSource;
+  
+  console.log("Environment Detection:");
+  console.log(`- NODE_ENV: ${process.env.NODE_ENV}`);
+  console.log(`- ENV: ${process.env.ENV}`);
+  console.log(`- hasBuild: ${hasBuild}`);
+  console.log(`- hasSource: ${hasSource}`);
+  console.log(`- isProduction: ${isProduction}`);
+  console.log(`- process.cwd(): ${process.cwd()}`);
+  
+  if (!isProduction) {
+    console.log("Starting server in DEVELOPMENT mode with Vite middleware");
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: "spa",
+      root: process.cwd(),
     });
     app.use(vite.middlewares);
   } else {
-    app.use(express.static("dist"));
+    console.log("Starting server in PRODUCTION mode");
+
+    // Serve static files from dist
+    app.use(express.static("dist", { index: false }));
+
+    // Handle API 404s explicitly to avoid returning index.html for API calls
+    app.all("/api/*", (req, res) => {
+      res.status(404).json({ 
+        error: "API route not found", 
+        message: `The requested API endpoint ${req.originalUrl} does not exist on this server.` 
+      });
+    });
+
+    // Catch-all for SPA routing
     app.get("*", (req, res) => {
-      res.sendFile("index.html", { root: "dist" });
+      const indexPath = path.join(process.cwd(), "dist", "index.html");
+      
+      // If we're in production but dist/index.html is missing, 
+      // it might be a misconfiguration or a missing build.
+      if (fs.existsSync(indexPath)) {
+        res.sendFile(indexPath);
+      } else {
+        // Fallback to source index.html if dist is missing, 
+        // but warn that this is likely not what's intended for production.
+        const sourceIndexPath = path.join(process.cwd(), "index.html");
+        if (fs.existsSync(sourceIndexPath)) {
+          console.warn("Production mode active but dist/index.html missing. Falling back to source index.html.");
+          res.sendFile(sourceIndexPath);
+        } else {
+          res.status(404).send(`
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+              <meta charset="utf-8">
+              <title>Application Error</title>
+              <style>
+                body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; background: #f8fafc; color: #1e293b; }
+                .card { background: white; padding: 2rem; border-radius: 1rem; shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); max-width: 400px; text-align: center; }
+                h1 { color: #e11d48; margin-top: 0; }
+                code { background: #f1f5f9; padding: 0.2rem 0.4rem; border-radius: 0.25rem; font-family: monospace; }
+              </style>
+            </head>
+            <body>
+              <div class="card">
+                <h1>Build Missing</h1>
+                <p>The application build was not found at <code>dist/index.html</code>.</p>
+                <p>Please run <code>npm run build</code> on your server to generate the production assets.</p>
+              </div>
+            </body>
+            </html>
+          `);
+        }
+      }
     });
   }
 

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Shield, Heart, Car, Home, Lock, CheckCircle2, Info, Briefcase, ArrowRight, ShieldCheck, Sparkles, ChevronDown, ChevronUp } from 'lucide-react';
-import BlurText from '@/src/components/BlurText';
-import ChromaGrid from '@/src/components/ChromaGrid';
-import { useModal } from '@/src/context/ModalContext';
+import BlurText from '@/components/BlurText';
+import ChromaGrid from '@/components/ChromaGrid';
+import { useModal } from '@/context/ModalContext';
 
 const insuranceTypes = [
   {

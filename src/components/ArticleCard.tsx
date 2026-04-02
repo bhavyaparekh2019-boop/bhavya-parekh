@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Bookmark, Sparkles, RefreshCcw } from 'lucide-react';
-import { Article } from '@/src/constants';
-import { cn } from '@/src/lib/utils';
+import { Article } from '@/constants';
+import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'motion/react';
-import { useSmartImage } from '@/src/lib/hooks';
+import { useSmartImage } from '@/lib/hooks';
 import { Loader2 } from 'lucide-react';
 
 interface ArticleCardProps {
   article: Article;
   featured?: boolean;
+  layout?: 'horizontal' | 'vertical';
   key?: React.Key;
 }
 
@@ -37,28 +38,34 @@ const Tooltip = ({ isHovered, article }: { isHovered: boolean; article: Article 
   </AnimatePresence>
 );
 
-export default function ArticleCard({ article, featured }: ArticleCardProps): React.JSX.Element {
+export default function ArticleCard({ article, featured, layout = 'horizontal' }: ArticleCardProps): React.JSX.Element {
   const [isHovered, setIsHovered] = useState(false);
   const { src, isLoading, refreshImage } = useSmartImage(article.image, article.title, article.category);
   const isAiGenerated = src.startsWith('data:image');
   const isPlaceholder = article.image.includes('picsum.photos') || !article.image;
 
+  const isVertical = layout === 'vertical';
+
   return (
     <article 
       className={cn(
-        "group relative bg-white rounded-[2.5rem] overflow-hidden border border-slate-200 hover:border-primary/50 transition-all duration-500 hover:shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] flex flex-col md:flex-row",
-        featured ? "min-h-[500px]" : "min-h-[400px]"
+        "group relative bg-white rounded-2xl overflow-hidden border border-slate-200 hover:border-primary/50 transition-all duration-500 hover:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.08)] flex flex-col",
+        !isVertical && "md:flex-row",
+        featured ? "min-h-[250px]" : "min-h-[180px]"
       )}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <Tooltip isHovered={isHovered} article={article} />
-      <div className="md:w-1/2 overflow-hidden block relative bg-slate-100">
+      <div className={cn(
+        "overflow-hidden block relative bg-slate-100",
+        isVertical ? "aspect-video w-full" : "md:w-2/5"
+      )}>
         <Link to={`/article/${article.id}`} className="block h-full w-full">
           {isLoading ? (
-            <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 text-primary p-8 text-center">
-              <Loader2 className="w-10 h-10 animate-spin" />
-              <p className="text-xs font-black uppercase tracking-widest">Generating relevant image...</p>
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 text-primary p-6 text-center">
+              <Loader2 className="w-8 h-8 animate-spin" />
+              <p className="text-[10px] font-black uppercase tracking-widest">Generating relevant image...</p>
             </div>
           ) : (
             <>
@@ -69,8 +76,8 @@ export default function ArticleCard({ article, featured }: ArticleCardProps): Re
                 referrerPolicy="no-referrer"
               />
               {isAiGenerated && (
-                <div className="absolute top-4 left-4 bg-white/80 backdrop-blur-md p-1.5 rounded-lg shadow-sm z-10">
-                  <Sparkles className="w-3 h-3 text-primary" />
+                <div className="absolute top-3 left-3 bg-white/80 backdrop-blur-md p-1 rounded-lg shadow-sm z-10">
+                  <Sparkles className="w-2.5 h-2.5 text-primary" />
                 </div>
               )}
             </>
@@ -85,46 +92,49 @@ export default function ArticleCard({ article, featured }: ArticleCardProps): Re
               e.stopPropagation();
               refreshImage();
             }}
-            className="absolute top-4 right-4 z-20 bg-white/20 backdrop-blur-md text-white p-2 rounded-xl hover:bg-white/40 transition-all border border-white/20 opacity-0 group-hover:opacity-100"
+            className="absolute top-3 right-3 z-20 bg-white/20 backdrop-blur-md text-white p-1.5 rounded-xl hover:bg-white/40 transition-all border border-white/20 opacity-0 group-hover:opacity-100"
             title="Regenerate AI Image"
           >
-            <RefreshCcw className="w-3 h-3" />
+            <RefreshCcw className="w-2.5 h-2.5" />
           </button>
         )}
       </div>
-      <div className="p-8 md:p-12 md:w-1/2 flex flex-col justify-center">
-        <div className="flex items-center gap-4 mb-6">
-          <span className="bg-primary/10 text-primary text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-[0.2em]">
-            {article.category}
-          </span>
-          <span className="text-slate-400 text-xs font-bold uppercase tracking-widest">{article.readTime}</span>
-        </div>
+      <div className={cn(
+        "p-3 md:p-4 flex flex-col justify-center",
+        !isVertical && "md:w-3/5"
+      )}>
         <Link to={`/article/${article.id}`}>
           <h3 className={cn(
-            "font-black text-slate-900 leading-[1.1] mb-6 group-hover:text-primary transition-colors tracking-tight",
-            featured ? "text-4xl md:text-5xl" : "text-3xl md:text-4xl"
+            "font-black text-slate-900 leading-[1.1] mb-1 group-hover:text-primary transition-colors tracking-tight",
+            featured ? "text-xl md:text-2xl" : "text-lg md:text-xl"
           )}>
             {article.title}
           </h3>
         </Link>
-        <p className="text-slate-600 mb-10 line-clamp-3 text-lg md:text-xl leading-relaxed font-medium">
+        <div className="flex items-center gap-2 mb-2">
+          <span className="bg-primary/10 text-primary text-[7px] font-black px-1.5 py-0.5 rounded-full uppercase tracking-[0.2em]">
+            {article.category}
+          </span>
+          <span className="text-slate-400 text-[8px] font-bold uppercase tracking-widest">{article.readTime}</span>
+        </div>
+        <p className="text-slate-600 mb-3 line-clamp-2 text-xs md:text-sm leading-relaxed font-medium">
           {article.excerpt}
         </p>
-        <div className="flex items-center justify-between mt-auto pt-8 border-t border-slate-100">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-slate-100 overflow-hidden border-2 border-white shadow-sm">
+        <div className="flex items-center justify-between mt-auto pt-3 border-t border-slate-100">
+          <div className="flex items-center gap-2">
+            <div className="w-6 h-6 rounded-lg bg-slate-100 overflow-hidden border-2 border-white shadow-sm">
               <img src={`https://i.pravatar.cc/150?u=${article.author}`} alt={article.author} className="w-full h-full object-cover" />
             </div>
             <div className="flex flex-col">
-              <span className="text-sm font-black text-slate-900 uppercase tracking-tight">{article.author}</span>
-              <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{article.date}</span>
+              <span className="text-[9px] font-black text-slate-900 uppercase tracking-tight">{article.author}</span>
+              <span className="text-[7px] text-slate-400 font-bold uppercase tracking-widest">{article.date}</span>
             </div>
           </div>
           <Link
             to={`/article/${article.id}`}
-            className="group/btn flex items-center gap-2 text-slate-900 font-black text-sm uppercase tracking-widest hover:text-primary transition-colors"
+            className="group/btn flex items-center gap-1 text-slate-900 font-black text-[9px] uppercase tracking-widest hover:text-primary transition-colors"
           >
-            Read Full <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
+            Read <ArrowRight className="w-3 h-3 group-hover/btn:translate-x-1 transition-transform" />
           </Link>
         </div>
       </div>

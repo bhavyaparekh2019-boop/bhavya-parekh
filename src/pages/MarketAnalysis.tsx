@@ -4,9 +4,9 @@ import { Link } from 'react-router-dom';
 import { TrendingUp, BarChart2, Info, Loader2, RefreshCw, ArrowUpRight, ArrowDownRight, Globe, Zap, ArrowRight, Shield, Sparkles } from 'lucide-react';
 import { GoogleGenAI, Type } from "@google/genai";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
-import BlurText from '@/src/components/BlurText';
-import { cn } from '@/src/lib/utils';
-import { useModal } from '@/src/context/ModalContext';
+import BlurText from '@/components/BlurText';
+import { cn } from '@/lib/utils';
+import { useModal } from '@/context/ModalContext';
 
 interface MarketData {
   indices: {
@@ -77,7 +77,22 @@ export default function MarketAnalysis() {
   const [marketData, setMarketData] = useState<MarketData | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchMarketAnalysis = async () => {
+  const fetchMarketAnalysis = async (forceRefresh = false) => {
+    const CACHE_KEY = 'bhp_market_analysis_cache';
+    const CACHE_DURATION = 10 * 60 * 1000; // 10 minutes
+
+    if (!forceRefresh) {
+      const cached = localStorage.getItem(CACHE_KEY);
+      if (cached) {
+        const { data, timestamp } = JSON.parse(cached);
+        if (Date.now() - timestamp < CACHE_DURATION) {
+          setMarketData(data);
+          setLoading(false);
+          return;
+        }
+      }
+    }
+
     setLoading(true);
     setError(null);
     try {
@@ -96,17 +111,19 @@ export default function MarketAnalysis() {
       const ai = new GoogleGenAI({ apiKey });
       const response = await ai.models.generateContent({
         model: "gemini-3-flash-preview",
-        contents: [{ role: 'user', parts: [{ text: `Provide a real-time market analysis for the Indian stock market (Nifty 50, Sensex) as of ${new Date().toLocaleString()}. 
-        Include current index values, a structured expert commentary on market sentiment, a sentiment score (0-100, where 0 is extreme fear and 100 is extreme greed), and 10 realistic data points for a chart visualization representing the last 24 hours of Nifty 50. 
-        Also list 3 top gainers and 3 top losers in the Indian market today.
+        contents: [{ role: 'user', parts: [{ text: `Provide a comprehensive real-time market analysis for the Indian stock market (Nifty 50, Sensex, Bank Nifty) as of ${new Date().toLocaleString()}. 
         
-        The commentary MUST be structured into:
-        1. Overview: A high-level summary of the current market state.
-        2. Key Drivers: 3-4 bullet points on what's moving the market.
-        3. Risks: 2-3 bullet points on potential headwinds.
-        4. Outlook: A forward-looking statement on expected trends.
+        Focus on:
+        - Current index values and daily changes.
+        - Detailed expert commentary on Indian market sentiment (Bullish/Bearish/Neutral).
+        - A sentiment score (0-100, where 0 is extreme fear and 100 is extreme greed).
+        - 10 realistic data points for a chart visualization representing the last 24 hours of Nifty 50. 
+        - Top 3 gainers and top 3 losers in the NSE/BSE today with their LTP and % change.
+        - Key drivers moving the Indian markets (e.g., FII/DII activity, global cues, sector-specific news).
+        - Potential risks and headwinds for Indian investors.
+        - Short-term and medium-term strategic outlook.
 
-        Ensure the response is a valid JSON object matching the requested schema.` }] }],
+        Format your response as a valid JSON object matching the requested schema.` }] }],
         config: {
           tools: [{ googleSearch: {} }],
           responseMimeType: "application/json",
@@ -185,6 +202,12 @@ export default function MarketAnalysis() {
 
       const data = JSON.parse(response.text);
       setMarketData(data);
+      
+      // Cache the successful response
+      localStorage.setItem(CACHE_KEY, JSON.stringify({
+        data,
+        timestamp: Date.now()
+      }));
     } catch (err: any) {
       console.error('Market Analysis Error:', err);
       // Fallback to mock data on error but show a warning
@@ -223,7 +246,7 @@ export default function MarketAnalysis() {
             </div>
             <div className="flex items-center gap-4">
               <button 
-                onClick={fetchMarketAnalysis}
+                onClick={() => fetchMarketAnalysis(true)}
                 disabled={loading}
                 className="flex items-center gap-2 bg-primary text-slate-900 px-6 py-3 rounded-2xl font-bold text-sm hover:brightness-110 transition-all disabled:opacity-50 shadow-lg shadow-primary/20"
               >
@@ -259,7 +282,7 @@ export default function MarketAnalysis() {
             <h3 className="text-xl font-bold text-rose-900 mb-2">Market Data Unavailable</h3>
             <p className="text-rose-700 mb-6">{error}</p>
             <button 
-              onClick={fetchMarketAnalysis}
+              onClick={() => fetchMarketAnalysis(true)}
               className="bg-rose-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-rose-700 transition-all"
             >
               Retry Connection

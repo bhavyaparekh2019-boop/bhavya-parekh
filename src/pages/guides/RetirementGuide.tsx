@@ -1,9 +1,9 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { PiggyBank, Target, Clock, ShieldCheck, Wallet, ArrowRight, CheckCircle2, AlertCircle, Landmark, Shield, Briefcase, Info, ChevronDown, ChevronUp, Sparkles } from 'lucide-react';
-import BlurText from '@/src/components/BlurText';
-import ChromaGrid from '@/src/components/ChromaGrid';
-import { useModal } from '@/src/context/ModalContext';
+import BlurText from '@/components/BlurText';
+import ChromaGrid from '@/components/ChromaGrid';
+import { useModal } from '@/context/ModalContext';
 import { AnimatePresence } from 'motion/react';
 
 const retirementSchemes = [

@@ -2,14 +2,13 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, ChevronLeft, ChevronRight, Info, Loader2, TrendingUp, Shield, Sparkles, BarChart2, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ARTICLES, CATEGORIES } from '@/src/constants';
+import { ARTICLES, CATEGORIES } from '@/constants';
 import Fuse from 'fuse.js';
-import ArticleCard from '@/src/components/ArticleCard';
-import Sidebar from '@/src/components/Sidebar';
-import ChromaGrid from '@/src/components/ChromaGrid';
-import { cn } from '@/src/lib/utils';
-import { GoogleGenAI } from "@google/genai";
-import BlurText from '@/src/components/BlurText';
+import Sidebar from '@/components/Sidebar';
+import ChromaGrid from '@/components/ChromaGrid';
+import { cn } from '@/lib/utils';
+import { GoogleGenAI, Type } from "@google/genai";
+import BlurText from '@/components/BlurText';
 
 const KNOWLEDGE_CENTER_ITEMS = [
   {
@@ -74,15 +73,6 @@ const KNOWLEDGE_CENTER_ITEMS = [
     url: '/market-analysis',
     borderColor: '#19d4e6',
     gradient: 'linear-gradient(145deg, #19d4e6, #000)'
-  },
-  {
-    title: 'Blogs & Insights',
-    icon: Sparkles,
-    image: 'https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&q=80&w=800&h=600',
-    description: 'Deep dives into the latest financial trends and personal stories.',
-    url: '#',
-    borderColor: '#A855F7',
-    gradient: 'linear-gradient(145deg, #A855F7, #000)'
   }
 ];
 
@@ -158,8 +148,6 @@ export default function Home() {
   } | null>(null);
   const [showFullAiResponse, setShowFullAiResponse] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const ARTICLES_PER_PAGE = 6;
 
   const filteredArticles = useMemo(() => {
     let results = ARTICLES;
@@ -179,30 +167,9 @@ export default function Home() {
     });
   }, [searchQuery, activeCategory]);
 
-  // Reset to first page when search or category changes
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchQuery, activeCategory]);
-
-  const featuredArticle = useMemo(() => filteredArticles.find((a) => a.featured), [filteredArticles]);
-  
-  const totalPages = Math.ceil(filteredArticles.length / ARTICLES_PER_PAGE);
-  
-  const paginatedArticles = useMemo(() => {
-    const start = (currentPage - 1) * ARTICLES_PER_PAGE;
-    return filteredArticles.slice(start, start + ARTICLES_PER_PAGE);
-  }, [filteredArticles, currentPage]);
-
-  const displayFeatured = useMemo(() => {
-    return currentPage === 1 && paginatedArticles.some(a => a.id === featuredArticle?.id);
-  }, [currentPage, paginatedArticles, featuredArticle]);
-
   const gridArticles = useMemo(() => {
-    if (displayFeatured) {
-      return paginatedArticles.filter(a => a.id !== featuredArticle?.id);
-    }
-    return paginatedArticles;
-  }, [displayFeatured, paginatedArticles, featuredArticle]);
+    return filteredArticles;
+  }, [filteredArticles]);
 
   const handleSmartSearch = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -256,10 +223,10 @@ export default function Home() {
           tools: [{ googleSearch: {} }],
           responseMimeType: "application/json",
           responseSchema: {
-            type: "OBJECT",
+            type: Type.OBJECT,
             properties: {
-              concise: { type: "STRING", description: "A one-sentence, direct, and perfect answer to the query." },
-              full: { type: "STRING", description: "A detailed explanation with context, data, and trends for 2026." }
+              concise: { type: Type.STRING, description: "A one-sentence, direct, and perfect answer to the query." },
+              full: { type: Type.STRING, description: "A detailed explanation with context, data, and trends for 2026." }
             },
             required: ["concise", "full"]
           }
@@ -749,7 +716,7 @@ export default function Home() {
       </section>
 
       {/* Knowledge Center Section */}
-      <section className="bg-slate-50 py-16 border-b border-slate-200">
+      <section className="bg-slate-50 py-12 border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-4">
             <div>
@@ -791,26 +758,19 @@ export default function Home() {
       </div>
 
       {/* Main Content Grid */}
-      <div className="max-w-7xl mx-auto px-4 py-16 lg:py-24 grid grid-cols-1 lg:grid-cols-12 gap-16">
-        <div className="lg:col-span-8 space-y-20">
-          {paginatedArticles.length > 0 ? (
-            <>
-              {/* Featured Article */}
-              {displayFeatured && featuredArticle && (
-                <section>
-                  <div className="flex items-center gap-4 mb-8">
-                    <div className="h-px flex-1 bg-slate-200" />
-                    <h2 className="text-xs font-black uppercase tracking-[0.2em] text-primary">
-                      {searchQuery ? 'Search Result' : 'Latest Market Update'}
-                    </h2>
-                    <div className="h-px flex-1 bg-slate-200" />
-                  </div>
-                  <ArticleCard article={featuredArticle} featured />
-                </section>
-              )}
-
-              {/* Insights Grid */}
-              <section className="space-y-12">
+      <div className="max-w-7xl mx-auto px-4 py-12 lg:py-16 grid grid-cols-1 lg:grid-cols-12 gap-16">
+        <div className="lg:col-span-8 space-y-12">
+          {filteredArticles.length > 0 ? (
+            <section className="space-y-12">
+              <div className="flex items-center gap-4 mb-8">
+                <div className="h-px flex-1 bg-slate-200" />
+                <h2 className="text-xs font-black uppercase tracking-[0.2em] text-primary">
+                  {searchQuery ? 'Search Results' : 'Latest Financial Articles'}
+                </h2>
+                <div className="h-px flex-1 bg-slate-200" />
+              </div>
+              
+              <div className="max-w-2xl mx-auto">
                 <ChromaGrid 
                   cols="grid-cols-1"
                   radius={300}
@@ -826,12 +786,14 @@ export default function Home() {
                     author: article.author,
                     date: article.date,
                     url: `/article/${article.id}`,
-                    borderColor: '#3B82F6',
-                    gradient: 'linear-gradient(145deg, #3B82F6, #000)'
+                    borderColor: article.featured ? '#A855F7' : '#3B82F6',
+                    gradient: article.featured 
+                      ? 'linear-gradient(145deg, #A855F7, #000)' 
+                      : 'linear-gradient(145deg, #3B82F6, #000)'
                   }))}
                 />
-              </section>
-            </>
+              </div>
+            </section>
           ) : (
             <div className="text-center py-20 bg-slate-50 rounded-3xl border border-dashed border-slate-200">
               <Search className="w-12 h-12 text-slate-300 mx-auto mb-4" />
@@ -846,64 +808,7 @@ export default function Home() {
             </div>
           )}
 
-          {/* Pagination */}
-          {totalPages > 1 && (
-            <div className="flex justify-center pt-10">
-              <nav className="flex items-center gap-3">
-                <button 
-                  onClick={() => {
-                    setCurrentPage(prev => Math.max(1, prev - 1));
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                  }}
-                  disabled={currentPage === 1}
-                  className="w-12 h-12 rounded-xl flex items-center justify-center border border-slate-200 hover:bg-slate-50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-                >
-                  <ChevronLeft className="w-5 h-5" />
-                </button>
-                
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => {
-                  const isVisible = n === 1 || n === totalPages || (n >= currentPage - 1 && n <= currentPage + 1);
-                  
-                  if (isVisible) {
-                    return (
-                      <button
-                        key={n}
-                        onClick={() => {
-                          setCurrentPage(n);
-                          window.scrollTo({ top: 0, behavior: 'smooth' });
-                        }}
-                        className={cn(
-                          'w-12 h-12 rounded-xl flex items-center justify-center font-bold transition-all',
-                          n === currentPage 
-                            ? 'bg-primary text-slate-900 shadow-lg shadow-primary/20' 
-                            : 'border border-slate-200 hover:bg-slate-50'
-                        )}
-                      >
-                        {n}
-                      </button>
-                    );
-                  }
-                  
-                  if (n === currentPage - 2 || n === currentPage + 2) {
-                    return <span key={n} className="px-2 text-slate-400 font-bold">...</span>;
-                  }
-                  
-                  return null;
-                })}
-
-                <button 
-                  onClick={() => {
-                    setCurrentPage(prev => Math.min(totalPages, prev + 1));
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                  }}
-                  disabled={currentPage === totalPages}
-                  className="w-12 h-12 rounded-xl flex items-center justify-center border border-slate-200 hover:bg-slate-50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-                >
-                  <ChevronRight className="w-5 h-5" />
-                </button>
-              </nav>
-            </div>
-          )}
+          {/* Pagination removed as per user request for single list */}
         </div>
 
         {/* Sidebar */}

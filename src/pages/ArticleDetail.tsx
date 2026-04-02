@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Clock, Calendar, User, Share2, Bookmark, MessageSquare, Sparkles, Loader2, Info, ChevronDown, ChevronUp, RefreshCcw } from 'lucide-react';
-import { ARTICLES } from '@/src/constants';
-import Sidebar from '@/src/components/Sidebar';
-import BlurText from '@/src/components/BlurText';
-import { cn } from '@/src/lib/utils';
+import { ARTICLES } from '@/constants';
+import Sidebar from '@/components/Sidebar';
+import BlurText from '@/components/BlurText';
+import { cn } from '@/lib/utils';
 import { GoogleGenAI } from "@google/genai";
 import { motion, AnimatePresence } from 'motion/react';
-import { useSmartImage } from '@/src/lib/hooks';
+import { useSmartImage } from '@/lib/hooks';
 import Markdown from 'react-markdown';
 
 export default function ArticleDetail() {
@@ -202,7 +202,7 @@ export default function ArticleDetail() {
               to="/"
               className="inline-flex items-center gap-2 text-white hover:text-white/80 transition-colors mb-6 font-medium"
             >
-              <ArrowLeft className="w-4 h-4" /> Back to Insights
+              <ArrowLeft className="w-4 h-4" /> Back to Home
             </Link>
             <span className="inline-block bg-white text-primary text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded mb-4">
               {article.category}

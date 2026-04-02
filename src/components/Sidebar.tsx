@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import { Calculator, Download, Mail, Home, PiggyBank, TrendingUp, ChevronRight, Sparkles, Loader2, RefreshCcw, Shield, ArrowRight, Coins } from 'lucide-react';
 import { GoogleGenAI } from "@google/genai";
 import { motion, AnimatePresence } from 'motion/react';
-import { cn } from '@/src/lib/utils';
-import { useModal } from '@/src/context/ModalContext';
+import { cn } from '@/lib/utils';
+import { useModal } from '@/context/ModalContext';
 
 export default function Sidebar() {
   const { openConsultationModal } = useModal();
@@ -47,14 +47,21 @@ export default function Sidebar() {
       });
 
       if (response.ok) {
-        const data = await response.json();
-        setSubscribeStatus('success');
-        setSubscribeNote(data.note || null);
-        setEmail('');
-        setTimeout(() => {
-          setSubscribeStatus('idle');
-          setSubscribeNote(null);
-        }, 8000);
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.includes("application/json")) {
+          const data = await response.json();
+          setSubscribeStatus('success');
+          setSubscribeNote(data.note || null);
+          setEmail('');
+          setTimeout(() => {
+            setSubscribeStatus('idle');
+            setSubscribeNote(null);
+          }, 8000);
+        } else {
+          const text = await response.text();
+          console.error('Non-JSON response from /api/subscribe:', text.substring(0, 100));
+          setSubscribeStatus('error');
+        }
       } else {
         setSubscribeStatus('error');
       }
