@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
+import { Link } from 'react-router-dom';
 import { FileText, Calculator, Landmark, Shield, Briefcase, ArrowRight, CheckCircle2, Info, Home } from 'lucide-react';
 import BlurText from '@/components/BlurText';
 import ChromaGrid from '@/components/ChromaGrid';
@@ -454,9 +455,12 @@ export default function TaxGuide() {
               <p className="text-sm text-sky-700 mb-6 leading-relaxed">
                 Equity Linked Savings Schemes (ELSS) offer the shortest lock-in period (3 years) among all 80C options and the potential for high equity returns.
               </p>
-              <button className="w-full bg-sky-600 text-white font-bold py-4 rounded-2xl text-sm hover:bg-sky-700 transition-all flex items-center justify-center gap-2">
+              <Link 
+                to="/guides/mutual-funds?category=ELSS"
+                className="w-full bg-sky-600 text-white font-bold py-4 rounded-2xl text-sm hover:bg-sky-700 transition-all flex items-center justify-center gap-2"
+              >
                 View ELSS Funds <ArrowRight className="w-4 h-4" />
-              </button>
+              </Link>
             </div>
 
             <div className="bg-white p-8 rounded-[2rem] border border-slate-200">

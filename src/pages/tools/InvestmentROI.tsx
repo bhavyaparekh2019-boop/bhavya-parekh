@@ -4,6 +4,7 @@ import { ArrowLeft, TrendingUp, Info, BarChart3, DollarSign, PieChart as PieChar
 import { motion } from 'motion/react';
 import BlurText from '@/components/BlurText';
 import { GoogleGenAI } from "@google/genai";
+import { getGeminiClient, getApiKey } from '@/lib/gemini';
 import { cn } from '@/lib/utils';
 import {
   AreaChart,
@@ -66,7 +67,13 @@ export default function InvestmentROI() {
   const fetchMarketContext = async () => {
     setIsLoadingContext(true);
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+      const apiKey = getApiKey();
+      if (!apiKey || apiKey === '') {
+        setMarketContext('Please configure your Gemini API key in settings to get real-time market data.');
+        setIsLoadingContext(false);
+        return;
+      }
+      const ai = getGeminiClient();
       const response = await ai.models.generateContent({
         model: "gemini-3-flash-preview",
         contents: "What are the current Nifty 50 year-to-date returns and what is the consensus forecast for the Indian stock market for the remainder of 2024?",
@@ -77,7 +84,7 @@ export default function InvestmentROI() {
       setMarketContext(response.text || 'Unable to fetch current market data.');
     } catch (error) {
       console.error('Error fetching market context:', error);
-      setMarketContext('Error loading market data. Please try again later.');
+      setMarketContext('Market data is currently unavailable. Please try again later.');
     } finally {
       setIsLoadingContext(false);
     }

@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Search, Menu, X, User, ChevronDown, Loader2, Info, ArrowRight, Globe, Sparkles, Sun, Moon, BookOpen, Filter, Calendar, TrendingUp, TrendingDown, Activity, Shield, Zap } from 'lucide-react';
+import { Search, Menu, X, User, ChevronDown, Loader2, Info, ArrowRight, Globe, Sparkles, Sun, Moon, BookOpen, Filter, Calendar, TrendingUp, TrendingDown, Activity, Shield, Zap, Settings } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '@/lib/utils';
 import { useModal } from '@/context/ModalContext';
 import { GoogleGenAI, Type } from "@google/genai";
+import { getGeminiClient, getApiKey } from '@/lib/gemini';
 import { ARTICLES, Article, GUIDES, Guide } from '@/constants';
 import Fuse from 'fuse.js';
 
 import Logo from './Logo';
+import SettingsModal from './SettingsModal';
 
 import { auth, onAuthStateChanged } from '../lib/firebase';
 
@@ -22,6 +24,7 @@ export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);
   
@@ -161,11 +164,11 @@ export default function Navbar() {
     const localGuides = guideFuse.search(query).map(r => r.item).slice(0, 2);
 
     try {
-      const apiKey = process.env.GEMINI_API_KEY;
-      if (!apiKey || apiKey === 'MY_GEMINI_API_KEY' || apiKey === 'undefined' || apiKey === '') {
+      const apiKey = getApiKey();
+      if (!apiKey || apiKey === 'undefined' || apiKey === '') {
         throw new Error('API key not valid');
       }
-      const ai = new GoogleGenAI({ apiKey });
+      const ai = getGeminiClient();
       const response = await ai.models.generateContent({
         model: "gemini-3-flash-preview",
         contents: `The user is asking: "${query}". 
@@ -222,11 +225,11 @@ export default function Navbar() {
       let full = "Please try again in a moment. I'm having trouble connecting to my financial intelligence engine.";
       
       if (error.message?.includes('quota') || error.message?.includes('429')) {
-        concise = "Free usage limit reached.";
-        full = "I've reached my free usage limit for the moment. Please try again in a few minutes or check your plan for higher limits.";
+        concise = "Service temporarily at capacity.";
+        full = "I've reached my usage limit for the moment. Please try again in a few minutes.";
       } else if (error.message?.includes('API key not valid')) {
-        concise = "AI configuration error.";
-        full = "The Gemini API key is invalid or missing. Please check your environment configuration in the settings menu.";
+        concise = "Service temporarily unavailable.";
+        full = "I'm currently unable to provide real-time AI insights. Please try again later or browse our financial guides for general information.";
       }
       
       setAiResponse({ concise, full, relevantArticles: localResults, relevantGuides: localGuides });
@@ -307,6 +310,13 @@ export default function Navbar() {
           </nav>
 
           <div className="flex items-center gap-6">
+            <button 
+              onClick={() => setIsSettingsOpen(true)}
+              className="p-2 text-slate-500 hover:text-primary transition-colors"
+              title="System Settings"
+            >
+              <Settings className="w-5 h-5" />
+            </button>
             <button 
               onClick={() => setIsSearchOpen(true)}
               className="p-2 text-slate-500 hover:text-primary transition-colors"
@@ -883,6 +893,11 @@ export default function Navbar() {
           </button>
         </div>
       )}
+      {/* Settings Modal */}
+      <SettingsModal 
+        isOpen={isSettingsOpen} 
+        onClose={() => setIsSettingsOpen(false)} 
+      />
     </header>
   );
 }

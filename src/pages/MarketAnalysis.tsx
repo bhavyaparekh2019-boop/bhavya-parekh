@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'motion/react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { Link } from 'react-router-dom';
-import { TrendingUp, BarChart2, Info, Loader2, RefreshCw, ArrowUpRight, ArrowDownRight, Globe, Zap, ArrowRight, Shield, Sparkles } from 'lucide-react';
+import { TrendingUp, TrendingDown, BarChart2, Info, Loader2, RefreshCw, ArrowUpRight, ArrowDownRight, Globe, Zap, ArrowRight, Shield, Sparkles, Check, ChevronDown, ChevronUp, Settings } from 'lucide-react';
 import { GoogleGenAI, Type } from "@google/genai";
+import { getGeminiClient, getApiKey } from '@/lib/gemini';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
 import BlurText from '@/components/BlurText';
+import StockTicker from '@/components/StockTicker';
 import { cn } from '@/lib/utils';
 import { useModal } from '@/context/ModalContext';
 
@@ -16,15 +18,34 @@ interface MarketData {
     isPositive: boolean;
   }[];
   commentary: {
-    overview: string;
+    dailySummary: string;
+    sentimentSummary: string;
     keyDrivers: string[];
     risks: string[];
     outlook: string;
+    trendingTopics: { title: string; url: string }[];
   };
   chartData: { time: string; value: number }[];
   topGainers: { name: string; price: string; change: string }[];
   topLosers: { name: string; price: string; change: string }[];
+  marketBreadth: {
+    advances: number;
+    declines: number;
+    unchanged: number;
+    ratio: string;
+  };
+  keyStocks: {
+    name: string;
+    price: string;
+    change: string;
+    isPositive: boolean;
+    sentiment: 'Bullish' | 'Bearish' | 'Neutral';
+    volume: string;
+    peRatio: string;
+    analystRating: string;
+  }[];
   sentimentScore: number;
+  sentimentTrend: 'Rising' | 'Falling' | 'Stable';
   lastUpdated: string;
 }
 
@@ -36,7 +57,8 @@ const MOCK_MARKET_DATA: MarketData = {
     { name: 'Nifty IT', value: '38,120.15', change: '+2.10%', isPositive: true },
   ],
   commentary: {
-    overview: "The Indian market is showing strong resilience with the Nifty 50 holding above the 24,000 mark. Positive global cues and robust domestic institutional buying are supporting the uptrend.",
+    dailySummary: "The Indian market is showing strong resilience with the Nifty 50 holding above the 24,000 mark. Positive global cues and robust domestic institutional buying are supporting the uptrend. Large-cap sectors like IT and Banking are leading the charge, while mid-caps show selective buying interest.",
+    sentimentSummary: "Overall market sentiment is cautiously optimistic. While domestic factors remain strong, investors are keeping a close eye on global macro indicators and geopolitical developments.",
     keyDrivers: [
       "Strong Q3 corporate earnings across major sectors.",
       "Increased FII inflows following positive global economic data.",
@@ -47,7 +69,14 @@ const MOCK_MARKET_DATA: MarketData = {
       "Fluctuating crude oil prices impacting trade balance.",
       "Geopolitical tensions in the Middle East."
     ],
-    outlook: "The short-term outlook remains positive with Nifty likely to test 24,500 levels. Investors are advised to maintain a diversified portfolio with a focus on large-cap stocks."
+    outlook: "The short-term outlook remains positive with Nifty likely to test 24,500 levels. Investors are advised to maintain a diversified portfolio with a focus on large-cap stocks.",
+    trendingTopics: [
+      { title: "Budget 2026 Expectations", url: "https://www.moneycontrol.com" },
+      { title: "AI in Fintech", url: "https://www.economictimes.com" },
+      { title: "Green Energy Stocks", url: "https://www.livemint.com" },
+      { title: "RBI Monetary Policy", url: "https://www.rbi.org.in" },
+      { title: "Global Tech Rally", url: "https://www.reuters.com" }
+    ]
   },
   chartData: [
     { time: '09:15', value: 24150 },
@@ -67,7 +96,21 @@ const MOCK_MARKET_DATA: MarketData = {
     { name: 'Axis Bank', price: '₹1,080.00', change: '-0.85%' },
     { name: 'Wipro', price: '₹480.15', change: '-0.50%' },
   ],
+  marketBreadth: {
+    advances: 1240,
+    declines: 850,
+    unchanged: 110,
+    ratio: '1.46'
+  },
+  keyStocks: [
+    { name: 'Reliance', price: '₹2,950.00', change: '+2.45%', isPositive: true, sentiment: 'Bullish', volume: '4.2M', peRatio: '28.5', analystRating: 'Strong Buy' },
+    { name: 'HDFC Bank', price: '₹1,680.50', change: '+1.80%', isPositive: true, sentiment: 'Bullish', volume: '12.1M', peRatio: '18.2', analystRating: 'Buy' },
+    { name: 'TCS', price: '₹4,120.30', change: '+1.11%', isPositive: true, sentiment: 'Neutral', volume: '2.8M', peRatio: '31.4', analystRating: 'Hold' },
+    { name: 'ICICI Bank', price: '₹1,050.20', change: '-0.45%', isPositive: false, sentiment: 'Neutral', volume: '8.5M', peRatio: '17.8', analystRating: 'Buy' },
+    { name: 'Infosys', price: '₹1,540.20', change: '+3.15%', isPositive: true, sentiment: 'Bullish', volume: '6.4M', peRatio: '24.6', analystRating: 'Buy' },
+  ],
   sentimentScore: 75,
+  sentimentTrend: 'Rising',
   lastUpdated: new Date().toLocaleTimeString(),
 };
 
@@ -76,10 +119,54 @@ export default function MarketAnalysis() {
   const [loading, setLoading] = useState(true);
   const [marketData, setMarketData] = useState<MarketData | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [selectedStocks, setSelectedStocks] = useState<string[]>([]);
+  const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' } | null>(null);
+
+  const toggleStockSelection = (stockName: string) => {
+    setSelectedStocks(prev => 
+      prev.includes(stockName) 
+        ? prev.filter(name => name !== stockName) 
+        : [...prev, stockName]
+    );
+  };
+
+  const handleSort = (key: string) => {
+    let direction: 'asc' | 'desc' = 'asc';
+    if (sortConfig && sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const sortedComparisonData = useMemo(() => {
+    if (!marketData) return [];
+    
+    const selectedData = marketData.keyStocks.filter(stock => selectedStocks.includes(stock.name));
+    
+    if (!sortConfig) return selectedData;
+
+    return [...selectedData].sort((a: any, b: any) => {
+      let aValue = a[sortConfig.key];
+      let bValue = b[sortConfig.key];
+
+      // Handle numeric strings like "₹2,950.00" or "28.5"
+      if (sortConfig.key === 'price' || sortConfig.key === 'peRatio' || sortConfig.key === 'volume') {
+        aValue = parseFloat(aValue.replace(/[₹,M]/g, ''));
+        bValue = parseFloat(bValue.replace(/[₹,M]/g, ''));
+      } else if (sortConfig.key === 'change') {
+        aValue = parseFloat(aValue.replace(/[+%]/g, ''));
+        bValue = parseFloat(bValue.replace(/[+%]/g, ''));
+      }
+
+      if (aValue < bValue) return sortConfig.direction === 'asc' ? -1 : 1;
+      if (aValue > bValue) return sortConfig.direction === 'asc' ? 1 : -1;
+      return 0;
+    });
+  }, [marketData, selectedStocks, sortConfig]);
 
   const fetchMarketAnalysis = async (forceRefresh = false) => {
     const CACHE_KEY = 'bhp_market_analysis_cache';
-    const CACHE_DURATION = 10 * 60 * 1000; // 10 minutes
+    const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
     if (!forceRefresh) {
       const cached = localStorage.getItem(CACHE_KEY);
@@ -96,11 +183,10 @@ export default function MarketAnalysis() {
     setLoading(true);
     setError(null);
     try {
-      const apiKey = process.env.GEMINI_API_KEY;
+      const apiKey = getApiKey();
       
-      // If API key is missing or placeholder, use mock data
-      if (!apiKey || apiKey === 'MY_GEMINI_API_KEY' || apiKey === 'undefined' || apiKey === '') {
-        console.warn('Gemini API key is missing. Falling back to mock market data.');
+      // If API key is missing, use mock data
+      if (!apiKey || apiKey === '') {
         setTimeout(() => {
           setMarketData(MOCK_MARKET_DATA);
           setLoading(false);
@@ -108,20 +194,27 @@ export default function MarketAnalysis() {
         return;
       }
 
-      const ai = new GoogleGenAI({ apiKey });
+      const ai = getGeminiClient();
       const response = await ai.models.generateContent({
         model: "gemini-3-flash-preview",
-        contents: [{ role: 'user', parts: [{ text: `Provide a comprehensive real-time market analysis for the Indian stock market (Nifty 50, Sensex, Bank Nifty) as of ${new Date().toLocaleString()}. 
+        contents: [{ role: 'user', parts: [{ text: `Provide a comprehensive, real-time market analysis for the Indian stock market (Nifty 50, Sensex, Bank Nifty) as of ${new Date().toLocaleString()}. 
+        
+        CRITICAL: Use Google Search to get the ABSOLUTE LATEST index values, top gainers, top losers, and market breadth (Advance/Decline ratio) from NSE/BSE for today.
         
         Focus on:
-        - Current index values and daily changes.
-        - Detailed expert commentary on Indian market sentiment (Bullish/Bearish/Neutral).
-        - A sentiment score (0-100, where 0 is extreme fear and 100 is extreme greed).
+        - Current index values and daily percentage changes.
+        - A detailed "Daily Summary" of the market's performance and narrative.
+        - A "Sentiment Summary" explaining the current mood of the market (Bullish/Bearish/Neutral) and why.
+        - A sentiment score (0-100, where 0 is extreme fear and 100 is extreme greed). This score MUST be derived specifically from the analysis of the daily summary, key drivers, and market breadth.
+        - A sentiment trend indicator (Rising/Falling/Stable) based on the comparison of today's drivers vs recent market action.
         - 10 realistic data points for a chart visualization representing the last 24 hours of Nifty 50. 
         - Top 3 gainers and top 3 losers in the NSE/BSE today with their LTP and % change.
-        - Key drivers moving the Indian markets (e.g., FII/DII activity, global cues, sector-specific news).
+        - Market Breadth data: Number of advances, declines, and unchanged stocks on NSE today.
+        - A watchlist of 5 key blue-chip stocks (Reliance, HDFC Bank, TCS, ICICI Bank, Infosys) with their current price, change, a quick AI sentiment tag (Bullish/Bearish/Neutral), daily volume, P/E ratio, and current analyst consensus rating (e.g., Strong Buy, Buy, Hold).
+        - Key drivers moving the Indian markets right now.
         - Potential risks and headwinds for Indian investors.
-        - Short-term and medium-term strategic outlook.
+        - Exactly 5 "Trending Topics" or buzzwords in the Indian financial space today. For each topic, provide a short title and a relevant URL to a news article or official source from today.
+        - A very concise 2-sentence strategic outlook.
 
         Format your response as a valid JSON object matching the requested schema.` }] }],
         config: {
@@ -146,12 +239,24 @@ export default function MarketAnalysis() {
               commentary: {
                 type: Type.OBJECT,
                 properties: {
-                  overview: { type: Type.STRING },
+                  dailySummary: { type: Type.STRING },
+                  sentimentSummary: { type: Type.STRING },
                   keyDrivers: { type: Type.ARRAY, items: { type: Type.STRING } },
                   risks: { type: Type.ARRAY, items: { type: Type.STRING } },
-                  outlook: { type: Type.STRING }
+                  outlook: { type: Type.STRING },
+                  trendingTopics: { 
+                    type: Type.ARRAY, 
+                    items: { 
+                      type: Type.OBJECT,
+                      properties: {
+                        title: { type: Type.STRING },
+                        url: { type: Type.STRING }
+                      },
+                      required: ["title", "url"]
+                    } 
+                  }
                 },
-                required: ["overview", "keyDrivers", "risks", "outlook"]
+                required: ["dailySummary", "sentimentSummary", "keyDrivers", "risks", "outlook", "trendingTopics"]
               },
               chartData: {
                 type: Type.ARRAY,
@@ -188,10 +293,38 @@ export default function MarketAnalysis() {
                   required: ["name", "price", "change"]
                 }
               },
+              marketBreadth: {
+                type: Type.OBJECT,
+                properties: {
+                  advances: { type: Type.NUMBER },
+                  declines: { type: Type.NUMBER },
+                  unchanged: { type: Type.NUMBER },
+                  ratio: { type: Type.STRING }
+                },
+                required: ["advances", "declines", "unchanged", "ratio"]
+              },
+              keyStocks: {
+                type: Type.ARRAY,
+                items: {
+                  type: Type.OBJECT,
+                  properties: {
+                    name: { type: Type.STRING },
+                    price: { type: Type.STRING },
+                    change: { type: Type.STRING },
+                    isPositive: { type: Type.BOOLEAN },
+                    sentiment: { type: Type.STRING },
+                    volume: { type: Type.STRING },
+                    peRatio: { type: Type.STRING },
+                    analystRating: { type: Type.STRING }
+                  },
+                  required: ["name", "price", "change", "isPositive", "sentiment", "volume", "peRatio", "analystRating"]
+                }
+              },
               sentimentScore: { type: Type.NUMBER },
+              sentimentTrend: { type: Type.STRING },
               lastUpdated: { type: Type.STRING }
             },
-            required: ["indices", "commentary", "chartData", "topGainers", "topLosers", "sentimentScore", "lastUpdated"]
+            required: ["indices", "commentary", "chartData", "topGainers", "topLosers", "marketBreadth", "keyStocks", "sentimentScore", "sentimentTrend", "lastUpdated"]
           }
         },
       });
@@ -214,9 +347,9 @@ export default function MarketAnalysis() {
       setMarketData(MOCK_MARKET_DATA);
       
       if (err.message?.includes('quota') || err.message?.includes('429')) {
-        setError('Note: AI usage limit reached. Showing simulated market data for now.');
+        setError('Note: Market analysis service is currently at capacity. Showing simulated data.');
       } else {
-        setError('Note: Showing simulated data as real-time connection failed.');
+        setError('Note: Real-time market connection is currently unavailable. Showing simulated data.');
       }
     } finally {
       setLoading(false);
@@ -225,12 +358,24 @@ export default function MarketAnalysis() {
 
   useEffect(() => {
     fetchMarketAnalysis();
+
+    // Auto-refresh every 5 minutes
+    const interval = setInterval(() => {
+      fetchMarketAnalysis(true);
+    }, 5 * 60 * 1000);
+
+    return () => clearInterval(interval);
   }, []);
 
   return (
     <div className="bg-slate-50 min-h-screen pb-20">
+      {/* Stock Ticker */}
+      <div className="pt-16">
+        <StockTicker />
+      </div>
+
       {/* Hero Section */}
-      <section className="bg-white border-b border-slate-200 pt-24 pb-16 overflow-hidden">
+      <section className="bg-white border-b border-slate-200 pt-8 pb-16 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
             <div className="max-w-2xl">
@@ -245,13 +390,17 @@ export default function MarketAnalysis() {
               </p>
             </div>
             <div className="flex items-center gap-4">
+              <div className="hidden sm:flex items-center gap-2 px-4 py-2 bg-emerald-50 rounded-2xl border border-emerald-100">
+                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Live Data Stream Active</span>
+              </div>
               <button 
                 onClick={() => fetchMarketAnalysis(true)}
                 disabled={loading}
                 className="flex items-center gap-2 bg-primary text-slate-900 px-6 py-3 rounded-2xl font-bold text-sm hover:brightness-110 transition-all disabled:opacity-50 shadow-lg shadow-primary/20"
               >
                 {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
-                Refresh Data
+                Refresh Now
               </button>
             </div>
           </div>
@@ -334,30 +483,69 @@ export default function MarketAnalysis() {
                     <span className="text-xs font-black text-slate-400 uppercase tracking-widest">Market Sentiment</span>
                   </div>
                   <div className="text-right">
-                    <span className={cn(
-                      "text-xs font-black uppercase tracking-widest",
-                      marketData.sentimentScore > 70 ? "text-sky-600" : 
-                      marketData.sentimentScore > 40 ? "text-amber-600" : 
-                      "text-rose-600"
-                    )}>
-                      {marketData.sentimentScore}%
-                    </span>
+                    <div className="flex flex-col items-end">
+                      <span className={cn(
+                        "text-xs font-black uppercase tracking-widest",
+                        marketData.sentimentScore > 70 ? "text-sky-600" : 
+                        marketData.sentimentScore > 40 ? "text-amber-600" : 
+                        "text-rose-600"
+                      )}>
+                        {marketData.sentimentScore}%
+                      </span>
+                      <div className="flex items-center gap-1 mt-0.5">
+                        {marketData.sentimentTrend === 'Rising' ? <TrendingUp className="w-2.5 h-2.5 text-emerald-500" /> :
+                         marketData.sentimentTrend === 'Falling' ? <TrendingDown className="w-2.5 h-2.5 text-rose-500" /> :
+                         <div className="w-2.5 h-0.5 bg-slate-300 rounded-full" />}
+                        <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">{marketData.sentimentTrend}</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 
                 <div className="flex items-center gap-4 mb-6">
-                  <div className={cn(
-                    "w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-lg transition-transform duration-500 group-hover:scale-110",
-                    marketData.sentimentScore > 70 ? "bg-sky-500 text-white shadow-sky-200" : 
-                    marketData.sentimentScore > 40 ? "bg-amber-500 text-white shadow-amber-200" : 
-                    "bg-rose-500 text-white shadow-rose-200"
-                  )}>
-                    {marketData.sentimentScore > 70 ? <TrendingUp className="w-6 h-6" /> : 
-                     marketData.sentimentScore > 40 ? <Zap className="w-6 h-6" /> : 
-                     <ArrowDownRight className="w-6 h-6" />}
+                  <div className="relative w-16 h-16 shrink-0">
+                    <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                      <circle
+                        cx="50"
+                        cy="50"
+                        r="45"
+                        fill="transparent"
+                        stroke="currentColor"
+                        strokeWidth="10"
+                        className="text-slate-100"
+                      />
+                      <motion.circle
+                        cx="50"
+                        cy="50"
+                        r="45"
+                        fill="transparent"
+                        stroke="currentColor"
+                        strokeWidth="10"
+                        strokeDasharray="282.7"
+                        initial={{ strokeDashoffset: 282.7 }}
+                        animate={{ strokeDashoffset: 282.7 - (282.7 * marketData.sentimentScore) / 100 }}
+                        transition={{ duration: 1.5, ease: "easeOut" }}
+                        className={cn(
+                          "transition-colors duration-500",
+                          marketData.sentimentScore > 70 ? "text-sky-500" : 
+                          marketData.sentimentScore > 40 ? "text-amber-500" : 
+                          "text-rose-500"
+                        )}
+                      />
+                    </svg>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      {marketData.sentimentScore > 70 ? <TrendingUp className="w-6 h-6 text-sky-500" /> : 
+                       marketData.sentimentScore > 40 ? <Zap className="w-6 h-6 text-amber-500" /> : 
+                       <ArrowDownRight className="w-6 h-6 text-rose-500" />}
+                    </div>
                   </div>
                   <div>
-                    <p className="text-xl font-black text-slate-900 leading-none mb-1">
+                    <p className={cn(
+                      "text-2xl font-black leading-none mb-1",
+                      marketData.sentimentScore > 70 ? "text-sky-600" : 
+                      marketData.sentimentScore > 40 ? "text-amber-600" : 
+                      "text-rose-600"
+                    )}>
                       {marketData.sentimentScore > 70 ? 'Bullish' : marketData.sentimentScore > 40 ? 'Neutral' : 'Bearish'}
                     </p>
                     <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
@@ -389,6 +577,52 @@ export default function MarketAnalysis() {
                   <span>Extreme Fear</span>
                   <span>Neutral</span>
                   <span>Extreme Greed</span>
+                </div>
+              </div>
+
+              {/* Market Breadth */}
+              <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm flex flex-col justify-center">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="p-2 bg-slate-50 rounded-xl text-slate-600">
+                    <BarChart2 className="w-4 h-4" />
+                  </div>
+                  <span className="text-xs font-black text-slate-400 uppercase tracking-widest">Market Breadth (NSE)</span>
+                </div>
+                
+                <div className="grid grid-cols-3 gap-4 mb-6">
+                  <div className="text-center">
+                    <p className="text-[10px] font-black text-emerald-500 uppercase tracking-widest mb-1">Advances</p>
+                    <p className="text-xl font-black text-slate-900">{marketData.marketBreadth.advances}</p>
+                  </div>
+                  <div className="text-center border-x border-slate-100">
+                    <p className="text-[10px] font-black text-rose-500 uppercase tracking-widest mb-1">Declines</p>
+                    <p className="text-xl font-black text-slate-900">{marketData.marketBreadth.declines}</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Unchanged</p>
+                    <p className="text-xl font-black text-slate-900">{marketData.marketBreadth.unchanged}</p>
+                  </div>
+                </div>
+
+                <div className="relative h-3 bg-slate-100 rounded-full overflow-hidden flex">
+                  <div 
+                    className="h-full bg-emerald-500 transition-all duration-1000" 
+                    style={{ width: `${(marketData.marketBreadth.advances / (marketData.marketBreadth.advances + marketData.marketBreadth.declines + marketData.marketBreadth.unchanged)) * 100}%` }} 
+                  />
+                  <div 
+                    className="h-full bg-slate-300 transition-all duration-1000" 
+                    style={{ width: `${(marketData.marketBreadth.unchanged / (marketData.marketBreadth.advances + marketData.marketBreadth.declines + marketData.marketBreadth.unchanged)) * 100}%` }} 
+                  />
+                  <div 
+                    className="h-full bg-rose-500 transition-all duration-1000" 
+                    style={{ width: `${(marketData.marketBreadth.declines / (marketData.marketBreadth.advances + marketData.marketBreadth.declines + marketData.marketBreadth.unchanged)) * 100}%` }} 
+                  />
+                </div>
+                <div className="flex justify-between mt-3">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">A/D Ratio: {marketData.marketBreadth.ratio}</span>
+                  <span className="text-[10px] font-black text-primary uppercase tracking-widest">
+                    {Number(marketData.marketBreadth.ratio) > 1 ? 'Positive' : 'Negative'} Bias
+                  </span>
                 </div>
               </div>
             </div>
@@ -452,7 +686,7 @@ export default function MarketAnalysis() {
                 <div className="flex items-center justify-between mb-8">
                   <h3 className="text-xl font-bold text-slate-900 flex items-center gap-2">
                     <Globe className="w-6 h-6 text-primary" />
-                    Expert Commentary
+                    Daily AI Summary & Analysis
                   </h3>
                   <div className="flex items-center gap-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                     <Loader2 className="w-3 h-3" />
@@ -461,11 +695,50 @@ export default function MarketAnalysis() {
                 </div>
 
                 <div className="space-y-8">
-                  <div>
-                    <p className="text-slate-600 leading-relaxed text-lg italic border-l-4 border-primary/20 pl-6 py-2">
-                      "{marketData.commentary.overview}"
+                  <div className="bg-slate-50 p-6 rounded-3xl border border-slate-100">
+                    <h4 className="text-sm font-black text-slate-900 uppercase tracking-widest mb-4 flex items-center gap-2">
+                      <Sparkles className="w-4 h-4 text-primary" />
+                      Daily Market Pulse
+                    </h4>
+                    <p className="text-slate-600 leading-relaxed text-lg font-medium">
+                      {marketData.commentary.dailySummary}
                     </p>
                   </div>
+
+                  <div className="bg-primary/5 p-6 rounded-3xl border border-primary/10">
+                    <h4 className="text-sm font-black text-primary uppercase tracking-widest mb-2">Market Sentiment Breakdown</h4>
+                    <p className="text-slate-700 text-sm leading-relaxed">
+                      {marketData.commentary.sentimentSummary}
+                    </p>
+                  </div>
+
+                  {marketData.commentary.trendingTopics && (
+                    <div className="space-y-4">
+                      <h4 className="text-sm font-black text-slate-900 uppercase tracking-widest flex items-center gap-2">
+                        <Zap className="w-4 h-4 text-primary" />
+                        Top 5 Trending Topics
+                      </h4>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {marketData.commentary.trendingTopics.map((topic, idx) => (
+                          <a 
+                            key={idx}
+                            href={topic.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="p-4 bg-white border border-slate-100 rounded-2xl hover:border-primary hover:shadow-md transition-all group flex flex-col justify-between"
+                          >
+                            <div className="flex items-start justify-between mb-2">
+                              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Topic {idx + 1}</span>
+                              <ArrowUpRight className="w-4 h-4 text-slate-300 group-hover:text-primary transition-colors" />
+                            </div>
+                            <p className="text-sm font-bold text-slate-900 group-hover:text-primary transition-colors">
+                              {topic.title}
+                            </p>
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+                  )}
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="bg-slate-50 p-6 rounded-3xl border border-slate-100">
@@ -499,9 +772,9 @@ export default function MarketAnalysis() {
                     </div>
                   </div>
 
-                  <div className="bg-primary/5 p-6 rounded-3xl border border-primary/10">
+                  <div className="bg-slate-900 p-6 rounded-3xl text-white">
                     <h4 className="text-sm font-black text-primary uppercase tracking-widest mb-2">Strategic Outlook</h4>
-                    <p className="text-slate-700 text-sm leading-relaxed font-medium">
+                    <p className="text-slate-300 text-sm leading-relaxed font-medium">
                       {marketData.commentary.outlook}
                     </p>
                   </div>
@@ -519,6 +792,158 @@ export default function MarketAnalysis() {
 
             {/* Gainers & Losers */}
             <div className="lg:col-span-4 space-y-8">
+              <section className="bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-sm">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+                    <TrendingUp className="w-5 h-5 text-primary" />
+                    Key Stocks Watchlist
+                  </h3>
+                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Live LTP</span>
+                </div>
+                <div className="space-y-3">
+                  {marketData.keyStocks.map((stock, idx) => (
+                    <button 
+                      key={idx} 
+                      onClick={() => toggleStockSelection(stock.name)}
+                      className={cn(
+                        "w-full text-left group p-4 rounded-2xl border transition-all relative overflow-hidden",
+                        selectedStocks.includes(stock.name) 
+                          ? "bg-primary/5 border-primary shadow-sm" 
+                          : "bg-slate-50/50 border-slate-100 hover:border-primary hover:bg-white"
+                      )}
+                    >
+                      {selectedStocks.includes(stock.name) && (
+                        <div className="absolute top-2 right-2 p-1 bg-primary text-slate-900 rounded-full">
+                          <Check className="w-2.5 h-2.5" />
+                        </div>
+                      )}
+                      <div className="flex items-center justify-between mb-2">
+                        <p className="font-black text-slate-900 text-sm">{stock.name}</p>
+                        <div className={cn(
+                          "px-2 py-0.5 rounded-md text-[8px] font-black uppercase tracking-widest",
+                          stock.sentiment === 'Bullish' ? "bg-emerald-100 text-emerald-700" :
+                          stock.sentiment === 'Bearish' ? "bg-rose-100 text-rose-700" :
+                          "bg-slate-100 text-slate-700"
+                        )}>
+                          {stock.sentiment}
+                        </div>
+                      </div>
+                      <div className="flex items-end justify-between">
+                        <p className="text-lg font-black text-slate-900 tracking-tight">{stock.price}</p>
+                        <span className={cn(
+                          "text-xs font-black",
+                          stock.isPositive ? "text-emerald-600" : "text-rose-600"
+                        )}>
+                          {stock.change}
+                        </span>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </section>
+
+              <AnimatePresence>
+                {selectedStocks.length > 0 && (
+                  <motion.section 
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-sm overflow-hidden"
+                  >
+                    <div className="flex items-center justify-between mb-8">
+                      <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+                        <BarChart2 className="w-5 h-5 text-primary" />
+                        Stock Comparison
+                      </h3>
+                      <button 
+                        onClick={() => setSelectedStocks([])}
+                        className="text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-rose-500 transition-colors"
+                      >
+                        Clear All
+                      </button>
+                    </div>
+
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-left border-collapse">
+                        <thead>
+                          <tr className="border-b border-slate-100">
+                            <th className="pb-4 pr-4">
+                              <button 
+                                onClick={() => handleSort('name')}
+                                className="flex items-center gap-1 text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-primary transition-colors"
+                              >
+                                Stock {sortConfig?.key === 'name' && (sortConfig.direction === 'asc' ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />)}
+                              </button>
+                            </th>
+                            <th className="pb-4 px-4">
+                              <button 
+                                onClick={() => handleSort('price')}
+                                className="flex items-center gap-1 text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-primary transition-colors"
+                              >
+                                Price {sortConfig?.key === 'price' && (sortConfig.direction === 'asc' ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />)}
+                              </button>
+                            </th>
+                            <th className="pb-4 px-4">
+                              <button 
+                                onClick={() => handleSort('change')}
+                                className="flex items-center gap-1 text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-primary transition-colors"
+                              >
+                                Change {sortConfig?.key === 'change' && (sortConfig.direction === 'asc' ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />)}
+                              </button>
+                            </th>
+                            <th className="pb-4 px-4">
+                              <button 
+                                onClick={() => handleSort('volume')}
+                                className="flex items-center gap-1 text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-primary transition-colors"
+                              >
+                                Volume {sortConfig?.key === 'volume' && (sortConfig.direction === 'asc' ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />)}
+                              </button>
+                            </th>
+                            <th className="pb-4 px-4">
+                              <button 
+                                onClick={() => handleSort('peRatio')}
+                                className="flex items-center gap-1 text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-primary transition-colors"
+                              >
+                                P/E {sortConfig?.key === 'peRatio' && (sortConfig.direction === 'asc' ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />)}
+                              </button>
+                            </th>
+                            <th className="pb-4 pl-4">
+                              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Rating</span>
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {sortedComparisonData.map((stock, idx) => (
+                            <tr key={idx} className="border-b border-slate-50 last:border-0 hover:bg-slate-50/50 transition-colors">
+                              <td className="py-4 pr-4 font-black text-slate-900 text-sm">{stock.name}</td>
+                              <td className="py-4 px-4 font-bold text-slate-900 text-sm">{stock.price}</td>
+                              <td className={cn(
+                                "py-4 px-4 font-black text-sm",
+                                stock.isPositive ? "text-emerald-600" : "text-rose-600"
+                              )}>
+                                {stock.change}
+                              </td>
+                              <td className="py-4 px-4 text-slate-600 text-sm font-medium">{stock.volume}</td>
+                              <td className="py-4 px-4 text-slate-600 text-sm font-medium">{stock.peRatio}</td>
+                              <td className="py-4 pl-4">
+                                <span className={cn(
+                                  "px-2 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest",
+                                  stock.analystRating.includes('Buy') ? "bg-emerald-50 text-emerald-600" :
+                                  stock.analystRating.includes('Sell') ? "bg-rose-50 text-rose-600" :
+                                  "bg-slate-100 text-slate-600"
+                                )}>
+                                  {stock.analystRating}
+                                </span>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </motion.section>
+                )}
+              </AnimatePresence>
+
               <section className="bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-sm">
                 <h3 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
                   <TrendingUp className="w-5 h-5 text-sky-500" />
@@ -643,10 +1068,13 @@ export default function MarketAnalysis() {
               </div>
             </motion.section>
 
-            <div className="mt-12 pb-12 text-center">
-              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] max-w-2xl mx-auto leading-relaxed">
-                Disclaimer: Market analysis and AI-generated insights provided by BHP Finance are for informational purposes only. This content does not constitute financial, investment, or legal advice. Past performance is not indicative of future results. Please consult with a certified financial planner before making any significant financial commitments.
-              </p>
+            <div className="mt-16 pb-12">
+              <div className="max-w-4xl mx-auto p-8 bg-slate-100/50 rounded-[2rem] border border-slate-200 text-center">
+                <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Important Disclaimer</p>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  The market analysis and AI-generated insights provided on this platform are for <span className="font-bold text-slate-900">informational purposes only</span> and do not constitute professional financial, investment, or legal advice. Market investments are subject to market risks. We strongly advise users to <span className="font-bold text-slate-900">consult with a qualified financial planner</span> or certified investment advisor before making any significant investment decisions. BHP Finance is not responsible for any financial losses resulting from the use of this information.
+                </p>
+              </div>
             </div>
           </>
         )}

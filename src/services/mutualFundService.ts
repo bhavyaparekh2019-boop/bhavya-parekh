@@ -1,7 +1,6 @@
 import { GoogleGenAI, Type } from "@google/genai";
+import { getGeminiClient, getApiKey } from "../lib/gemini";
 import { db, collection, addDoc, getDocs, query, where, updateDoc, doc, setDoc, deleteDoc } from "../lib/firebase";
-
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "" });
 
 export interface MutualFund {
   id?: string;
@@ -40,6 +39,10 @@ const MUTUAL_FUND_SCHEMA = {
 };
 
 export async function fetchRealMutualFunds(count: number = 20, category?: string): Promise<MutualFund[]> {
+  const apiKey = getApiKey();
+  if (!apiKey) throw new Error("API Key missing");
+  const ai = getGeminiClient();
+
   const categoryPrompt = category ? ` specifically in the ${category} category` : "";
   const prompt = `Fetch details for ${count} real and popular mutual funds currently available in India${categoryPrompt}. 
   Include their official names, categories, and latest performance metrics (returns, expense ratio, alpha, beta, sharpe). 
@@ -52,6 +55,7 @@ export async function fetchRealMutualFunds(count: number = 20, category?: string
     config: {
       responseMimeType: "application/json",
       responseSchema: MUTUAL_FUND_SCHEMA,
+      tools: [{ googleSearch: {} }],
     },
   });
 
@@ -64,6 +68,10 @@ export async function fetchRealMutualFunds(count: number = 20, category?: string
 }
 
 export async function searchMutualFunds(queryStr: string): Promise<MutualFund[]> {
+  const apiKey = getApiKey();
+  if (!apiKey) throw new Error("API Key missing");
+  const ai = getGeminiClient();
+
   const prompt = `Search for real mutual funds in India matching the query: "${queryStr}". 
   Provide details for up to 5 matching funds. 
   Include their official names, categories, and latest performance metrics.`;
@@ -74,6 +82,7 @@ export async function searchMutualFunds(queryStr: string): Promise<MutualFund[]>
     config: {
       responseMimeType: "application/json",
       responseSchema: MUTUAL_FUND_SCHEMA,
+      tools: [{ googleSearch: {} }],
     },
   });
 
@@ -86,6 +95,10 @@ export async function searchMutualFunds(queryStr: string): Promise<MutualFund[]>
 }
 
 export async function verifyMutualFundData(fund: MutualFund): Promise<{ isValid: boolean; correctedData?: MutualFund; reason?: string }> {
+  const apiKey = getApiKey();
+  if (!apiKey) throw new Error("API Key missing");
+  const ai = getGeminiClient();
+
   const prompt = `Verify the following mutual fund data for accuracy against real-world financial data as of early 2026: ${JSON.stringify(fund)}. 
   Check if the name exists, the category is correct, and the returns/risk metrics are realistic for this specific fund. 
   If any data point is significantly off, mark as invalid and provide corrected data.`;
@@ -118,6 +131,7 @@ export async function verifyMutualFundData(fund: MutualFund): Promise<{ isValid:
         },
         required: ["isValid"],
       },
+      tools: [{ googleSearch: {} }],
     },
   });
 

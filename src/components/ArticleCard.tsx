@@ -41,10 +41,18 @@ const Tooltip = ({ isHovered, article }: { isHovered: boolean; article: Article 
 export default function ArticleCard({ article, featured, layout = 'horizontal' }: ArticleCardProps): React.JSX.Element {
   const [isHovered, setIsHovered] = useState(false);
   const { src, isLoading, refreshImage } = useSmartImage(article.image, article.title, article.category);
+  const [hasError, setHasError] = useState(false);
   const isAiGenerated = src.startsWith('data:image');
-  const isPlaceholder = article.image.includes('picsum.photos') || !article.image;
+  const isPlaceholder = article.image.includes('picsum.photos') || article.image.includes('placeholder.com') || !article.image;
 
   const isVertical = layout === 'vertical';
+
+  const handleImageError = () => {
+    if (!hasError) {
+      setHasError(true);
+      refreshImage();
+    }
+  };
 
   return (
     <article 
@@ -63,20 +71,33 @@ export default function ArticleCard({ article, featured, layout = 'horizontal' }
       )}>
         <Link to={`/article/${article.id}`} className="block h-full w-full">
           {isLoading ? (
-            <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 text-primary p-6 text-center">
-              <Loader2 className="w-8 h-8 animate-spin" />
-              <p className="text-[10px] font-black uppercase tracking-widest">Generating relevant image...</p>
+            <div className="absolute inset-0 bg-slate-200 animate-pulse flex flex-col items-center justify-center gap-4 text-slate-400 p-6 text-center">
+              <div className="w-12 h-12 rounded-2xl bg-white/50 flex items-center justify-center">
+                <Loader2 className="w-6 h-6 animate-spin text-primary" />
+              </div>
+              <div className="space-y-2">
+                <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">AI Visualizer</p>
+                <p className="text-[8px] font-bold uppercase tracking-widest opacity-60">Crafting unique illustration...</p>
+              </div>
             </div>
           ) : (
             <>
-              <img
-                src={src}
-                alt={article.title}
-                className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-700"
-                referrerPolicy="no-referrer"
-              />
+              {hasError && !isAiGenerated ? (
+                <div className="absolute inset-0 bg-slate-100 flex flex-col items-center justify-center gap-2 text-slate-400 p-4 text-center">
+                  <Sparkles className="w-6 h-6 opacity-20" />
+                  <p className="text-[8px] font-black uppercase tracking-widest">Image Unavailable</p>
+                </div>
+              ) : (
+                <img
+                  src={src}
+                  alt={article.title}
+                  onError={handleImageError}
+                  className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-700"
+                  referrerPolicy="no-referrer"
+                />
+              )}
               {isAiGenerated && (
-                <div className="absolute top-3 left-3 bg-white/80 backdrop-blur-md p-1 rounded-lg shadow-sm z-10">
+                <div className="absolute top-3 left-3 bg-white/80 backdrop-blur-md p-1 rounded-lg shadow-sm z-10 border border-white/50">
                   <Sparkles className="w-2.5 h-2.5 text-primary" />
                 </div>
               )}

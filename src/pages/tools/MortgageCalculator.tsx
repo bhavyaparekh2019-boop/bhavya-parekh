@@ -4,6 +4,7 @@ import { ArrowLeft, Calculator, Info, TrendingUp } from 'lucide-react';
 import { motion } from 'motion/react';
 import BlurText from '@/components/BlurText';
 import { GoogleGenAI } from "@google/genai";
+import { getGeminiClient, getApiKey } from '@/lib/gemini';
 import { cn } from '@/lib/utils';
 
 export default function MortgageCalculator() {
@@ -58,7 +59,13 @@ export default function MortgageCalculator() {
   const fetchMarketContext = async () => {
     setIsLoadingContext(true);
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+      const apiKey = getApiKey();
+      if (!apiKey || apiKey === '') {
+        setMarketContext("Please configure your Gemini API key in settings to get real-time market data.");
+        setIsLoadingContext(false);
+        return;
+      }
+      const ai = getGeminiClient();
       const response = await ai.models.generateContent({
         model: "gemini-3-flash-preview",
         contents: "What are the current average home loan interest rates in India (SBI, HDFC, ICICI) for 2024 and what is the brief market outlook for home buyers in Mumbai/India right now?",
@@ -69,7 +76,7 @@ export default function MortgageCalculator() {
       setMarketContext(response.text || 'Unable to fetch current market data.');
     } catch (error) {
       console.error('Error fetching market context:', error);
-      setMarketContext('Error loading market data. Please try again later.');
+      setMarketContext('Market data is currently unavailable. Please try again later.');
     } finally {
       setIsLoadingContext(false);
     }

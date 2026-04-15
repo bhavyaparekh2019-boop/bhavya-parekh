@@ -459,7 +459,11 @@ export default function Admin() {
                         type="text" 
                         placeholder="Search & add funds..." 
                         value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          const sanitized = val.replace(/[^a-zA-Z0-9 ]/g, '');
+                          setSearchQuery(sanitized);
+                        }}
                         className="pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all w-64"
                       />
                       <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />

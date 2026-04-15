@@ -1,7 +1,6 @@
 import { GoogleGenAI, Type } from "@google/genai";
+import { getGeminiClient, getApiKey } from "../lib/gemini";
 import { db, collection, addDoc, getDocs, query, where, updateDoc, doc, setDoc, deleteDoc } from "../lib/firebase";
-
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "" });
 
 export interface InsurancePlan {
   id?: string;
@@ -38,6 +37,10 @@ const INSURANCE_PLAN_SCHEMA = {
 };
 
 export async function fetchRealInsurancePlans(count: number = 15, category?: string): Promise<InsurancePlan[]> {
+  const apiKey = getApiKey();
+  if (!apiKey) throw new Error("API Key missing");
+  const ai = getGeminiClient();
+
   const categoryPrompt = category ? ` specifically in the ${category} category` : "";
   const prompt = `Fetch details for ${count} real and popular insurance plans currently available in India${categoryPrompt}. 
   Include plans for Term Life, Health (Family Floater), and Motor insurance. 
@@ -50,6 +53,7 @@ export async function fetchRealInsurancePlans(count: number = 15, category?: str
     config: {
       responseMimeType: "application/json",
       responseSchema: INSURANCE_PLAN_SCHEMA,
+      tools: [{ googleSearch: {} }],
     },
   });
 
@@ -89,6 +93,10 @@ export async function deleteInsurancePlanFromFirestore(id: string) {
 }
 
 export async function verifyInsurancePlanData(plan: InsurancePlan): Promise<{ isValid: boolean; reason: string; correctedData?: InsurancePlan }> {
+  const apiKey = getApiKey();
+  if (!apiKey) throw new Error("API Key missing");
+  const ai = getGeminiClient();
+
   const prompt = `Verify the following insurance plan data for accuracy as of 2026:
   ${JSON.stringify(plan)}
   
@@ -119,7 +127,8 @@ export async function verifyInsurancePlanData(plan: InsurancePlan): Promise<{ is
             }
           }
         }
-      }
+      },
+      tools: [{ googleSearch: {} }],
     }
   });
 

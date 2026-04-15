@@ -6,6 +6,7 @@ import Sidebar from '@/components/Sidebar';
 import BlurText from '@/components/BlurText';
 import { cn } from '@/lib/utils';
 import { GoogleGenAI } from "@google/genai";
+import { getGeminiClient, getApiKey } from '@/lib/gemini';
 import { motion, AnimatePresence } from 'motion/react';
 import { useSmartImage } from '@/lib/hooks';
 import Markdown from 'react-markdown';
@@ -117,7 +118,14 @@ export default function ArticleDetail() {
 
     setIsSummarizing(true);
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+      const apiKey = getApiKey();
+      if (!apiKey || apiKey === '') {
+        setAiSummary("Please configure your Gemini API key in settings to use AI summary.");
+        setIsSummarizing(false);
+        setIsSummaryOpen(true);
+        return;
+      }
+      const ai = getGeminiClient();
       const response = await ai.models.generateContent({
         model: "gemini-3-flash-preview",
         contents: `Summarize the following financial article titled "${article.title}". Provide 3-4 key actionable takeaways for an investor. Use markdown formatting with bullet points. Article content: ${article.content.replace(/<[^>]*>?/gm, '')}`,
@@ -130,9 +138,9 @@ export default function ArticleDetail() {
     } catch (error: any) {
       console.error('AI Summary Error:', error);
       if (error.message?.includes('quota') || error.message?.includes('429')) {
-        setAiSummary("I've reached my free usage limit for the moment. Please try again in a few minutes.");
+        setAiSummary("The AI summary service is currently at capacity. Please try again later.");
       } else {
-        setAiSummary("Error generating AI summary. Please try again.");
+        setAiSummary("The AI summary service is currently unavailable. Please try again later.");
       }
       setIsSummaryOpen(true);
     } finally {

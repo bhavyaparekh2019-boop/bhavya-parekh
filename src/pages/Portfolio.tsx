@@ -35,6 +35,7 @@ import {
   Legend 
 } from 'recharts';
 import { GoogleGenAI, Type } from "@google/genai";
+import { getGeminiClient, getApiKey } from '@/lib/gemini';
 import Markdown from 'react-markdown';
 import { cn } from '@/lib/utils';
 
@@ -90,6 +91,7 @@ export default function Portfolio() {
   const [isAdding, setIsAdding] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [portfolioInsight, setPortfolioInsight] = useState<string | null>(null);
+  const [isHealthCheckOpen, setIsHealthCheckOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -157,16 +159,36 @@ export default function Portfolio() {
   }, [refreshInterval, investments.length]);
 
   const fetchStockDetails = async (investment: Investment) => {
+    if (investment.category !== 'Stock') return;
+    
     setSelectedStock(investment);
     setIsLoadingDetails(true);
     setStockDetails(null);
+    setError(null);
 
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+      const apiKey = getApiKey();
+      if (!apiKey) {
+        throw new Error('AI service temporarily unavailable');
+      }
+
+      const ai = getGeminiClient();
       const response = await ai.models.generateContent({
         model: "gemini-3-flash-preview",
-        contents: `Fetch detailed financial information for the Indian stock symbol: ${investment.symbol}.
-        Search for the most recent data from reliable sources like NSE, BSE, or Google Finance.`,
+        contents: [{ role: 'user', parts: [{ text: `Fetch detailed financial information for the Indian stock symbol: ${investment.symbol}.
+        Search for the most recent data from reliable sources like NSE, BSE, or Google Finance.
+        
+        Include:
+        - Market Cap (in INR Crores)
+        - P/E Ratio
+        - 52-Week High and Low
+        - Dividend Yield
+        - Sector/Industry
+        - A concise 2-sentence business summary
+        - Consensus analyst rating (Buy/Hold/Sell)
+        - Average analyst target price
+        
+        Format your response as a valid JSON object matching the requested schema.` }] }],
         config: {
           tools: [{ googleSearch: {} }],
           responseMimeType: "application/json",
@@ -180,27 +202,24 @@ export default function Portfolio() {
               dividendYield: { type: Type.STRING, description: "Dividend Yield percentage" },
               sector: { type: Type.STRING, description: "Industry sector" },
               summary: { type: Type.STRING, description: "1-2 sentence business summary" },
-              analystRating: { type: Type.STRING, description: "Consensus analyst rating (Buy, Hold, Sell, Strong Buy, etc.)" },
+              analystRating: { type: Type.STRING, description: "Consensus analyst rating" },
               targetPrice: { type: Type.STRING, description: "Average analyst target price in INR" }
             },
-            required: ["marketCap", "peRatio", "fiftyTwoWeekHigh", "fiftyTwoWeekLow", "analystRating", "targetPrice"]
+            required: ["marketCap", "peRatio", "fiftyTwoWeekHigh", "fiftyTwoWeekLow", "analystRating", "targetPrice", "summary", "sector"]
           }
         },
       });
 
-      const text = response.text;
-      if (text) {
-        let details = {};
-        try {
-          details = JSON.parse(text);
-        } catch (e) {
-          const match = text.match(/\{[\s\S]*\}/);
-          if (match) details = JSON.parse(match[0]);
-        }
-        setStockDetails(details);
+      if (!response.text) {
+        throw new Error('Empty response from AI model.');
       }
-    } catch (err) {
+
+      const data = JSON.parse(response.text);
+      setStockDetails(data);
+    } catch (err: any) {
       console.error('Failed to fetch stock details', err);
+      setError(`Could not fetch details for ${investment.symbol}. Service temporarily unavailable.`);
+      setSelectedStock(null);
     } finally {
       setIsLoadingDetails(false);
     }
@@ -242,7 +261,12 @@ export default function Portfolio() {
     }
 
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+      const apiKey = getApiKey();
+      if (!apiKey) {
+        setIsRefreshing(false);
+        return;
+      }
+      const ai = getGeminiClient();
       
       const batchPromises = batches.map(async (batch) => {
         const prompt = `Find the current market prices (NAV for mutual funds, stock price for stocks) for the following Indian investments:
@@ -302,7 +326,7 @@ export default function Portfolio() {
       
     } catch (err: any) {
       console.error('Failed to refresh prices', err);
-      setError(`Update failed: ${err.message || 'Unknown error'}.`);
+      setError(`Market data update failed. Please try again later.`);
     } finally {
       setIsRefreshing(false);
     }
@@ -315,7 +339,12 @@ export default function Portfolio() {
     setError(null);
 
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+      const apiKey = getApiKey();
+      if (!apiKey) {
+        setVerifyingId(null);
+        return;
+      }
+      const ai = getGeminiClient();
       const prompt = `Verify and provide the absolute latest market price (NAV for mutual funds, stock price for stocks) for: ${inv.category}: ${inv.name} (${inv.symbol}) in India. 
       Use Google Search to find the most recent closing or live price from NSE, BSE, AMFI, or Google Finance.
       Return ONLY a JSON object with the price and the source URL. 
@@ -371,7 +400,7 @@ export default function Portfolio() {
       }
     } catch (err: any) {
       console.error('Verification failed', err);
-      setError(`Verification failed for ${inv.symbol}: ${err.message || 'Unknown error'}`);
+      setError(`Verification failed for ${inv.symbol}. Service temporarily unavailable.`);
     } finally {
       setVerifyingId(null);
     }
@@ -381,8 +410,15 @@ export default function Portfolio() {
     if (investments.length === 0) return;
     
     setIsAnalyzing(true);
+    setIsHealthCheckOpen(true);
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' });
+      const apiKey = getApiKey();
+      if (!apiKey) {
+        setPortfolioInsight("Please configure your Gemini API key in settings to use AI analysis.");
+        setIsAnalyzing(false);
+        return;
+      }
+      const ai = getGeminiClient();
       const portfolioSummary = investments.map(inv => ({
         symbol: inv.symbol,
         category: inv.category,
@@ -395,13 +431,13 @@ export default function Portfolio() {
       const response = await ai.models.generateContent({
         model: "gemini-3-flash-preview",
         contents: `Analyze this financial portfolio and provide a health check report in Markdown format. 
-        Focus on diversification, performance, and risk management. 
+        Focus on diversification, performance, risk management, and projected returns. 
         Portfolio: ${JSON.stringify(portfolioSummary)}
         
         Structure:
         1. Executive Summary (Overall health score out of 10)
         2. Diversification Analysis (Asset allocation critique)
-        3. Performance Highlights (Top performers and laggards)
+        3. Performance & Projected Returns (Analysis of current gains and future outlook)
         4. Risk Assessment (Concentration risk, market exposure)
         5. Actionable Recommendations (Specific steps to improve)`,
         config: {
@@ -427,7 +463,12 @@ export default function Portfolio() {
 
     setIsSearching(true);
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' });
+      const apiKey = getApiKey();
+      if (!apiKey) {
+        setIsSearching(false);
+        return;
+      }
+      const ai = getGeminiClient();
       const response = await ai.models.generateContent({
         model: "gemini-3-flash-preview",
         contents: `Search for Indian ${newInvestment.category}s matching "${query}". 
@@ -470,7 +511,10 @@ export default function Portfolio() {
 
   const fetchMarketIndices = async () => {
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' });
+      const apiKey = getApiKey();
+      if (!apiKey) return;
+      
+      const ai = getGeminiClient();
       const response = await ai.models.generateContent({
         model: "gemini-3-flash-preview",
         contents: "Fetch current values and daily changes for Nifty 50, Sensex, Bank Nifty, and Nifty IT.",
@@ -734,6 +778,70 @@ export default function Portfolio() {
           </motion.div>
         </div>
 
+        {/* AI Portfolio Health Check Section */}
+        <AnimatePresence>
+          {isHealthCheckOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="mb-12 overflow-hidden"
+            >
+              <div className="bg-white rounded-[2.5rem] border border-slate-200 shadow-xl shadow-slate-200/50 overflow-hidden">
+                <div className="p-8 bg-slate-900 flex justify-between items-center">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
+                      <ShieldCheck className="w-6 h-6 text-slate-900" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-black text-white tracking-tight">Portfolio Health Check</h3>
+                      <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest">AI-Powered Analysis</p>
+                    </div>
+                  </div>
+                  <button 
+                    onClick={() => setIsHealthCheckOpen(false)}
+                    className="p-2 hover:bg-white/10 rounded-full transition-colors"
+                  >
+                    <X className="w-6 h-6 text-white" />
+                  </button>
+                </div>
+
+                <div className="p-8">
+                  {isAnalyzing ? (
+                    <div className="flex flex-col items-center justify-center py-12 text-slate-400">
+                      <Loader2 className="w-12 h-12 animate-spin mb-4 text-primary" />
+                      <p className="text-sm font-black uppercase tracking-widest">AI Strategist is analyzing your holdings...</p>
+                    </div>
+                  ) : portfolioInsight ? (
+                    <div className="prose prose-slate max-w-none prose-headings:font-black prose-headings:tracking-tight prose-p:text-slate-600 prose-li:text-slate-600">
+                      <Markdown>{portfolioInsight}</Markdown>
+                      <div className="mt-8 pt-8 border-t border-slate-100 flex justify-end">
+                        <button
+                          onClick={() => generatePortfolioInsight()}
+                          className="flex items-center gap-2 bg-slate-900 text-white px-8 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-slate-800 transition-all"
+                        >
+                          <RefreshCw className="w-4 h-4" />
+                          Re-Analyze Portfolio
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="text-center py-12">
+                      <p className="text-slate-500 mb-6">No analysis data available. Click the button above to start.</p>
+                      <button
+                        onClick={generatePortfolioInsight}
+                        className="bg-primary text-slate-900 px-8 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:brightness-110 transition-all"
+                      >
+                        Start Health Check
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {/* Market Overview */}
         {marketIndices.length > 0 && (
           <div className="mb-12">
@@ -824,7 +932,17 @@ export default function Portfolio() {
                             )}
                           >
                             <td className="px-4 sm:px-8 py-6">
-                              <div className="font-black text-slate-900 text-xs sm:text-sm group-hover:text-primary transition-colors">{inv.symbol}</div>
+                              <div className="flex items-center gap-2">
+                                <div className={cn(
+                                  "font-black text-slate-900 text-xs sm:text-sm transition-colors",
+                                  inv.category === 'Stock' && "group-hover:text-primary group-hover:underline decoration-2 underline-offset-4"
+                                )}>
+                                  {inv.symbol}
+                                </div>
+                                {inv.category === 'Stock' && (
+                                  <BarChart3 className="w-3 h-3 text-slate-300 group-hover:text-primary transition-colors" />
+                                )}
+                              </div>
                               <div className="text-[8px] sm:text-[10px] text-slate-400 font-bold uppercase tracking-widest">{inv.category}</div>
                               {/* Mobile-only info */}
                               <div className="sm:hidden text-[8px] text-slate-400 font-bold uppercase tracking-widest mt-1">
@@ -1240,60 +1358,6 @@ export default function Portfolio() {
                   </button>
                 </div>
               </form>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
-
-      {/* Portfolio Insight Modal */}
-      <AnimatePresence>
-        {portfolioInsight && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setPortfolioInsight(null)}
-              className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
-            />
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="relative w-full max-w-3xl bg-white rounded-[2.5rem] shadow-2xl overflow-hidden max-h-[90vh] flex flex-col"
-            >
-              <div className="p-8 bg-slate-900 flex justify-between items-center shrink-0">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
-                    <ShieldCheck className="w-6 h-6 text-slate-900" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-black text-white tracking-tight">Portfolio Health Check</h3>
-                    <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest">AI-Powered Analysis</p>
-                  </div>
-                </div>
-                <button 
-                  onClick={() => setPortfolioInsight(null)}
-                  className="p-2 hover:bg-white/10 rounded-full transition-colors"
-                >
-                  <X className="w-6 h-6 text-white" />
-                </button>
-              </div>
-
-              <div className="p-8 overflow-y-auto custom-scrollbar">
-                <div className="prose prose-slate max-w-none prose-headings:font-black prose-headings:tracking-tight prose-p:text-slate-600 prose-li:text-slate-600">
-                  <Markdown>{portfolioInsight}</Markdown>
-                </div>
-                
-                <div className="mt-8 pt-8 border-t border-slate-100 flex justify-end">
-                  <button
-                    onClick={() => setPortfolioInsight(null)}
-                    className="bg-slate-900 text-white px-8 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-slate-800 transition-all"
-                  >
-                    Got it, thanks!
-                  </button>
-                </div>
-              </div>
             </motion.div>
           </div>
         )}

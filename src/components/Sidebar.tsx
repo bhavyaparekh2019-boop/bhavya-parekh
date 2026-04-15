@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Calculator, Download, Mail, Home, PiggyBank, TrendingUp, ChevronRight, Sparkles, Loader2, RefreshCcw, Shield, ArrowRight, Coins } from 'lucide-react';
 import { GoogleGenAI } from "@google/genai";
+import { getGeminiClient, getApiKey } from '@/lib/gemini';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '@/lib/utils';
 import { useModal } from '@/context/ModalContext';
@@ -77,13 +78,14 @@ export default function Sidebar() {
   const fetchMarketPulse = async () => {
     setIsLoadingPulse(true);
     try {
-      const apiKey = process.env.GEMINI_API_KEY;
-      if (!apiKey || apiKey === 'MY_GEMINI_API_KEY' || apiKey === 'undefined' || apiKey === '') {
+      const apiKey = getApiKey();
+      if (!apiKey || apiKey === '') {
         setMarketPulse("Market sentiment remains cautiously bullish as domestic institutional buying offsets global volatility.");
+        setIsLoadingPulse(false);
         return;
       }
 
-      const ai = new GoogleGenAI({ apiKey });
+      const ai = getGeminiClient();
       const response = await ai.models.generateContent({
         model: "gemini-3-flash-preview",
         contents: "Provide a 1-sentence real-time summary of the Indian stock market (Nifty/Sensex) and global market sentiment for today. Be concise and professional.",
@@ -99,7 +101,7 @@ export default function Sidebar() {
       if (error.message?.includes('quota') || error.message?.includes('429')) {
         setMarketPulse("Market sentiment remains cautiously bullish as domestic institutional buying offsets global volatility.");
       } else {
-        setMarketPulse("Unable to fetch live market pulse. Please check back later.");
+        setMarketPulse("Market pulse data is currently unavailable. Please check back later.");
       }
     } finally {
       setIsLoadingPulse(false);
@@ -163,17 +165,22 @@ export default function Sidebar() {
       </div>
 
       {/* Consultation CTA */}
-      <div className="bg-primary rounded-2xl p-6 text-slate-900 shadow-xl shadow-primary/20">
-        <h3 className="text-lg font-black uppercase tracking-tight mb-2">Talk to an Expert</h3>
-        <p className="text-sm font-bold text-slate-800 mb-6 leading-tight">
-          Get personalized financial advice tailored to your goals.
-        </p>
-        <button 
-          onClick={() => openConsultationModal('Investment Planning')}
-          className="w-full bg-white text-primary font-black py-4 rounded-xl text-xs uppercase tracking-widest hover:brightness-110 transition-all flex items-center justify-center gap-2 shadow-lg shadow-white/20"
-        >
-          Consult Now <ArrowRight className="w-4 h-4" />
-        </button>
+      <div className="bg-slate-900 rounded-2xl p-8 text-white shadow-2xl relative overflow-hidden group border border-white/5">
+        <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity pointer-events-none">
+          <Sparkles className="w-24 h-24 text-primary" />
+        </div>
+        <div className="relative z-10">
+          <h3 className="text-2xl font-black uppercase tracking-tight mb-3 leading-none">Consult an <span className="text-primary">Advisor</span></h3>
+          <p className="text-sm text-slate-400 mb-8 leading-relaxed font-medium">
+            Get personalized, data-driven financial strategies tailored to your unique goals.
+          </p>
+          <button 
+            onClick={() => openConsultationModal('Investment Planning')}
+            className="w-full bg-primary text-slate-900 font-black py-5 rounded-2xl text-xs uppercase tracking-widest hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3 shadow-xl shadow-primary/20"
+          >
+            Consult an Advisor <ArrowRight className="w-4 h-4" />
+          </button>
+        </div>
       </div>
 
       {/* Knowledge Base */}

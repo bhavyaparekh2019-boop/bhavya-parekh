@@ -8,7 +8,9 @@ import Sidebar from '@/components/Sidebar';
 import ChromaGrid from '@/components/ChromaGrid';
 import { cn } from '@/lib/utils';
 import { GoogleGenAI, Type } from "@google/genai";
+import { getGeminiClient, getApiKey } from '@/lib/gemini';
 import BlurText from '@/components/BlurText';
+import StockTicker from '@/components/StockTicker';
 
 const KNOWLEDGE_CENTER_ITEMS = [
   {
@@ -194,15 +196,14 @@ export default function Home() {
       });
       const relatedArticles = fuseArticles.search(searchQuery).map(r => r.item).slice(0, 3);
 
-      const apiKey = process.env.GEMINI_API_KEY;
+      const apiKey = getApiKey();
       
       // Fallback to mock data if API key is missing
-      if (!apiKey || apiKey === 'MY_GEMINI_API_KEY' || apiKey === 'undefined' || apiKey === '') {
-        console.warn('Gemini API key is missing. Falling back to mock response.');
+      if (!apiKey || apiKey === 'undefined' || apiKey === '') {
         setTimeout(() => {
           setAiResponse({
             concise: `For "${searchQuery}", the general financial consensus suggests careful planning and diversification.`,
-            full: `Regarding your query about "${searchQuery}", it's important to consider your risk appetite and long-term goals. In the Indian context, this often involves looking at tax-saving instruments under Section 80C, balanced mutual funds, and maintaining an emergency fund. (Note: This is a demo response as no API key is configured).`,
+            full: `Regarding your query about "${searchQuery}", it's important to consider your risk appetite and long-term goals. In the Indian context, this often involves looking at tax-saving instruments under Section 80C, balanced mutual funds, and maintaining an emergency fund.`,
             sources: [
               { title: "BHP Finance Guides", uri: "/guides/investment" },
               { title: "Market Analysis", uri: "/market-analysis" }
@@ -215,7 +216,7 @@ export default function Home() {
         return;
       }
 
-      const ai = new GoogleGenAI({ apiKey });
+      const ai = getGeminiClient();
       const response = await ai.models.generateContent({
         model: "gemini-3-flash-preview",
         contents: [{ role: 'user', parts: [{ text: `The user is searching for "${searchQuery}" on an Indian financial insights blog. Provide a concise, expert financial summary or answer related to this query, specifically tailored to the Indian context (Rupees, Indian tax laws, market conditions). Use Google Search to ensure the information is current as of March 2026.` }] }],
@@ -333,7 +334,11 @@ export default function Home() {
                   <input
                     type="text"
                     value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      const sanitized = val.replace(/[^a-zA-Z0-9 ]/g, '');
+                      setSearchQuery(sanitized);
+                    }}
                     placeholder="Search for financial topics..."
                     className="w-full bg-transparent border-none focus:ring-0 text-slate-900 placeholder:text-slate-400 text-base py-3 px-4"
                   />
@@ -376,43 +381,7 @@ export default function Home() {
       </section>
 
       {/* Market Ticker */}
-      <div className="bg-primary overflow-hidden py-4 border-y border-white/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-8 animate-marquee whitespace-nowrap">
-            <Link to="/market-analysis" className="flex items-center gap-2 hover:text-white transition-colors group">
-              <span className="text-[10px] font-black text-white/50 uppercase tracking-widest group-hover:text-white">Nifty 50</span>
-              <span className="text-sm font-bold text-white">24,320.45</span>
-              <span className="text-xs font-bold text-sky-300">+1.24%</span>
-            </Link>
-            <Link to="/market-analysis" className="flex items-center gap-2 hover:text-primary transition-colors group">
-              <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest group-hover:text-primary">Sensex</span>
-              <span className="text-sm font-bold text-white">79,850.12</span>
-              <span className="text-xs font-bold text-sky-500">+0.98%</span>
-            </Link>
-            <Link to="/market-analysis" className="flex items-center gap-2 hover:text-primary transition-colors group">
-              <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest group-hover:text-primary">Bank Nifty</span>
-              <span className="text-sm font-bold text-white">52,410.30</span>
-              <span className="text-xs font-bold text-rose-500">-0.15%</span>
-            </Link>
-            <Link to="/market-analysis" className="flex items-center gap-2 hover:text-primary transition-colors group">
-              <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest group-hover:text-primary">USD/INR</span>
-              <span className="text-sm font-bold text-white">83.45</span>
-              <span className="text-xs font-bold text-slate-400">0.00%</span>
-            </Link>
-            <Link to="/market-analysis" className="flex items-center gap-2 hover:text-primary transition-colors group">
-              <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest group-hover:text-primary">Gold</span>
-              <span className="text-sm font-bold text-white">72,140</span>
-              <span className="text-xs font-bold text-sky-500">+0.45%</span>
-            </Link>
-            {/* Duplicate for seamless loop */}
-            <Link to="/market-analysis" className="flex items-center gap-2 hover:text-primary transition-colors group">
-              <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest group-hover:text-primary">Nifty 50</span>
-              <span className="text-sm font-bold text-white">24,320.45</span>
-              <span className="text-xs font-bold text-sky-500">+1.24%</span>
-            </Link>
-          </div>
-        </div>
-      </div>
+      <StockTicker />
 
       {/* AI Smart Response */}
       <AnimatePresence>

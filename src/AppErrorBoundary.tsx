@@ -17,7 +17,6 @@ export default class AppErrorBoundary extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = { hasError: false, error: null };
-    console.log('AppErrorBoundary initialized');
   }
 
   static getDerivedStateFromError(error: Error): State {

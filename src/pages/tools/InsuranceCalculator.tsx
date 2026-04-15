@@ -4,6 +4,7 @@ import { Shield, Info, AlertCircle, CheckCircle2, ArrowRight, TrendingUp, Sparkl
 import BlurText from '@/components/BlurText';
 import { cn } from '@/lib/utils';
 import { GoogleGenAI } from "@google/genai";
+import { getGeminiClient, getApiKey } from '@/lib/gemini';
 
 interface PolicyComparison {
   id: string;
@@ -34,7 +35,13 @@ export default function InsuranceCalculator() {
   const fetchMarketContext = async () => {
     setIsLoadingContext(true);
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+      const apiKey = getApiKey();
+      if (!apiKey || apiKey === '') {
+        setMarketContext("Please configure your Gemini API key in settings to get real-time market data.");
+        setIsLoadingContext(false);
+        return;
+      }
+      const ai = getGeminiClient();
       const response = await ai.models.generateContent({
         model: "gemini-3-flash-preview",
         contents: "What are the current trends in the Indian insurance market for 2024? Mention term insurance rates, health insurance medical inflation in India, and any new IRDAI regulations that benefit policyholders.",

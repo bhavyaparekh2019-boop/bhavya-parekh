@@ -1,6 +1,20 @@
 import { GoogleGenAI } from "@google/genai";
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' });
+export function getApiKey() {
+  // 1. Check localStorage for user-provided key (for self-hosted/exported versions)
+  if (typeof window !== 'undefined') {
+    const userKey = localStorage.getItem('BHP_GEMINI_API_KEY');
+    if (userKey) return userKey;
+  }
+
+  // 2. Fallback to environment variable
+  return process.env.GEMINI_API_KEY || '';
+}
+
+export function getGeminiClient() {
+  const apiKey = getApiKey();
+  return new GoogleGenAI({ apiKey });
+}
 
 // Session-wide quota tracking
 let isQuotaExceeded = false;
@@ -13,6 +27,7 @@ export async function generateArticleImage(title: string, category: string, retr
   if (isQuotaExceeded) return null;
 
   try {
+    const ai = getGeminiClient();
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash-image',
       contents: {
@@ -81,6 +96,7 @@ export interface ETFData {
 
 export async function getETFData(): Promise<ETFData[]> {
   try {
+    const ai = getGeminiClient();
     const response = await ai.models.generateContent({
       model: "gemini-3-flash-preview",
       contents: "List top 5 performing Exchange Traded Funds (ETFs) in India across different categories (Equity, Gold, Debt). Include their ticker, 1-year returns, 3-year returns, expense ratio, and AUM (Assets Under Management).",

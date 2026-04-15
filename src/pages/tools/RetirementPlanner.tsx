@@ -16,6 +16,7 @@ import {
 import { motion, AnimatePresence } from 'motion/react';
 import BlurText from '@/components/BlurText';
 import { GoogleGenAI } from "@google/genai";
+import { getGeminiClient, getApiKey } from '@/lib/gemini';
 import { cn } from '@/lib/utils';
 import { 
   AreaChart, 
@@ -86,12 +87,12 @@ export default function RetirementPlanner() {
   const fetchMarketContext = async () => {
     setIsLoadingContext(true);
     try {
-      const apiKey = process.env.GEMINI_API_KEY;
-      if (!apiKey || apiKey === 'undefined') {
+      const apiKey = getApiKey();
+      if (!apiKey || apiKey === 'undefined' || apiKey === '') {
         setMarketContext("Current NPS Tier-1 returns average 9-12% over 10 years. EPF rate for 2023-24 is 8.25%. Long-term inflation in India is expected to hover around 5-6%.");
         return;
       }
-      const ai = new GoogleGenAI({ apiKey });
+      const ai = getGeminiClient();
       const response = await ai.models.generateContent({
         model: "gemini-3-flash-preview",
         contents: "What are the latest NPS and EPF interest rates in India for 2024-2025? Also mention the current inflation rate and recommended retirement corpus for a middle-class professional in a Tier-1 city.",
@@ -102,7 +103,7 @@ export default function RetirementPlanner() {
       setMarketContext(response.text || 'Unable to fetch current market data.');
     } catch (error) {
       console.error('Error fetching market context:', error);
-      setMarketContext('Current NPS Tier-1 returns average 9-12% over 10 years. EPF rate for 2023-24 is 8.25%. Long-term inflation in India is expected to hover around 5-6%.');
+      setMarketContext('Market data is currently unavailable. Current NPS Tier-1 returns average 9-12% over 10 years. EPF rate for 2023-24 is 8.25%. Long-term inflation in India is expected to hover around 5-6%.');
     } finally {
       setIsLoadingContext(false);
     }

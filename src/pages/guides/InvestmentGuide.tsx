@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { TrendingUp, PieChart, Landmark, Coins, Building2, ArrowUpRight, Target, Zap, ArrowRight, CheckCircle2, HelpCircle, Sparkles, Trophy, RotateCcw, Info, X, Home, GraduationCap, Umbrella, Palmtree, Wallet, Activity, BarChart3, Loader2 } from 'lucide-react';
+import { TrendingUp, PieChart, Landmark, Coins, Building2, ArrowUpRight, Target, Zap, ArrowRight, CheckCircle2, HelpCircle, Sparkles, Trophy, RotateCcw, Info, X, Home, GraduationCap, Umbrella, Palmtree, Wallet, Activity, BarChart3, Loader2, ArrowUpDown, RefreshCw } from 'lucide-react';
 import BlurText from '@/components/BlurText';
 import ChromaGrid from '@/components/ChromaGrid';
 import { useModal } from '@/context/ModalContext';
 import { cn } from '@/lib/utils';
-import { getETFData, type ETFData } from '@/lib/gemini';
+import { getETFData, type ETFData, getGeminiClient, getApiKey } from '@/lib/gemini';
 
 const QUIZ_QUESTIONS = [
   {
@@ -186,14 +186,54 @@ export default function InvestmentGuide() {
   const [selectedAssets, setSelectedAssets] = useState<string[]>([]);
   const [etfData, setEtfData] = useState<ETFData[]>([]);
   const [loadingETFs, setLoadingETFs] = useState(true);
+  const [lastUpdated, setLastUpdated] = useState<string | null>(null);
+  const [etfSortConfig, setEtfSortConfig] = useState<{ key: keyof ETFData; direction: 'asc' | 'desc' } | null>(null);
+
+  const fetchETFs = async () => {
+    setLoadingETFs(true);
+    const data = await getETFData();
+    setEtfData(data);
+    setLastUpdated(new Date().toLocaleTimeString());
+    setLoadingETFs(false);
+  };
+
+  const handleEtfSort = (key: keyof ETFData) => {
+    setEtfSortConfig(prev => {
+      if (prev?.key === key) {
+        return { key, direction: prev.direction === 'asc' ? 'desc' : 'asc' };
+      }
+      return { key, direction: 'desc' };
+    });
+  };
+
+  const sortedEtfData = [...etfData].sort((a, b) => {
+    if (!etfSortConfig) return 0;
+    const { key, direction } = etfSortConfig;
+    
+    let aVal: any = a[key];
+    let bVal: any = b[key];
+
+    const parseNumeric = (val: string) => {
+      if (!val) return 0;
+      const cleaned = val.replace(/[^\d.-]/g, '');
+      let num = parseFloat(cleaned) || 0;
+      const lower = val.toLowerCase();
+      if (lower.includes('cr')) num *= 10000000;
+      else if (lower.includes('lakh')) num *= 100000;
+      return num;
+    };
+
+    if (['returns1Y', 'returns3Y', 'expenseRatio', 'aum'].includes(key)) {
+      aVal = parseNumeric(aVal);
+      bVal = parseNumeric(bVal);
+    }
+
+    if (aVal < bVal) return direction === 'asc' ? -1 : 1;
+    if (aVal > bVal) return direction === 'asc' ? 1 : -1;
+    return 0;
+  });
 
   useEffect(() => {
-    const fetchETFs = async () => {
-      setLoadingETFs(true);
-      const data = await getETFData();
-      setEtfData(data);
-      setLoadingETFs(false);
-    };
     fetchETFs();
   }, []);
 
@@ -725,10 +765,23 @@ export default function InvestmentGuide() {
 
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-                    <BarChart3 className="w-5 h-5 text-primary" />
-                    Top Performing ETFs in India
-                  </h3>
+                  <div className="flex items-center gap-3">
+                    <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+                      <BarChart3 className="w-5 h-5 text-primary" />
+                      Top Performing ETFs in India
+                    </h3>
+                    {lastUpdated && !loadingETFs && (
+                      <span className="text-[10px] text-slate-400 font-medium">Last updated: {lastUpdated}</span>
+                    )}
+                  </div>
+                  <button 
+                    onClick={fetchETFs}
+                    disabled={loadingETFs}
+                    className="p-2 hover:bg-slate-100 rounded-lg transition-colors text-slate-500 disabled:opacity-50"
+                    title="Refresh ETF Data"
+                  >
+                    <RefreshCw className={cn("w-4 h-4", loadingETFs && "animate-spin")} />
+                  </button>
                 </div>
 
                 {loadingETFs ? (
@@ -741,29 +794,80 @@ export default function InvestmentGuide() {
                     <table className="w-full text-left border-collapse">
                       <thead>
                         <tr className="border-b border-slate-100">
-                          <th className="py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">ETF Name</th>
-                          <th className="py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Ticker</th>
-                          <th className="py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Category</th>
-                          <th className="py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">1Y Return</th>
-                          <th className="py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">Exp. Ratio</th>
+                          <th 
+                            className="py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest cursor-pointer hover:text-primary transition-colors"
+                            onClick={() => handleEtfSort('name')}
+                          >
+                            <div className="flex items-center gap-1">
+                              ETF Name
+                              <ArrowUpDown className="w-3 h-3" />
+                            </div>
+                          </th>
+                          <th 
+                            className="py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest cursor-pointer hover:text-primary transition-colors"
+                            onClick={() => handleEtfSort('ticker')}
+                          >
+                            <div className="flex items-center gap-1">
+                              Ticker
+                              <ArrowUpDown className="w-3 h-3" />
+                            </div>
+                          </th>
+                          <th 
+                            className="py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right cursor-pointer hover:text-primary transition-colors"
+                            onClick={() => handleEtfSort('returns1Y')}
+                          >
+                            <div className="flex items-center justify-end gap-1">
+                              1Y Return
+                              <ArrowUpDown className="w-3 h-3" />
+                            </div>
+                          </th>
+                          <th 
+                            className="py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right cursor-pointer hover:text-primary transition-colors"
+                            onClick={() => handleEtfSort('returns3Y')}
+                          >
+                            <div className="flex items-center justify-end gap-1">
+                              3Y Return
+                              <ArrowUpDown className="w-3 h-3" />
+                            </div>
+                          </th>
+                          <th 
+                            className="py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right cursor-pointer hover:text-primary transition-colors"
+                            onClick={() => handleEtfSort('expenseRatio')}
+                          >
+                            <div className="flex items-center justify-end gap-1">
+                              Exp. Ratio
+                              <ArrowUpDown className="w-3 h-3" />
+                            </div>
+                          </th>
+                          <th 
+                            className="py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right cursor-pointer hover:text-primary transition-colors"
+                            onClick={() => handleEtfSort('aum')}
+                          >
+                            <div className="flex items-center justify-end gap-1">
+                              AUM
+                              <ArrowUpDown className="w-3 h-3" />
+                            </div>
+                          </th>
                         </tr>
                       </thead>
                       <tbody>
-                        {etfData.map((etf, i) => (
+                        {sortedEtfData.map((etf, i) => (
                           <tr key={i} className="border-b border-slate-50 hover:bg-slate-50/50 transition-colors group">
                             <td className="py-4">
                               <div className="font-bold text-slate-900 group-hover:text-primary transition-colors">{etf.name}</div>
-                              <div className="text-[10px] text-slate-400">AUM: {etf.aum}</div>
+                              <div className="text-[10px] text-slate-400 uppercase tracking-wider">{etf.category}</div>
                             </td>
                             <td className="py-4">
                               <span className="px-2 py-1 bg-slate-100 text-slate-600 text-[10px] font-bold rounded uppercase">{etf.ticker}</span>
                             </td>
-                            <td className="py-4 text-sm text-slate-600">{etf.category}</td>
                             <td className="py-4 text-right">
                               <div className="font-bold text-emerald-600">{etf.returns1Y}</div>
-                              <div className="text-[10px] text-slate-400">3Y: {etf.returns3Y}</div>
+                            </td>
+                            <td className="py-4 text-right">
+                              <div className="font-bold text-emerald-600/80">{etf.returns3Y}</div>
                             </td>
                             <td className="py-4 text-right font-mono text-xs text-slate-500">{etf.expenseRatio}</td>
+                            <td className="py-4 text-right text-xs font-bold text-slate-600">{etf.aum}</td>
                           </tr>
                         ))}
                       </tbody>

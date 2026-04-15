@@ -14,18 +14,7 @@ async function startServer() {
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
 
-  // Request logging middleware
-  app.use((req, res, next) => {
-    const start = Date.now();
-    console.log(`[REQ] ${new Date().toISOString()} - ${req.method} ${req.url} - Start`);
-    res.on('finish', () => {
-      const duration = Date.now() - start;
-      console.log(`[RES] ${new Date().toISOString()} - ${req.method} ${req.url} - ${res.statusCode} (${duration}ms)`);
-    });
-    next();
-  });
-
-  // JSON parsing error handler
+  // 2. JSON parsing error handler
   app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
     if (err instanceof SyntaxError && 'status' in err && err.status === 400 && 'body' in err) {
       console.error(`[API] JSON Syntax Error: ${err.message}`);
@@ -98,12 +87,11 @@ async function startServer() {
     res.json(db_mock);
   });
 
-  app.get("/api/subscribe", (req, res) => {
+  app.get(["/api/subscribe", "/api/subscribe/"], (req, res) => {
     res.status(405).json({ error: "Method Not Allowed", message: "Use POST to subscribe" });
   });
 
-  app.post("/api/subscribe", async (req, res) => {
-    console.log(`[API] POST /api/subscribe - Start - Body: ${JSON.stringify(req.body)}`);
+  app.post(["/api/subscribe", "/api/subscribe/"], async (req, res) => {
     try {
       const { email } = req.body;
 
@@ -197,7 +185,7 @@ async function startServer() {
     }
   });
 
-  app.post("/api/consultation", async (req, res) => {
+  app.post(["/api/consultation", "/api/consultation/"], async (req, res) => {
     const { name, email, phone, service } = req.body;
 
     if (!name || !email || !phone || !service) {
@@ -310,10 +298,9 @@ async function startServer() {
 
   // Ensure all API routes that aren't matched return a JSON 404 instead of falling through to Vite/SPA
   app.all("/api/*", (req, res) => {
-    console.warn(`[API] 404 - Unmatched API route: ${req.method} ${req.originalUrl}`);
     res.status(404).json({ 
       error: "API route not found", 
-      message: `The requested API endpoint ${req.originalUrl} does not exist on this server.` 
+      message: `The requested API endpoint ${req.originalUrl} does not exist.` 
     });
   });
 
@@ -326,14 +313,6 @@ async function startServer() {
   // Only use production mode if we have a build AND we don't want to be in dev mode
   // or if we are explicitly told to be in production and source is missing.
   const isProduction = hasBuild && !hasSource;
-  
-  console.log("Environment Detection:");
-  console.log(`- NODE_ENV: ${process.env.NODE_ENV}`);
-  console.log(`- ENV: ${process.env.ENV}`);
-  console.log(`- hasBuild: ${hasBuild}`);
-  console.log(`- hasSource: ${hasSource}`);
-  console.log(`- isProduction: ${isProduction}`);
-  console.log(`- process.cwd(): ${process.cwd()}`);
   
   if (!isProduction) {
     console.log("Starting server in DEVELOPMENT mode with Vite middleware");

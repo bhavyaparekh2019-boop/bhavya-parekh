@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageCircle, X, Send, Loader2, Bot, User, Minimize2, Maximize2, AlertCircle, RefreshCw } from 'lucide-react';
+import { MessageCircle, X, Send, Loader2, Bot, User, Minimize2, Maximize2, AlertCircle, RefreshCw, Shield, TrendingUp, Zap, Target } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { GoogleGenAI } from "@google/genai";
+import { getGeminiClient, getApiKey } from '@/lib/gemini';
 import { cn } from '@/lib/utils';
 import Markdown from 'react-markdown';
 
@@ -14,17 +15,34 @@ export default function ChatBot() {
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [input, setInput] = useState('');
-  const [messages, setMessages] = useState<Message[]>([
-    { role: 'model', text: 'Hello! I am your AI financial assistant. How can I help you with your financial planning today?' }
-  ]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [streamingText, setStreamingText] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatRef = useRef<any>(null);
   const cacheRef = useRef<Map<string, string>>(new Map());
 
-  // Load cache from localStorage on mount
+  const SUGGESTED_QUESTIONS = [
+    { text: "How to save tax under 80C?", icon: <Shield className="w-3 h-3" /> },
+    { text: "Best SIP for 5 years?", icon: <TrendingUp className="w-3 h-3" /> },
+    { text: "What is Term Insurance?", icon: <Zap className="w-3 h-3" /> },
+    { text: "How to plan for retirement?", icon: <Target className="w-3 h-3" /> }
+  ];
+
+  // Load history and cache from localStorage on mount
   useEffect(() => {
+    const savedMessages = localStorage.getItem('chatbot_history');
+    if (savedMessages) {
+      try {
+        setMessages(JSON.parse(savedMessages));
+      } catch (e) {
+        console.error('Failed to parse chatbot history', e);
+        setMessages([{ role: 'model', text: 'Hello! I am your AI financial assistant. How can I help you with your financial planning today?' }]);
+      }
+    } else {
+      setMessages([{ role: 'model', text: 'Hello! I am your AI financial assistant. How can I help you with your financial planning today?' }]);
+    }
+
     const savedCache = localStorage.getItem('chatbot_cache');
     if (savedCache) {
       try {
@@ -36,11 +54,25 @@ export default function ChatBot() {
     }
   }, []);
 
+  // Save history to localStorage when it changes
+  useEffect(() => {
+    if (messages.length > 0) {
+      localStorage.setItem('chatbot_history', JSON.stringify(messages));
+    }
+  }, [messages]);
+
   // Save cache to localStorage when it changes
   const updateCache = (key: string, value: string) => {
     cacheRef.current.set(key, value);
     const obj = Object.fromEntries(cacheRef.current);
     localStorage.setItem('chatbot_cache', JSON.stringify(obj));
+  };
+
+  const clearHistory = () => {
+    const initialMessage: Message = { role: 'model', text: 'Hello! I am your AI financial assistant. How can I help you with your financial planning today?' };
+    setMessages([initialMessage]);
+    localStorage.removeItem('chatbot_history');
+    chatRef.current = null;
   };
 
   const scrollToBottom = () => {
@@ -75,14 +107,13 @@ export default function ChatBot() {
     }
 
     try {
-      const apiKey = process.env.GEMINI_API_KEY;
+      const apiKey = getApiKey();
       
       // Fallback to mock response if API key is missing
-      if (!apiKey || apiKey === 'MY_GEMINI_API_KEY' || apiKey === 'undefined' || apiKey === '') {
-        console.warn('Gemini API key is missing. Falling back to mock chat response.');
+      if (!apiKey || apiKey === '') {
         setTimeout(() => {
           const mockResponses: { [key: string]: string } = {
-            "default": "I'm here to help with your financial queries! Since I'm currently in demo mode (no API key configured), I can provide general information about investments, insurance, and tax planning in India.",
+            "default": "I'm here to help with your financial queries! I can provide general information about investments, insurance, and tax planning in India.",
             "hello": "Hello! How can I assist you with your financial planning today?",
             "investment": "Investment planning is key to wealth creation. We recommend looking at a mix of Equity Mutual Funds, PPF, and potentially direct stocks depending on your risk appetite.",
             "tax": "For tax saving in India, Section 80C is the most popular, allowing deductions up to ₹1.5 Lakhs through instruments like ELSS, PPF, and LIC.",
@@ -105,10 +136,17 @@ export default function ChatBot() {
         return;
       }
 
-      const ai = new GoogleGenAI({ apiKey });
+      const ai = getGeminiClient();
       
       // Initialize chat if not already done
       if (!chatRef.current) {
+        const history = messages
+          .filter(m => m.role !== 'error')
+          .map(m => ({
+            role: m.role,
+            parts: [{ text: m.text }]
+          }));
+
         chatRef.current = ai.chats.create({
           model: "gemini-3-flash-preview",
           config: {
@@ -117,8 +155,11 @@ export default function ChatBot() {
             Always maintain a professional yet approachable tone. 
             If asked about specific tools on the site, mention the Home Loan Calculator, Retirement Planner, Investment ROI Calculator, and Insurance Planner.
             Keep responses concise but informative. Use markdown for formatting where appropriate.
-            If the user asks for specific Indian market data, use your internal knowledge or suggest they use the search tools on the home page which have real-time search capabilities.`,
+            If the user asks for specific Indian market data, use your internal knowledge or suggest they use the search tools on the home page which have real-time search capabilities.
+            When discussing insurance, cover Life Insurance (Term, Endowment), Health Insurance (Individual, Family Floater), and General Insurance (Motor, Home).
+            When discussing investments, cover Mutual Funds (Equity, Debt, Hybrid), Stocks, Fixed Deposits, PPF, NPS, and Gold.`,
           },
+          history: history.slice(0, -1), // Exclude the current user message which will be sent via sendMessageStream
         });
       }
 
@@ -144,9 +185,9 @@ export default function ChatBot() {
       let errorMessage = "Sorry, I'm having trouble connecting right now. Please check your internet connection.";
       
       if (error.message?.includes('quota') || error.message?.includes('429')) {
-        errorMessage = "I've reached my free usage limit for the moment. Please try again in a few minutes.";
+        errorMessage = "The AI service is currently at capacity. Please try again later.";
       } else if (error.message?.includes('API key not valid')) {
-        errorMessage = "The AI service is currently misconfigured. Please contact support.";
+        errorMessage = "The AI service is currently unavailable. Please try again later.";
       } else if (error.name === 'AbortError' || error.message?.includes('fetch')) {
         errorMessage = "Network error: Unable to reach the AI service. Please check your connection.";
       }
@@ -205,6 +246,13 @@ export default function ChatBot() {
                 </div>
               </div>
               <div className="flex items-center gap-2">
+                <button 
+                  onClick={clearHistory}
+                  title="Clear History"
+                  className="p-2 hover:bg-white/20 rounded-lg transition-colors"
+                >
+                  <RefreshCw className="w-4 h-4" />
+                </button>
                 <button 
                   onClick={() => setIsMinimized(!isMinimized)}
                   className="p-2 hover:bg-white/20 rounded-lg transition-colors"
@@ -304,6 +352,27 @@ export default function ChatBot() {
                   )}
                   <div ref={messagesEndRef} />
                 </div>
+
+                {/* Suggested Questions */}
+                {messages.length <= 1 && !isLoading && (
+                  <div className="px-6 py-4 bg-slate-50/80 border-t border-slate-100">
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Suggested Topics</p>
+                    <div className="flex flex-wrap gap-2">
+                      {SUGGESTED_QUESTIONS.map((q, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => {
+                            setInput(q.text);
+                          }}
+                          className="px-3 py-2 bg-white border border-slate-200 rounded-xl text-[10px] font-bold text-slate-600 hover:border-primary hover:text-primary transition-all flex items-center gap-2 shadow-sm"
+                        >
+                          {q.icon}
+                          {q.text}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 {/* Input Area */}
                 <form 
